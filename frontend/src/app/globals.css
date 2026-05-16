@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-cream: #FDF5E6;
+  --color-brand-gold: #B8860B;
+  --color-brand-gold-light: #F0D080;
+  --color-brand-gold-dim: #D4A017;
+  --color-brand-red: #8B0000;
+  --color-brand-slate: #2F4F4F;
+  --color-brand-char: #1A1208;
+  --color-brand-bronze: #6B4C1E;
+  --color-brand-cream-dark: #F5EDD8;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --font-display: var(--font-playfair);
+  --font-script: var(--font-kalam);
+  --font-body: var(--font-lora);
+  --font-ui: var(--font-hind);
+  --font-data: var(--font-inter);
+}
+
+:root {
+  --background: var(--color-brand-cream);
+  --foreground: var(--color-brand-char);
+  --card: var(--color-brand-cream);
+  --card-foreground: var(--color-brand-char);
+  --popover: var(--color-brand-cream);
+  --popover-foreground: var(--color-brand-char);
+  --primary: var(--color-brand-gold);
+  --primary-foreground: var(--color-brand-cream);
+  --secondary: var(--color-brand-gold-light);
+  --secondary-foreground: var(--color-brand-char);
+  --muted: var(--color-brand-cream-dark);
+  --muted-foreground: var(--color-brand-slate);
+  --accent: var(--color-brand-gold-light);
+  --accent-foreground: var(--color-brand-char);
+  --destructive: var(--color-brand-red);
+  --destructive-foreground: var(--color-brand-cream);
+  --border: var(--color-brand-gold-dim);
+  --input: var(--color-brand-gold-dim);
+  --ring: var(--color-brand-gold);
+  --radius: 0.5rem;
+  --font-playfair: var(--font-playfair), Georgia, serif;
+  --font-kalam: var(--font-kalam), cursive;
+  --font-lora: var(--font-lora), Georgia, serif;
+  --font-hind: var(--font-hind), system-ui, sans-serif;
+  --font-inter: var(--font-inter), system-ui, sans-serif;
+
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-out-circ: cubic-bezier(0.85, 0, 0.15, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --duration-fast: 0.2s;
+  --duration-mid: 0.4s;
+  --duration-slow: 0.7s;
+  --duration-cinematic: 1.2s;
+
+  --section-gap: clamp(64px, 10vw, 120px);
+  --container-max: 1320px;
+  --container-pad: clamp(16px, 4vw, 48px);
+}
+
+html,
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  width: 100vw;
+  position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-display);
+}
+
+/* Skeleton Loading Animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+.font-script {
+  font-family: var(--font-script);
+}
+
+.font-ui {
+  font-family: var(--font-ui);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translateY(-100px) scale(1);
+    opacity: 0;
+  }
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Scrollbar Utilities */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar,
+.scrollbar-none {
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(calc(-100% - var(--gap)));
+  }
+}
+
+.animate-marquee {
+  animation: marquee var(--duration) linear infinite;
+}
