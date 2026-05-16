@@ -245,7 +245,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
-    console.error("PhonePe Webhook Processing Error:", error.message);
-    return NextResponse.json({ error: "Internal processing error" }, { status: 500 });
+    console.error(`[CRITICAL] Webhook Processing Error for ${merchantTransactionId}:`, error instanceof Error ? error.message : "Unknown error");
+    return NextResponse.json({ error: "Webhook processing failed" }, { status: 500 });
   }
 }

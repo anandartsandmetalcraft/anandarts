@@ -53,17 +53,27 @@ export async function processOrderPayment(orderId: string) {
 
   // --- Step 3: Call Cashfree Initiation ---
   try {
-    const result = await initiateCashfreePayment({
-      orderId: merchantTransactionId,
+    // Enforce customer contact data for gateway integrity
+    const customerEmail = order.user.email;
+    const customerPhone = order.address?.phone || order.user.phone;
+
+    if (!customerPhone) {
+      throw new Error("Customer phone number is required for payment initiation");
+    }
+
+    const cashfreeParams = {
+      orderId: order.id,
       orderAmount: order.total,
       customerDetails: {
-        customerId: session.user.id,
-        customerPhone: order.address.phone || order.user.phone || "9999999999",
-        customerEmail: session.user.email || undefined,
-        customerName: `${order.address.firstName} ${order.address.lastName}`
+        customerId: order.userId,
+        customerPhone: customerPhone,
+        customerEmail: customerEmail || undefined, // Gateway will handle missing email better than a generic one
+        customerName: `${order.address?.firstName || "Customer"} ${order.address?.lastName || ""}`.trim()
       },
-      returnUrl: callbackUrl,
-    });
+      returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/callback?orderId=${order.id}`
+    };
+
+    const result = await initiateCashfreePayment(cashfreeParams);
 
     return { success: true, url: result.url };
   } catch (error: any) {
