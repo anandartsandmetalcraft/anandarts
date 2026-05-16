@@ -198,29 +198,29 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          className="relative w-full max-w-4xl bg-[#11100D] rounded-[32px] overflow-hidden flex flex-col md:flex-row shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-white/5"
+          className="relative w-full max-w-4xl max-h-[95vh] bg-[#11100D] rounded-[32px] overflow-hidden flex flex-col md:flex-row shadow-[0_40px_100px_rgba(0,0,0,0.8)] border border-white/5"
         >
           {/* Left Side: Brand & Perks */}
-          <div className="w-full md:w-[45%] bg-[#1A1208] p-10 flex flex-col items-center text-center relative overflow-hidden">
+          <div className="w-full md:w-[45%] bg-[#1A1208] p-6 md:p-10 flex flex-col items-center justify-center text-center relative overflow-hidden shrink-0">
              {/* Decorative glow */}
              <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(184,134,11,0.1)_0%,_transparent_100%)] opacity-50" />
              
-             <div className="relative z-10 space-y-12">
-                <div className="flex flex-col items-center gap-6">
+             <div className="relative z-10 space-y-8 md:space-y-12 py-4">
+                <div className="flex flex-col items-center gap-4 md:gap-6">
                    <Image
                       src="/Logo3.png"
                       alt="Anand Arts Logo"
-                      width={80}
-                      height={80}
-                      className="rounded-lg"
+                      width={60}
+                      height={60}
+                      className="rounded-lg md:w-[80px] md:h-[80px]"
                       priority
                    />
-                   <p className="font-ui text-sm text-[var(--color-brand-cream)]/60 leading-relaxed text-center">
+                   <p className="font-ui text-xs md:text-sm text-[var(--color-brand-cream)]/60 leading-relaxed text-center hidden md:block">
                       Quality handcrafted temple idols and metal art.
                    </p>
                 </div>
  
-                <div className="grid gap-6">
+                <div className="hidden md:grid gap-6">
                    {[
                       { i: Truck, t: "Fast Shipping", d: "Secure delivery to your address" },
                       { i: ShieldCheck, t: "Quality Guaranteed", d: "Authentic handcrafted products" },
@@ -241,7 +241,7 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
           </div>
  
           {/* Right Side: Form Area */}
-          <div className="flex-1 bg-white p-8 md:p-12 flex flex-col items-center justify-center relative overflow-y-auto max-h-[90vh]">
+          <div className="flex-1 bg-white p-6 md:p-12 flex flex-col items-center justify-center relative overflow-y-auto">
              <button onClick={onClose} className="absolute top-8 right-8 p-2 hover:bg-black/5 rounded-full transition-colors text-black/40 z-30">
                 <X size={24} />
              </button>

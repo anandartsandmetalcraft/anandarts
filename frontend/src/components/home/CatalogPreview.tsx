@@ -89,11 +89,25 @@ export default function CatalogPreview() {
               key={p.id}
               className="slider-item relative group overflow-hidden rounded-sm shrink-0 snap-start w-[280px] md:w-[320px] h-[400px] shadow-lg cursor-pointer bg-[var(--color-brand-cream)] block"
             >
-              {p.coupon && (
-                <div className="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-md text-[var(--color-brand-char)] font-ui text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm shadow-lg">
-                  {p.coupon.code} • {formatCouponDiscount(p.coupon.discount)}
-                </div>
-              )}
+              <div className="absolute top-4 left-4 right-12 z-20 flex flex-col items-start gap-2 pointer-events-none">
+                {p.coupon && (
+                  <div className="bg-white/90 backdrop-blur-md text-[var(--color-brand-char)] font-ui text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-sm shadow-lg pointer-events-auto">
+                    {p.coupon.code} • {formatCouponDiscount(p.coupon.discount)}
+                  </div>
+                )}
+                
+                {typeof p.stock === "number" && (
+                  p.stock <= 0 ? (
+                    <div className="bg-black/70 text-white font-ui text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm pointer-events-auto">
+                      Out of stock
+                    </div>
+                  ) : p.stock <= 2 ? (
+                    <div className="bg-[var(--color-brand-red)] text-white font-ui text-[10px] font-extrabold uppercase tracking-widest px-3 py-1.5 rounded-sm pointer-events-auto">
+                      Low stock alert only {p.stock} left
+                    </div>
+                  ) : null
+                )}
+              </div>
 
               <Image
                 src={p.img}
@@ -102,18 +116,6 @@ export default function CatalogPreview() {
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 className="object-cover group-hover:scale-[1.08] transition-transform duration-[400ms] cubic-bezier(0.25,0.46,0.45,0.94)"
               />
-
-              {typeof p.stock === "number" && (
-                p.stock <= 0 ? (
-                  <div className="absolute top-4 left-4 bg-black/70 text-white font-ui text-[11px] font-bold uppercase tracking-wider px-3 py-1 rounded-sm z-20">
-                    Out of stock
-                  </div>
-                ) : p.stock <= 2 ? (
-                  <div className="absolute top-4 left-4 bg-[var(--color-brand-red)] text-white font-ui text-[10px] font-extrabold uppercase tracking-widest px-3 py-2 rounded-sm z-20">
-                    Low stock alert â€¢ only {p.stock} left
-                  </div>
-                ) : null
-              )}
 
               <button className="absolute top-4 right-4 z-20 p-2 bg-white/40 backdrop-blur-md rounded-full text-[var(--color-brand-slate)] hover:text-[var(--color-brand-red)] hover:bg-white transition-colors duration-300">
                 <Heart size={18} strokeWidth={2} />

@@ -308,7 +308,7 @@ export default function CheckoutPage() {
                                                    <p className="font-ui text-xs font-bold text-[var(--color-brand-char)] mt-2">{addr.country}</p>
                                                    {addr.country !== "India" && (
                                                       <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100 flex gap-3"><Info className="text-blue-500 shrink-0 mt-0.5" size={16} /><p className="text-[10px] text-blue-800 font-medium leading-relaxed"><strong>International Delivery:</strong> Our logistics team will contact you at <strong>+91 91108 55462</strong> to finalize shipping details.</p></div>
-                                                   )}
+                                                    )}
                                                 </div>
                                              );
                                           })()}
@@ -432,11 +432,50 @@ export default function CheckoutPage() {
                                  <ShieldCheck size={14} className="text-blue-600" />
                                  <span className="text-[9px] font-bold uppercase tracking-widest text-blue-800">Secured by Cashfree Payments</span>
                               </div>
-                              <div className="flex gap-4 opacity-40 grayscale hover:grayscale-0 transition-all cursor-default">
-                                 <Image src="https://images.cloudinary.com/dqyqhmnhw/image/upload/v1/assets/payment-visa" alt="Visa" width={30} height={20} />
-                                 <Image src="https://images.cloudinary.com/dqyqhmnhw/image/upload/v1/assets/payment-mastercard" alt="Mastercard" width={30} height={20} />
-                                 <Image src="https://images.cloudinary.com/dqyqhmnhw/image/upload/v1/assets/payment-upi" alt="UPI" width={30} height={20} />
+                              <div className="flex gap-4 items-center transition-all duration-300">
+                                 {/* Visa */}
+                                 <svg width="32" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-auto">
+                                   <path d="M18.83 29.86l2.9-17.91h4.63l-2.9 17.91h-4.63zm18.31-17.51c-1.07-.41-2.76-.85-4.82-.85-5.32 0-9.06 2.82-9.09 6.87-.03 2.99 2.68 4.65 4.73 5.65 2.1 1.03 2.81 1.68 2.8 2.6-.02 1.4-1.68 2.04-3.23 2.04-2.15 0-3.41-.34-5.23-1.14l-.74-.35-.79 4.88c1.31.6 3.75 1.12 6.27 1.15 5.66 0 9.32-2.8 9.37-7.14.04-2.38-1.42-4.18-4.54-5.67-1.89-.95-3.05-1.59-3.04-2.56.01-.88.99-1.82 3.12-1.82 1.77-.03 3.06.38 4.04.81l.48.23.88-5.55zm7.32.4c-1.05 0-1.94.61-2.35 1.58l-8.23 19.52h4.86l.97-2.68h5.95l.56 2.68h4.29L44.46 12.75zm-3.66 12.98l1.9-5.18 1.08 5.18h-2.98zM8.3 12.75L3.71 25.13l-.48-2.45c-.83-2.81-3.41-5.84-6.3-7.37L1 29.86h4.89l7.28-17.11H8.3z" fill="#11100D"/>
+                                 </svg>
+                                 {/* Mastercard */}
+                                 <svg width="24" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-auto">
+                                   <circle cx="7" cy="12" r="7" fill="#11100D" fillOpacity="0.7"/>
+                                   <circle cx="17" cy="12" r="7" fill="#11100D" fillOpacity="0.5"/>
+                                 </svg>
+                                 {/* UPI */}
+                                 <svg width="32" height="20" viewBox="0 0 40 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-3 w-auto">
+                                   <path d="M6.08 0l-2.01 7.23h2.36l2.01-7.23H6.08zm8.62 0l-2.01 7.23h2.36l2.01-7.23h-2.36zm8.62 0l-2.01 7.23h2.36l2.01-7.23h-2.36z" fill="#11100D"/>
+                                   <path d="M3.7 10.5h32.6v1.5H3.7v-1.5z" fill="#11100D"/>
+                                 </svg>
                               </div>
+
+                              {/* Demo Checkout - Visible only for testing/client demo */}
+                              {process.env.NEXT_PUBLIC_ALLOW_TEST_PAYMENTS === "true" && (
+                                 <button
+                                    onClick={async () => {
+                                       if (!orderDbId) {
+                                          toast.error("Please click 'Pay & Place Order' first to create the order draft");
+                                          return;
+                                       }
+                                       setIsProcessing(true);
+                                       try {
+                                          toast.success("Demo Mode: Simulating Payment Success...");
+                                          // Small delay to feel real
+                                          setTimeout(() => {
+                                             window.location.href = `/checkout/success?orderId=${orderDbId}`;
+                                          }, 2000);
+                                       } catch (err) {
+                                          toast.error("Demo checkout failed");
+                                       } finally {
+                                          setIsProcessing(false);
+                                       }
+                                    }}
+                                    type="button"
+                                    className="w-full mt-4 border-2 border-dashed border-[var(--color-brand-gold)] text-[var(--color-brand-gold)] font-ui text-[10px] font-bold uppercase tracking-[0.2em] py-4 rounded-xl hover:bg-[var(--color-brand-gold)] hover:text-white transition-all duration-300 shadow-lg"
+                                 >
+                                    ⚡ Run Client Demo (Simulate Success)
+                                 </button>
+                              )}
                            </div>
                         </div>
                      </div>
