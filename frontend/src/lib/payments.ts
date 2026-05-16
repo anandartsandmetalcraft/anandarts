@@ -150,8 +150,8 @@ export async function initiateCashfreePayment({
     customer_details: {
       customer_id: customerDetails.customerId,
       customer_phone: customerDetails.customerPhone,
-      customer_email: customerDetails.customerEmail || "customer@anandarts.com",
-      customer_name: customerDetails.customerName || "Anand Arts Customer"
+      customer_email: customerDetails.customerEmail || undefined,
+      customer_name: customerDetails.customerName || undefined
     },
     order_meta: {
       return_url: returnUrl
@@ -184,8 +184,8 @@ export async function initiateCashfreePayment({
       throw new Error("Invalid response from Cashfree");
     }
   } catch (error: any) {
-    console.error("Cashfree Payment Initiation Error:", error.response?.data || error.message);
-    throw new Error("Could not initiate Cashfree payment. Please check your credentials.");
+    console.error(`[CRITICAL] Cashfree Payment Initiation Error for Order ${orderId}:`, error.response?.data || error.message);
+    throw new Error("Payment initiation failed. Please try again or contact support.");
   }
 }
 

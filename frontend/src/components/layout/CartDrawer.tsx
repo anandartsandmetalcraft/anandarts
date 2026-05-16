@@ -192,7 +192,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     </span>
                     {remainingForFree > 0 && (
                       <span className="font-ui text-[10px] font-bold text-[#8B8375]">
-                        Need â‚¹{(remainingForFree / 100).toLocaleString("en-IN")}
+                        Need {(remainingForFree / 100).toLocaleString("en-IN")}
                       </span>
                     )}
                   </div>
@@ -208,7 +208,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           <div className="min-w-0 flex-1">
                             <p className="font-ui text-[11px] font-bold text-[var(--color-brand-char)] truncate">{p.name}</p>
                             <p className="font-ui text-[10px] text-[#8B8375]">
-                              â‚¹{(Number(p.price || 0) / 100).toLocaleString("en-IN")}
+                              {(Number(p.price || 0) / 100).toLocaleString("en-IN")}
                             </p>
                           </div>
                           <button

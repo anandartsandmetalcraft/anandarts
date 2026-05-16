@@ -18,6 +18,7 @@ export default function ProductDetails({ product }: { product: Product }) {
   const [activeImgIdx, setActiveImgIdx] = useState(0);
   const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
   const [isZooming, setIsZooming] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isStoreInfoOpen, setIsStoreInfoOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>("dimensions");
 
@@ -135,12 +136,20 @@ export default function ProductDetails({ product }: { product: Product }) {
                 src={images[activeImgIdx]} 
                 alt={product.name} 
                 fill 
-                className={`object-cover transition-transform duration-200 ease-out ${isZooming && activeImgIdx === 0 ? 'scale-[2.5]' : 'scale-100'}`}
+                className={`object-cover transition-transform duration-200 ease-out ${isZooming && activeImgIdx === 0 ? 'md:scale-[2.5] scale-100' : 'scale-100'}`}
                 style={isZooming && activeImgIdx === 0 ? { transformOrigin: `${zoomPos.x}% ${zoomPos.y}%` } : {}}
                 loading="lazy"
                 placeholder="blur"
                 blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z"
               />
+
+              {/* Mobile Zoom Scope Button */}
+              <button 
+                onClick={(e) => { e.stopPropagation(); setIsModalOpen(true); }}
+                className="absolute top-4 right-4 w-10 h-10 bg-white/80 backdrop-blur rounded-full flex items-center justify-center text-black z-20 shadow-md md:hidden"
+              >
+                 <Plus size={20} />
+              </button>
 
               {/* Navigation Arrows */}
               <button onClick={(e) => { e.stopPropagation(); prevImg(); }} className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/80 backdrop-blur shadow-lg flex items-center justify-center text-black opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white">
@@ -240,41 +249,41 @@ export default function ProductDetails({ product }: { product: Product }) {
                  {isOutOfStock ? "Out of stock" : `Low stock alert • only ${stockCount} left`}
                </div>
              )}
-             <div className="space-y-4">
-                <label className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Quantity</label>
-                <div className="inline-flex items-center gap-6 bg-white border border-black/5 rounded-full p-2 pr-6 shadow-sm">
-                   <div className="flex items-center gap-2">
+             <div className="space-y-3">
+                <label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375]">Quantity</label>
+                <div className="inline-flex items-center gap-4 bg-white border border-black/5 rounded-full p-1.5 pr-5 shadow-sm">
+                   <div className="flex items-center gap-1.5">
                       <button
                         disabled={isOutOfStock}
                         onClick={() => setQty(Math.max(1, qty - 1))}
-                        className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center hover:bg-black text-black hover:text-white transition-all disabled:opacity-40 disabled:hover:bg-black/5 disabled:hover:text-black disabled:cursor-not-allowed"
+                        className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center hover:bg-black text-black hover:text-white transition-all disabled:opacity-40 disabled:hover:bg-black/5 disabled:hover:text-black disabled:cursor-not-allowed"
                       >
-                        <Minus size={16} />
+                        <Minus size={14} />
                       </button>
-                      <span className="w-8 text-center font-display text-xl">{qty}</span>
+                      <span className="w-6 text-center font-display text-lg">{qty}</span>
                       <button
                         disabled={isOutOfStock || (stockCount !== null && qty >= stockCount)}
                         onClick={() => setQty((prev) => (stockCount !== null ? Math.min(stockCount, prev + 1) : prev + 1))}
-                        className="w-10 h-10 rounded-full bg-black/5 flex items-center justify-center hover:bg-black text-black hover:text-white transition-all disabled:opacity-40 disabled:hover:bg-black/5 disabled:hover:text-black disabled:cursor-not-allowed"
+                        className="w-8 h-8 rounded-full bg-black/5 flex items-center justify-center hover:bg-black text-black hover:text-white transition-all disabled:opacity-40 disabled:hover:bg-black/5 disabled:hover:text-black disabled:cursor-not-allowed"
                       >
-                        <Plus size={16} />
+                        <Plus size={14} />
                       </button>
                    </div>
                 </div>
              </div>
 
-             <div className="flex flex-col gap-4">
+             <div className="flex flex-col gap-3 max-w-lg">
                 <button 
                   onClick={handleAddToCart}
                   disabled={isOutOfStock}
-                  className="w-full py-5 border-2 border-[var(--color-brand-char)] font-ui text-sm font-bold uppercase tracking-[0.2em] text-[var(--color-brand-char)] hover:bg-[var(--color-brand-char)] hover:text-white transition-all rounded-full disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--color-brand-char)] disabled:cursor-not-allowed"
+                  className="w-full py-4 border border-[var(--color-brand-char)] font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-char)] hover:bg-[var(--color-brand-char)] hover:text-white transition-all rounded-full disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--color-brand-char)] disabled:cursor-not-allowed"
                 >
                    {isOutOfStock ? "Out of Stock" : "Add to Cart"}
                 </button>
                 <button 
                   onClick={handleBuyNow}
                   disabled={isOutOfStock}
-                  className="w-full py-5 bg-[var(--color-brand-char)] font-ui text-sm font-bold uppercase tracking-[0.2em] text-white hover:bg-black transition-all rounded-full shadow-2xl disabled:opacity-40 disabled:hover:bg-[var(--color-brand-char)] disabled:cursor-not-allowed"
+                  className="w-full py-4 bg-[var(--color-brand-char)] font-ui text-[11px] font-bold uppercase tracking-widest text-white hover:bg-black transition-all rounded-full shadow-lg disabled:opacity-40 disabled:hover:bg-[var(--color-brand-char)] disabled:cursor-not-allowed"
                 >
                    Buy it Now
                 </button>
@@ -282,7 +291,7 @@ export default function ProductDetails({ product }: { product: Product }) {
                   href={whatsappHref}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-5 border-2 border-[var(--color-brand-gold)] bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-char)] font-ui text-sm font-bold uppercase tracking-[0.2em] rounded-full shadow-sm hover:bg-[var(--color-brand-gold)] hover:text-white transition-all flex items-center justify-center gap-3"
+                  className="w-full py-4 border border-[var(--color-brand-gold)] bg-[var(--color-brand-gold)]/5 text-[var(--color-brand-char)] font-ui text-[10px] sm:text-[11px] font-bold uppercase tracking-widest rounded-full shadow-sm hover:bg-[var(--color-brand-gold)] hover:text-white transition-all flex items-center justify-center gap-2 whitespace-nowrap"
                 >
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" className="shrink-0">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
@@ -409,9 +418,21 @@ export default function ProductDetails({ product }: { product: Product }) {
           </div>
 
           <button 
-             onClick={() => {
-                navigator.clipboard.writeText(window.location.href);
-                alert("The product link has been copied to your clipboard.");
+             onClick={async () => {
+                if (navigator.share) {
+                  try {
+                    await navigator.share({
+                      title: product.name,
+                      text: `Discover this beautifully handcrafted ${product.name} at Anand Arts`,
+                      url: window.location.href,
+                    });
+                  } catch (err) {
+                    console.log("Error sharing:", err);
+                  }
+                } else {
+                  navigator.clipboard.writeText(window.location.href);
+                  alert("The product link has been copied to your clipboard.");
+                }
              }}
              className="mt-8 flex items-center gap-3 font-ui text-[11px] font-bold uppercase tracking-[0.2em] text-[#8B8375] hover:text-[var(--color-brand-char)] transition-colors group"
           >
@@ -423,6 +444,36 @@ export default function ProductDetails({ product }: { product: Product }) {
 
         </div>
       </div>
+
+      {/* Full Screen Image Modal for Mobile Zoom */}
+      <AnimatePresence>
+        {isModalOpen && (
+           <motion.div 
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             exit={{ opacity: 0 }}
+             className="fixed inset-0 z-[300] bg-black flex flex-col"
+           >
+              <div className="p-4 flex justify-end bg-gradient-to-b from-black/80 to-transparent absolute top-0 w-full z-10">
+                 <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center text-white backdrop-blur">
+                    <X size={20} />
+                 </button>
+              </div>
+              <div className="flex-1 overflow-auto flex items-center justify-center touch-pan-x touch-pan-y">
+                 <img 
+                    src={images[activeImgIdx]} 
+                    alt={product.name} 
+                    className="max-w-none w-[200%] sm:w-full h-auto object-contain origin-center transition-transform" 
+                 />
+              </div>
+              <div className="absolute bottom-10 w-full text-center pointer-events-none">
+                 <span className="bg-black/50 text-white font-ui text-[10px] uppercase tracking-widest px-4 py-2 rounded-full backdrop-blur">
+                    Drag to explore
+                 </span>
+              </div>
+           </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -101,19 +101,23 @@ export default function BestsellersRail() {
                     className="object-cover group-hover:scale-110 transition-transform duration-1000" 
                   />
                   
-                  {prod.tag && (
-                    <div className="absolute top-6 left-6 bg-[var(--color-brand-gold)] text-[#11100D] font-ui text-[10px] font-extrabold uppercase px-4 py-2 rounded-xl shadow-lg z-10 transition-transform group-hover:-translate-y-1">
-                      {prod.tag}
-                    </div>
-                  )}
+                  <div className="absolute top-4 left-4 right-4 flex flex-col items-start gap-2 z-10 pointer-events-none">
+                    {prod.tag && (
+                      <div className="bg-[var(--color-brand-gold)] text-[#11100D] font-ui text-[10px] font-extrabold uppercase px-3 py-1.5 rounded-xl shadow-lg pointer-events-auto">
+                        {prod.tag}
+                      </div>
+                    )}
+                    {prod.coupon && (
+                      <div className="bg-white/90 backdrop-blur-md text-[var(--color-brand-char)] font-ui text-[9px] font-bold uppercase px-3 py-1.5 rounded-xl shadow-lg pointer-events-auto">
+                        {prod.coupon.code} • {formatCouponDiscount(prod.coupon.discount)}
+                      </div>
+                    )}
+                  </div>
 
-                  {prod.coupon && (
-                    <div className="absolute top-6 right-6 bg-white/90 backdrop-blur-md text-[var(--color-brand-char)] font-ui text-[9px] font-bold uppercase px-3 py-2 rounded-xl shadow-lg z-10">
-                      {prod.coupon.code} • {formatCouponDiscount(prod.coupon.discount)}
-                    </div>
-                  )}
-
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-700" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-all duration-700 pointer-events-none z-0" />
+                  
+                  {/* Invisible link overlay for entire image tapping */}
+                  <Link href={`/product/${prod.id}`} className="absolute inset-0 z-10" aria-label={`View ${prod.name}`} />
                   
                   <div className="absolute inset-x-4 bottom-6 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20 flex gap-2">
                      <button 
@@ -135,9 +139,11 @@ export default function BestsellersRail() {
                   <p className="font-ui text-[11px] uppercase font-bold tracking-widest text-[#8B8375] opacity-60">
                      {prod.category} • {prod.material}
                   </p>
-                  <h3 className="font-display text-2xl text-[var(--color-brand-char)] group-hover:text-[var(--color-brand-gold)] transition-colors line-clamp-1">
-                     {prod.name}
-                  </h3>
+                  <Link href={`/product/${prod.id}`}>
+                     <h3 className="font-display text-2xl text-[var(--color-brand-char)] group-hover:text-[var(--color-brand-gold)] transition-colors line-clamp-1">
+                        {prod.name}
+                     </h3>
+                  </Link>
                   {prod.description && (
                     <p className="font-ui text-[10px] text-[#8B8375] line-clamp-1 mb-2 opacity-0 group-hover:opacity-100 transition-opacity">
                       {prod.description}
