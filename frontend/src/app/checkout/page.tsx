@@ -335,14 +335,49 @@ export default function CheckoutPage() {
                                              <div className="space-y-2">
                                                 <label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">State</label>
                                                 {shipping.country === "India" ? (
-                                                   <select value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none">{INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}</select>
+                                                   <div className="relative">
+                                                      <select value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none appearance-none cursor-pointer">
+                                                         {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                                                      </select>
+                                                      <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
+                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                                      </div>
+                                                   </div>
                                                 ) : (
-                                                   <input required type="text" value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" />
+                                                   <input required type="text" value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" placeholder="State/Region" />
                                                 )}
                                              </div>
-                                             <div className="space-y-2"><label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">ZIP</label><input required type="text" value={shipping.postalCode} onChange={(e) => setShipping({ ...shipping, postalCode: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" /></div>
+                                             <div className="space-y-2"><label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">ZIP / Postal Code</label><input required type="text" value={shipping.postalCode} onChange={(e) => setShipping({ ...shipping, postalCode: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" /></div>
                                           </div>
-                                          <div className="space-y-2"><label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Country</label><select value={shipping.country} onChange={(e) => setShipping({ ...shipping, country: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none"><option value="India">India 🇮🇳</option><option value="USA">USA 🇺🇸</option><option value="UK">UK 🇬🇧</option><option value="Other">Other</option></select></div>
+                                          <div className="space-y-2">
+                                             <label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Country</label>
+                                             <div className="relative">
+                                                <select value={shipping.country} onChange={(e) => setShipping({ ...shipping, country: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none appearance-none cursor-pointer">
+                                                   <option value="India">India 🇮🇳</option>
+                                                   <option value="USA">United States 🇺🇸</option>
+                                                   <option value="UK">United Kingdom 🇬🇧</option>
+                                                   <option value="UAE">United Arab Emirates 🇦🇪</option>
+                                                   <option value="Japan">Japan 🇯🇵</option>
+                                                   <option value="France">France 🇫🇷</option>
+                                                   <option value="Australia">Australia 🇦🇺</option>
+                                                   <option value="Canada">Canada 🇨🇦</option>
+                                                   <option value="Singapore">Singapore 🇸🇬</option>
+                                                   <option value="Germany">Germany 🇩🇪</option>
+                                                   <option value="Other">Other Country</option>
+                                                </select>
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
+                                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                                </div>
+                                             </div>
+                                             {shipping.country !== "India" && (
+                                                <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
+                                                   <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={16} />
+                                                   <p className="text-[10px] text-amber-800 font-medium leading-relaxed">
+                                                      <strong>International Delivery:</strong> For secure and fast international shipping, please contact our team via WhatsApp at <strong>+91 8754262271</strong> before placing your order.
+                                                   </p>
+                                                </div>
+                                             )}
+                                          </div>
                                        </form>
                                     </div>
                                  )}
@@ -350,7 +385,10 @@ export default function CheckoutPage() {
                            )}
 
                            <div className="pt-4 flex justify-end">
-                              <button onClick={handleSaveAddress} disabled={isProcessing} className="bg-[var(--color-brand-char)] text-white font-ui text-xs font-bold uppercase tracking-[0.2em] px-12 py-5 rounded-full shadow-2xl hover:bg-black transition-all group flex items-center gap-3 disabled:opacity-50">{isProcessing ? 'Processing...' : 'Continue to Payment'}<ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" /></button>
+                              <button onClick={handleSaveAddress} disabled={isProcessing || shipping.country !== "India"} className="bg-[var(--color-brand-char)] text-white font-ui text-xs font-bold uppercase tracking-[0.2em] px-12 py-5 rounded-full shadow-2xl hover:bg-black transition-all group flex items-center gap-3 disabled:opacity-50">
+                                 {shipping.country !== "India" ? 'Contact for International' : isProcessing ? 'Processing...' : 'Continue to Payment'}
+                                 {shipping.country === "India" && <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />}
+                              </button>
                            </div>
                         </motion.div>
                      )}
@@ -412,21 +450,60 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="space-y-4 pt-8 border-t border-black/5">
-                           <div className="flex justify-between items-center"><span className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375]">Subtotal</span><span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{(getTotalPrice() / 100).toLocaleString("en-IN")}</span></div>
-                           <div className="flex justify-between items-center">
-                              <span className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375]">Shipping</span>
-                              {(() => {
-                                 const activeAddress = savedAddresses.find(a => a.id === selectedAddressId) || shipping;
-                                 const pin = activeAddress?.postalCode || "";
-                                 const cost = calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: pin });
-                                 return <span className={`font-ui text-[12px] font-bold ${cost === 0 ? 'text-green-600 uppercase' : 'text-[var(--color-brand-char)]'}`}>{cost === 0 ? 'Free' : `₹${(cost / 100).toLocaleString("en-IN")}`}</span>;
-                              })()}
+                           <div className="flex justify-between items-center bg-[#FAF9F6] p-4 rounded-2xl border border-black/5 mb-4">
+                              <div className="flex items-center gap-3">
+                                 <Gift className={isGiftWrapped ? "text-[var(--color-brand-gold)]" : "text-[#8B8375]"} size={20} />
+                                 <div>
+                                    <p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-char)]">Premium Gift Wrap</p>
+                                    <p className="font-ui text-[9px] text-[#8B8375]">Add a luxury touch to your package</p>
+                                 </div>
+                              </div>
+                              <button onClick={() => setGiftWrapped(!isGiftWrapped)} className={`w-12 h-6 rounded-full transition-all flex items-center p-1 ${isGiftWrapped ? 'bg-[var(--color-brand-gold)] justify-end' : 'bg-black/10 justify-start'}`}>
+                                 <motion.div layout className="w-4 h-4 rounded-full bg-white shadow-sm" />
+                              </button>
                            </div>
-                           {isGiftWrapped && <div className="flex justify-between items-center"><span className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375]">Gift Wrap</span><span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{(giftWrapFeePaise / 100).toLocaleString("en-IN")}</span></div>}
-                           <div className="flex justify-between items-center pt-6 border-t border-black/10">
-                              <span className="font-display text-xl text-[var(--color-brand-char)] uppercase tracking-widest">Total</span>
-                              <span className="font-display text-2xl text-[var(--color-brand-char)]">₹{((getTotalPrice() + giftWrapFeePaise + calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: (savedAddresses.find(a => a.id === selectedAddressId) || shipping).postalCode || "" })) / 100).toLocaleString("en-IN")}</span>
+
+                           <div className="space-y-5">
+                              <div className="flex justify-between items-center">
+                                 <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Base Price</span>
+                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() / 1.05) / 100).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                 <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">GST (5%)</span>
+                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() - (getTotalPrice() / 1.05)) / 100).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                 <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Shipping</span>
+                                 {(() => {
+                                    const activeAddress = savedAddresses.find(a => a.id === selectedAddressId) || shipping;
+                                    const pin = activeAddress?.postalCode || "";
+                                    const cost = calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: pin });
+                                    return (
+                                       <span className={`font-ui text-[12px] font-bold flex items-center gap-2 ${cost === 0 ? 'text-green-600 uppercase' : 'text-[var(--color-brand-char)]'}`}>
+                                          {cost === 0 && <span className="line-through text-gray-400/70 text-[11px]">₹150</span>}
+                                          {cost === 0 ? 'Free' : `₹${(cost / 100).toLocaleString("en-IN")}`}
+                                       </span>
+                                    );
+                                 })()}
+                              </div>
+                              {isGiftWrapped && (
+                                 <div className="flex justify-between items-center">
+                                    <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Gift Wrap</span>
+                                    <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{(giftWrapFeePaise / 100).toLocaleString("en-IN")}</span>
+                                 </div>
+                              )}
                            </div>
+                           
+                           <div className="pt-6 mt-2 border-t border-black/10 flex flex-col">
+                              <div className="flex justify-between items-end">
+                                 <div className="flex flex-col">
+                                    <span className="font-display text-2xl text-black">Total Amount</span>
+                                    <span className="font-ui text-[9px] font-bold uppercase tracking-[0.2em] text-[#8B8375] mt-1">Inclusive of all taxes</span>
+                                 </div>
+                                 <span className="font-display text-3xl text-black">₹{((getTotalPrice() + giftWrapFeePaise + calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: (savedAddresses.find(a => a.id === selectedAddressId) || shipping).postalCode || "" })) / 100).toLocaleString("en-IN")}</span>
+                              </div>
+                           </div>
+                           
                            <div className="mt-8 pt-8 border-t border-black/5 flex flex-col items-center gap-4">
                               <div className="flex items-center gap-2 px-6 py-2 bg-blue-50 rounded-full border border-blue-100">
                                  <ShieldCheck size={14} className="text-blue-600" />

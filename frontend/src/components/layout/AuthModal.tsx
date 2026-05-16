@@ -383,74 +383,59 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
                          <p className="font-ui text-xs text-[#8B8375] mb-6">Provide your details and shipping address.</p>
                          
                          <form onSubmit={handleSignupSubmit} className="space-y-4 max-h-[55vh] overflow-y-auto pr-4">
-                            {/* Personal Info */}
-                            <div className="grid grid-cols-2 gap-3">
-                               <div className="space-y-1">
-                                  <label className="font-ui text-[9px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">First Name</label>
-                                  <input required value={signupData.firstName} onChange={(e) => setSignupData({...signupData, firstName: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="First name" />
+                             {/* Personal Info */}
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">First Name</label><input required type="text" value={signupData.firstName} onChange={(e) => setSignupData({...signupData, firstName: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                                <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Last Name</label><input required type="text" value={signupData.lastName} onChange={(e) => setSignupData({...signupData, lastName: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                             </div>
+ 
+                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Mobile Number</label><input readOnly value={`+91 ${signupData.phone}`} className="w-full bg-[#FAF9F6]/50 border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm text-[#8B8375] cursor-not-allowed" /></div>
+                                <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Email Address</label><input required type="email" value={signupData.email} onChange={(e) => setSignupData({...signupData, email: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                             </div>
+ 
+                             {/* Shipping Address */}
+                             <div className="border-t border-black/5 pt-6 mt-6">
+                               <h4 className="font-ui text-[9px] uppercase font-bold tracking-widest text-[#8B8375] mb-4 ml-2">Shipping Details</h4>
+                               
+                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">House No.</label><input required type="text" value={signupData.houseNo} onChange={(e) => setSignupData({...signupData, houseNo: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Street</label><input required type="text" value={signupData.street} onChange={(e) => setSignupData({...signupData, street: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
                                </div>
-                               <div className="space-y-1">
-                                  <label className="font-ui text-[9px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">Last Name</label>
-                                  <input required value={signupData.lastName} onChange={(e) => setSignupData({...signupData, lastName: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="Last name" />
+ 
+                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Locality</label><input required type="text" value={signupData.locality} onChange={(e) => setSignupData({...signupData, locality: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Landmark</label><input type="text" value={(signupData as any).landmark || ""} onChange={(e) => setSignupData({...signupData, landmark: e.target.value} as any)} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
                                </div>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                               <div className="space-y-1">
-                                  <label className="font-ui text-[9px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">Mobile</label>
-                                  <input readOnly value={`+91 ${signupData.phone}`} className="w-full border-b border-black/5 py-1 outline-none font-ui text-sm text-[#8B8375] bg-transparent" />
+ 
+                               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">City</label><input required type="text" value={signupData.city} onChange={(e) => setSignupData({...signupData, city: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">State</label><input required type="text" value={signupData.state} onChange={(e) => setSignupData({...signupData, state: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">ZIP</label><input required type="text" value={signupData.postalCode} onChange={(e) => setSignupData({...signupData, postalCode: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
                                </div>
-                               <div className="space-y-1">
-                                  <label className="font-ui text-[9px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">Email</label>
-                                  <input required type="email" placeholder="invoice@email.com" value={signupData.email} onChange={(e) => setSignupData({...signupData, email: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" />
+ 
+                               <div className="space-y-2 mb-2">
+                                  <label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Country</label>
+                                  <div className="relative">
+                                     <select value={signupData.country} onChange={(e) => setSignupData({...signupData, country: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none appearance-none cursor-pointer font-ui text-sm">
+                                        <option value="India">India 🇮🇳</option>
+                                        <option value="USA">United States 🇺🇸</option>
+                                        <option value="UK">United Kingdom 🇬🇧</option>
+                                        <option value="UAE">United Arab Emirates 🇦🇪</option>
+                                        <option value="Japan">Japan 🇯🇵</option>
+                                        <option value="France">France 🇫🇷</option>
+                                        <option value="Australia">Australia 🇦🇺</option>
+                                        <option value="Canada">Canada 🇨🇦</option>
+                                        <option value="Singapore">Singapore 🇸🇬</option>
+                                        <option value="Germany">Germany 🇩🇪</option>
+                                        <option value="Other">Other Country</option>
+                                     </select>
+                                     <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                     </div>
+                                  </div>
                                </div>
-                            </div>
-
-                            {/* Shipping Address */}
-                            <div className="border-t border-black/10 pt-4 mt-6">
-                              <h4 className="font-ui text-[9px] uppercase font-bold tracking-widest text-[var(--color-brand-red)] mb-3">Shipping Address</h4>
-                              
-                              <div className="grid grid-cols-2 gap-3">
-                                 <div className="space-y-1">
-                                    <label className="font-ui text-[8px] uppercase font-bold tracking-widest text-[#8B8375]">Flat / House No.</label>
-                                    <input required value={signupData.houseNo} onChange={(e) => setSignupData({...signupData, houseNo: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="House/Flat no." />
-                                 </div>
-                                 <div className="space-y-1">
-                                    <label className="font-ui text-[8px] uppercase font-bold tracking-widest text-[#8B8375]">Street</label>
-                                    <input required value={signupData.street} onChange={(e) => setSignupData({...signupData, street: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="Street name" />
-                                 </div>
-                              </div>
-
-                              <div className="grid grid-cols-2 gap-3 mt-3">
-                                 <div className="space-y-1">
-                                    <label className="font-ui text-[8px] uppercase font-bold tracking-widest text-[#8B8375]">Locality</label>
-                                    <input required value={signupData.locality} onChange={(e) => setSignupData({...signupData, locality: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="Locality/Area" />
-                                 </div>
-                                 <div className="space-y-1">
-                                    <label className="font-ui text-[8px] uppercase font-bold tracking-widest text-[#8B8375]">City</label>
-                                    <input required value={signupData.city} onChange={(e) => setSignupData({...signupData, city: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="City" />
-                                 </div>
-                              </div>
-
-                              <div className="grid grid-cols-2 gap-3 mt-3">
-                                 <div className="space-y-1">
-                                    <label className="font-ui text-[8px] uppercase font-bold tracking-widest text-[#8B8375]">State</label>
-                                    <input value={signupData.state} onChange={(e) => setSignupData({...signupData, state: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="State" />
-                                 </div>
-                                 <div className="space-y-1">
-                                    <label className="font-ui text-[8px] uppercase font-bold tracking-widest text-[#8B8375]">ZIP Code</label>
-                                    <input required value={signupData.postalCode} onChange={(e) => setSignupData({...signupData, postalCode: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all" placeholder="PIN code" />
-                                 </div>
-                              </div>
-
-                              <div className="mt-3">
-                                 <label className="font-ui text-[8px] uppercase font-bold tracking-widest text-[#8B8375]">Country</label>
-                                 <select value={signupData.country} onChange={(e) => setSignupData({...signupData, country: e.target.value})} className="w-full border-b border-black/10 py-1 outline-none focus:border-black font-ui text-sm transition-all bg-transparent">
-                                    <option value="India">India</option>
-                                    <option value="Other">Other</option>
-                                 </select>
-                              </div>
-                            </div>
+                             </div>
 
                             <div className="flex gap-3 pt-6 mt-6 border-t border-black/10">
                                <button 
