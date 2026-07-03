@@ -60,7 +60,7 @@ async function main() {
   }
 
   // 2. Create Admin User with email + password
-  const adminEmail = "admin@anandarts.com";
+  const adminEmail = "admin@anandartsandmetalcrafts.com";
   const adminPassword = "AnandArts@2026";
   const hashedPassword = await bcrypt.hash(adminPassword, 12);
 

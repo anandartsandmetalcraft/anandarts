@@ -1,4 +1,5 @@
 import React from 'react';
+import { siteBrand, siteUrl } from '@/lib/seo';
 
 interface SchemaProps {
   type: 'Organization' | 'LocalBusiness' | 'Product' | 'WebSite' | 'WebPage' | 'FAQPage' | 'CollectionPage' | 'AboutPage';
@@ -25,12 +26,14 @@ export default Schema;
 // Pre-defined Schemas for Anand Arts
 export const AnandArtsSchema = {
   Organization: {
-    name: "Anand Arts",
-    url: "https://anandarts.com",
-    logo: "https://anandarts.com/logo.png",
+    name: siteBrand.name,
+    legalName: siteBrand.legalName,
+    url: siteUrl,
+    logo: `${siteUrl}/Logo.png`,
+    description: "Bengaluru-based temple art studio for handcrafted brass idols, bronze idols, copper idols, panchaloha idols, wood carvings, and custom sacred commissions.",
     contactPoint: {
       "@type": "ContactPoint",
-      "telephone": "+91 84318 38722",
+      "telephone": siteBrand.phone,
       "contactType": "Customer Service",
       "areaServed": "IN",
       "availableLanguage": ["English", "Hindi", "Kannada", "Tamil"]
@@ -41,14 +44,18 @@ export const AnandArtsSchema = {
     ]
   },
   LocalBusiness: {
-    name: "Anand Arts & Metal Craft",
-    image: "https://anandarts.com/og-image.jpg",
-    "@id": "https://anandarts.com",
-    url: "https://anandarts.com",
-    telephone: "+91 84318 38722",
+    name: siteBrand.legalName,
+    image: `${siteUrl}/Logo.png`,
+    "@id": siteUrl,
+    url: siteUrl,
+    telephone: siteBrand.phone,
+    priceRange: "INR",
+    currenciesAccepted: "INR",
+    paymentAccepted: "UPI, Credit Card, Debit Card, Netbanking",
+    areaServed: ["Bengaluru", "Karnataka", "India"],
     address: {
       "@type": "PostalAddress",
-      "streetAddress": "No. 12, 1st Cross, Srirampura",
+      "streetAddress": "2/4, 10th A, Laxmi Narayanpuram, Srirampura",
       "addressLocality": "Bengaluru",
       "postalCode": "560021",
       "addressRegion": "Karnataka",

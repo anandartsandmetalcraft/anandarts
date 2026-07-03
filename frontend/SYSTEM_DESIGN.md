@@ -14,9 +14,9 @@ Performance: We use PostgreSQL.
 Requirement: E-commerce requires "ACID" compliance. When a user buys a unique statue, we cannot have a "NoSQL" delay where someone else buys it at the same time. The database must be the "single source of truth."
 
 4. Idempotency (Payment Safety)
-Performance: Critical for PhonePe Webhooks.
+Performance: Critical for Cashfree Webhooks.
 
-Requirement: If the PhonePe server sends the "Payment Success" signal twice due to a network glitch, our code must check if the order is already marked as PAID. This prevents double-deduction of stock.
+Requirement: If Cashfree sends the "Payment Success" signal twice due to a network glitch, our code must check if the order is already marked as PAID. This prevents double-deduction of stock.
 
 5. Database Transactions (The Inventory Lock)
 Performance: Critical for "Unique Item" sales.
@@ -29,9 +29,9 @@ Performance: We use Cloudinary + Vercel.
 Requirement: Statue images are heavy. They must be served from a CDN node closest to the user (e.g., a Bengaluru user gets the image from a Bengaluru server, not a US server).
 
 7. Webhooks (Real-time Status)
-Performance: Used for PhonePe and Shiprocket.
+Performance: Used for Cashfree and Shiprocket.
 
-Requirement: Our backend must have a secure route (/api/webhooks/phonepe) to receive live updates. This is how the "Order Confirmation" email is triggered automatically.
+Requirement: Our backend must have a secure payment callback/webhook route to receive live updates. This is how the "Order Confirmation" email is triggered automatically.
 
 8. Blob Storage
 Performance: Do not store images in PostgreSQL.
@@ -51,4 +51,4 @@ Requirement: Since this is a specialized store, Server Actions are faster to imp
 11. Context-Aware Data Fetching (Anti-Bloat)
 Performance: "Each Screen -> Optimized API" Philosophy.
 
-Requirement: Never fetch the full object (e.g., User with Orders and Sessions) for a display-only component (e.g., Navbar Name). Use Prisma "select" to fetch only the required fields. This minimizes the database payload (Lower Scaling Cost) and prevents sensitive data leakage.
+Requirement: Never fetch the full object (e.g., User with Orders and Sessions) for a display-only component (e.g., Navbar Name). Use Prisma "select" to fetch only the required fields. This minimizes the database payload (Lower Scaling Cost) and prevents sensitive data leakage.

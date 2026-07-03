@@ -3,11 +3,14 @@
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { initiateCashfreePayment } from "@/lib/payments";
+import { rateLimit } from "@/lib/ratelimit";
+
 const PaymentStatus = {
   INITIATED: "INITIATED",
   SUCCESS: "SUCCESS",
   FAILED: "FAILED",
 } as const;
+
 const PaymentMethod = {
   CASHFREE: "CASHFREE",
   PHONEPE: "PHONEPE",
@@ -16,12 +19,17 @@ const PaymentMethod = {
 
 /**
  * Payment Server Actions
- * Handles initiating payment with PhonePe gateway and creating associated payment records in DB.
+ * Handles initiating payment with Cashfree gateway and creating associated payment records in DB.
  */
-
 export async function processOrderPayment(orderId: string) {
   const session = await auth();
   if (!session?.user?.id) return { error: "Not authenticated" };
+
+  // Rate Limiting: Max 5 payment requests per minute per user ID
+  const rateLimitResult = await rateLimit("payment", session.user.id);
+  if (!rateLimitResult.allowed) {
+    return { error: rateLimitResult.message || "Too many payment attempts. Please wait a minute." };
+  }
 
   // --- Step 1: Fetch Order & Sanity Checks ---
   const order = await db.order.findUnique({
@@ -48,8 +56,6 @@ export async function processOrderPayment(orderId: string) {
       method: "CASHFREE" as any, // Using string or casting as prisma enum is now updated
     },
   });
-
-  const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/callback`;
 
   // --- Step 3: Call Cashfree Initiation ---
   try {

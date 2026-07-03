@@ -216,7 +216,7 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
                       priority
                    />
                    <p className="font-ui text-xs md:text-sm text-[var(--color-brand-cream)]/60 leading-relaxed text-center hidden md:block">
-                      Quality handcrafted temple idols and metal art.
+                      Login to unlock exciting offers on handcrafted temple idols and metal art.
                    </p>
                 </div>
  
@@ -251,7 +251,7 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
                    {step === 'phone' && (
                       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                          <h3 className="font-display text-3xl text-black mb-2 text-center md:text-left">Sign In or Create Account</h3>
-                         <p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375] mb-10 text-center md:text-left">Sign in with your phone number</p>
+                         <p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375] mb-10 text-center md:text-left">Sign in with your phone number to unlock offers</p>
 
                          <div className="flex gap-2 mb-8 rounded-full bg-[#F7F1E7] p-1">
                            <button

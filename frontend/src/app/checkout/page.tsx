@@ -34,6 +34,7 @@ import { processOrderPayment, simulatePaymentSuccess } from "@/actions/payments"
 import { getUserAddresses, createAddress } from "@/actions/addresses";
 import { validateCoupon } from "@/actions/coupons";
 import { parseCouponDiscount } from "@/lib/coupons";
+import PaymentTrustStrip from "@/components/shared/PaymentTrustStrip";
 import {
    FREE_SHIPPING_THRESHOLD_PAISE,
    GIFT_WRAP_FEE_PAISE,
@@ -44,12 +45,12 @@ import {
 } from "@/lib/shipping";
 
 const INDIAN_STATES = [
-   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-   "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
-   "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-   "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
-   "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", 
-   "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", 
+   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+   "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+   "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+   "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+   "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh",
+   "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir",
    "Ladakh", "Lakshadweep", "Puducherry"
 ];
 
@@ -308,7 +309,7 @@ export default function CheckoutPage() {
                                                    <p className="font-ui text-xs font-bold text-[var(--color-brand-char)] mt-2">{addr.country}</p>
                                                    {addr.country !== "India" && (
                                                       <div className="mt-6 p-4 bg-blue-50 rounded-xl border border-blue-100 flex gap-3"><Info className="text-blue-500 shrink-0 mt-0.5" size={16} /><p className="text-[10px] text-blue-800 font-medium leading-relaxed"><strong>International Delivery:</strong> Our logistics team will contact you at <strong>+91 91108 55462</strong> to finalize shipping details.</p></div>
-                                                    )}
+                                                   )}
                                                 </div>
                                              );
                                           })()}
@@ -340,7 +341,7 @@ export default function CheckoutPage() {
                                                          {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
                                                       </select>
                                                       <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
-                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                                                       </div>
                                                    </div>
                                                 ) : (
@@ -366,7 +367,7 @@ export default function CheckoutPage() {
                                                    <option value="Other">Other Country</option>
                                                 </select>
                                                 <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
-                                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
                                                 </div>
                                              </div>
                                              {shipping.country !== "India" && (
@@ -398,7 +399,7 @@ export default function CheckoutPage() {
                            <h2 className="font-display text-2xl text-[var(--color-brand-char)] mb-10 flex items-center gap-4 uppercase tracking-widest">Select Payment <div className="h-[1px] flex-1 bg-black/10" /></h2>
                            <div className="space-y-4">
                               <button onClick={() => setPaymentMethod("upi")} className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all ${paymentMethod === 'upi' ? 'border-[var(--color-brand-gold)] bg-[var(--color-brand-cream-dark)]/20 shadow-sm' : 'border-black/5 hover:border-black/10'}`}>
-                                 <div className="flex items-center gap-4"><div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center"><Smartphone size={20} /></div><div className="text-left"><p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-char)]">UPI / G-Pay / PhonePe</p><p className="font-ui text-[9px] text-[#8B8375]">Fast & Secure with QR Code</p></div></div>
+                                 <div className="flex items-center gap-4"><div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center"><Smartphone size={20} /></div><div className="text-left"><p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-char)]">UPI / GPay / QR</p><p className="font-ui text-[9px] text-[#8B8375]">Fast & Secure with Cashfree</p></div></div>
                                  <CheckCircle2 size={20} className={paymentMethod === 'upi' ? 'text-[var(--color-brand-gold)]' : 'text-transparent'} />
                               </button>
                               <button onClick={() => setPaymentMethod("card")} className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all ${paymentMethod === 'card' ? 'border-[var(--color-brand-gold)] bg-[var(--color-brand-cream-dark)]/20 shadow-sm' : 'border-black/5 hover:border-black/10'}`}>
@@ -466,11 +467,11 @@ export default function CheckoutPage() {
                            <div className="space-y-5">
                               <div className="flex justify-between items-center">
                                  <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Base Price</span>
-                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() / 1.05) / 100).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() / 1.05) / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                               </div>
                               <div className="flex justify-between items-center">
                                  <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">GST (5%)</span>
-                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() - (getTotalPrice() / 1.05)) / 100).toLocaleString("en-IN", {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>
+                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() - (getTotalPrice() / 1.05)) / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
                               </div>
                               <div className="flex justify-between items-center">
                                  <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Shipping</span>
@@ -493,39 +494,20 @@ export default function CheckoutPage() {
                                  </div>
                               )}
                            </div>
-                           
+
                            <div className="pt-6 mt-2 border-t border-black/10 flex flex-col">
                               <div className="flex justify-between items-end">
                                  <div className="flex flex-col">
                                     <span className="font-display text-2xl text-black">Total Amount</span>
                                     <span className="font-ui text-[9px] font-bold uppercase tracking-[0.2em] text-[#8B8375] mt-1">Inclusive of all taxes</span>
                                  </div>
-                                 <span className="font-display text-3xl text-black">₹{((getTotalPrice() + giftWrapFeePaise + calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: (savedAddresses.find(a => a.id === selectedAddressId) || shipping).postalCode || "" })) / 100).toLocaleString("en-IN")}</span>
+                                                   <span className="font-display text-3xl text-black">₹{((getTotalPrice() + giftWrapFeePaise + calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: (savedAddresses.find(a => a.id === selectedAddressId) || shipping).postalCode || "" })) / 100).toLocaleString("en-IN")}</span>
                               </div>
                            </div>
-                           
-                           <div className="mt-8 pt-8 border-t border-black/5 flex flex-col items-center gap-4">
-                              <div className="flex items-center gap-2 px-6 py-2 bg-blue-50 rounded-full border border-blue-100">
-                                 <ShieldCheck size={14} className="text-blue-600" />
-                                 <span className="text-[9px] font-bold uppercase tracking-widest text-blue-800">Secured by Cashfree Payments</span>
-                              </div>
-                              <div className="flex gap-4 items-center transition-all duration-300">
-                                 {/* Visa */}
-                                 <svg width="32" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-auto">
-                                   <path d="M18.83 29.86l2.9-17.91h4.63l-2.9 17.91h-4.63zm18.31-17.51c-1.07-.41-2.76-.85-4.82-.85-5.32 0-9.06 2.82-9.09 6.87-.03 2.99 2.68 4.65 4.73 5.65 2.1 1.03 2.81 1.68 2.8 2.6-.02 1.4-1.68 2.04-3.23 2.04-2.15 0-3.41-.34-5.23-1.14l-.74-.35-.79 4.88c1.31.6 3.75 1.12 6.27 1.15 5.66 0 9.32-2.8 9.37-7.14.04-2.38-1.42-4.18-4.54-5.67-1.89-.95-3.05-1.59-3.04-2.56.01-.88.99-1.82 3.12-1.82 1.77-.03 3.06.38 4.04.81l.48.23.88-5.55zm7.32.4c-1.05 0-1.94.61-2.35 1.58l-8.23 19.52h4.86l.97-2.68h5.95l.56 2.68h4.29L44.46 12.75zm-3.66 12.98l1.9-5.18 1.08 5.18h-2.98zM8.3 12.75L3.71 25.13l-.48-2.45c-.83-2.81-3.41-5.84-6.3-7.37L1 29.86h4.89l7.28-17.11H8.3z" fill="#11100D"/>
-                                 </svg>
-                                 {/* Mastercard */}
-                                 <svg width="24" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-auto">
-                                   <circle cx="7" cy="12" r="7" fill="#11100D" fillOpacity="0.7"/>
-                                   <circle cx="17" cy="12" r="7" fill="#11100D" fillOpacity="0.5"/>
-                                 </svg>
-                                 {/* UPI */}
-                                 <svg width="32" height="20" viewBox="0 0 40 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-3 w-auto">
-                                   <path d="M6.08 0l-2.01 7.23h2.36l2.01-7.23H6.08zm8.62 0l-2.01 7.23h2.36l2.01-7.23h-2.36zm8.62 0l-2.01 7.23h2.36l2.01-7.23h-2.36z" fill="#11100D"/>
-                                   <path d="M3.7 10.5h32.6v1.5H3.7v-1.5z" fill="#11100D"/>
-                                 </svg>
-                              </div>
 
+                           <div className="mt-8 pt-8 border-t border-black/5">
+                               <PaymentTrustStrip />
+ 
                               {/* Demo Checkout - Visible only for testing/client demo */}
                               {process.env.NEXT_PUBLIC_ALLOW_TEST_PAYMENTS === "true" && (
                                  <button
@@ -537,10 +519,13 @@ export default function CheckoutPage() {
                                        setIsProcessing(true);
                                        try {
                                           toast.success("Demo Mode: Simulating Payment Success...");
-                                          // Small delay to feel real
-                                          setTimeout(() => {
+                                          const res = await simulatePaymentSuccess(orderDbId);
+                                          if (res && 'error' in res) {
+                                             toast.error(res.error || "Demo checkout failed");
+                                          } else {
+                                             toast.success("Payment succeeded in Demo Mode!");
                                              window.location.href = `/checkout/success?orderId=${orderDbId}`;
-                                          }, 2000);
+                                          }
                                        } catch (err) {
                                           toast.error("Demo checkout failed");
                                        } finally {
@@ -553,7 +538,7 @@ export default function CheckoutPage() {
                                     ⚡ Run Client Demo (Simulate Success)
                                  </button>
                               )}
-                           </div>
+                            </div>
                         </div>
                      </div>
 

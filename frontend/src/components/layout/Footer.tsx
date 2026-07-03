@@ -1,13 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Banknote, QrCode, CreditCard } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 import { FlipLink } from "@/components/ui/flip-links";
+import PaymentTrustStrip from "@/components/shared/PaymentTrustStrip";
 
 export default function Footer() {
   const pathname = usePathname();
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+
+  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = newsletterEmail.trim();
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!isValidEmail) {
+      toast.error("Please enter a valid email address.", { duration: 2000 });
+      return;
+    }
+
+    toast.success("Thank you for joining our newsletter.", { duration: 2000 });
+    setNewsletterEmail("");
+  };
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -26,16 +44,18 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="w-full md:w-auto flex items-center bg-[#23201D] rounded-full p-1 pl-6 shadow-inner flex-1 max-w-md">
+          <form onSubmit={handleNewsletterSubmit} className="w-full md:w-auto flex items-center bg-[#23201D] rounded-full p-1 pl-6 shadow-inner flex-1 max-w-md">
             <input
               type="email"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
               placeholder="Email Address"
               className="bg-transparent border-none outline-none text-[#E8E1D5] placeholder:text-[#6B6356] w-full text-sm tracking-wide font-ui"
             />
-            <button className="bg-[var(--color-brand-red)] hover:bg-[#A33B32] text-white font-bold uppercase tracking-widest text-[12px] px-8 py-3.5 rounded-full transition-colors ml-2 shadow-md">
+            <button type="submit" className="bg-[var(--color-brand-red)] hover:bg-[#A33B32] text-white font-bold uppercase tracking-widest text-[12px] px-8 py-3.5 rounded-full transition-colors ml-2 shadow-md">
               Subscribe
             </button>
-          </div>
+          </form>
         </div>
       </div>
 
@@ -217,22 +237,7 @@ export default function Footer() {
             <div className="h-[1px] w-8 bg-[#2A2621]"></div>
           </div>
 
-          <div className="flex gap-4 items-center transition-all duration-300">
-            {/* Visa */}
-            <svg width="32" height="20" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-auto">
-              <path d="M18.83 29.86l2.9-17.91h4.63l-2.9 17.91h-4.63zm18.31-17.51c-1.07-.41-2.76-.85-4.82-.85-5.32 0-9.06 2.82-9.09 6.87-.03 2.99 2.68 4.65 4.73 5.65 2.1 1.03 2.81 1.68 2.8 2.6-.02 1.4-1.68 2.04-3.23 2.04-2.15 0-3.41-.34-5.23-1.14l-.74-.35-.79 4.88c1.31.6 3.75 1.12 6.27 1.15 5.66 0 9.32-2.8 9.37-7.14.04-2.38-1.42-4.18-4.54-5.67-1.89-.95-3.05-1.59-3.04-2.56.01-.88.99-1.82 3.12-1.82 1.77-.03 3.06.38 4.04.81l.48.23.88-5.55zm7.32.4c-1.05 0-1.94.61-2.35 1.58l-8.23 19.52h4.86l.97-2.68h5.95l.56 2.68h4.29L44.46 12.75zm-3.66 12.98l1.9-5.18 1.08 5.18h-2.98zM8.3 12.75L3.71 25.13l-.48-2.45c-.83-2.81-3.41-5.84-6.3-7.37L1 29.86h4.89l7.28-17.11H8.3z" fill="#A89F91"/>
-            </svg>
-            {/* Mastercard */}
-            <svg width="24" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-4 w-auto">
-              <circle cx="7" cy="12" r="7" fill="#A89F91" fillOpacity="0.7"/>
-              <circle cx="17" cy="12" r="7" fill="#A89F91" fillOpacity="0.5"/>
-            </svg>
-            {/* UPI */}
-            <svg width="32" height="20" viewBox="0 0 40 15" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-3 w-auto">
-              <path d="M6.08 0l-2.01 7.23h2.36l2.01-7.23H6.08zm8.62 0l-2.01 7.23h2.36l2.01-7.23h-2.36zm8.62 0l-2.01 7.23h2.36l2.01-7.23h-2.36z" fill="#A89F91"/>
-              <path d="M3.7 10.5h32.6v1.5H3.7v-1.5z" fill="#A89F91"/>
-            </svg>
-          </div>
+          <PaymentTrustStrip compact className="md:items-end" />
         </div>
       </div>
     </footer>

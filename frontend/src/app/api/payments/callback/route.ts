@@ -17,8 +17,8 @@ const PaymentStatus = {
 } as const;
 
 /**
- * PhonePe Webhook/Callback Route
- * Final endpoint for payment status updates coming from PhonePe server.
+ * Cashfree Webhook/Callback Route
+ * Final endpoint for payment status updates coming from Cashfree, with legacy PhonePe parsing retained.
  */
 
 export async function POST(request: Request) {

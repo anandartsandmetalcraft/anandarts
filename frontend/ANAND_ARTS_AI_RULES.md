@@ -2,6 +2,7 @@
 ## The Single Source of Truth for Every AI Model on This Project
 
 **Version:** 1.0 · **Date:** April 2026
+**Current payment gateway:** Cashfree primary. PhonePe references in older sections are legacy/deprecated unless a task explicitly asks for PhonePe work.
 **Read this entire document before writing a single line of code, design, or config.**
 **This document overrides any prior assumptions or defaults you have.**
 
@@ -32,7 +33,7 @@ Anand Arts is a **premium Indian heritage temple art e-commerce website**.
 - **Audience:** Devotional buyers, interior decorators, NRI diaspora globally, temple trusts, B2B corporate gifting
 - **Business model:** Direct-to-consumer e-commerce + custom commission orders (high-margin)
 - **Location:** India (Bengaluru-based, artisans in South India temple towns)
-- **Payment:** PhonePe (UPI primary) + cards
+- **Payment:** Cashfree (UPI, cards, netbanking)
 - **Shipping:** Shiprocket integration
 - **Invoicing:** GST-compliant PDF invoices via Resend + React-PDF
 
@@ -69,7 +70,7 @@ Backend:       Next.js Server Actions + Route Handlers
 Database:      PostgreSQL on Neon (serverless)
 ORM:           Prisma
 Auth:          NextAuth v5 (Google OAuth + Phone OTP)
-Payments:      PhonePe (checksum-based)
+Payments:      Cashfree (gateway + webhook verification)
 Email:         Resend
 Invoices:      React-PDF
 File storage:  Cloudinary
@@ -86,7 +87,7 @@ Monitoring:    Vercel Analytics + Sentry
 Phase 1: Foundation — DB schema, security, project setup
 Phase 2: Product catalog — listing, search, filter, SEO
 Phase 3: Cart & checkout — guest cart, OTP auth, address
-Phase 4: Payments — PhonePe, webhook, invoice, stock
+Phase 4: Payments — Cashfree, webhook, invoice, stock
 Phase 5: Accounts, tracking, Admin CMS
 Phase 6: QA, performance, launch
 ```
@@ -908,7 +909,7 @@ Never rely on client-side role checks alone. Always verify on server.
 
 ### 5.2 Payment Security
 
-**RULE S-5: PhonePe checksum verification is mandatory on every webhook.**
+**RULE S-5: Cashfree webhook/status verification is mandatory before processing payment success.**
 ```typescript
 // Route Handler: /api/webhooks/phonepe
 export async function POST(request: Request) {
@@ -1174,7 +1175,7 @@ Before any code is considered "done", Orchestrator verifies:
 **Security gate:**
 - [ ] Security headers configured (Rule S-8)
 - [ ] No secrets in `.env.local` committed to git (Rule S-9)
-- [ ] PhonePe webhook signature verified (Rule S-5)
+- [ ] Cashfree webhook/status verified (Rule S-5)
 - [ ] Payment amount cross-referenced (Rule S-6)
 - [ ] OTP hashed before storage (Rule S-3)
 
@@ -1215,7 +1216,7 @@ Read this before every task.
 
 ```
 PROJECT:   Anand Arts — Premium Indian temple art e-commerce
-STACK:     Next.js 15, TypeScript, Tailwind, GSAP, Prisma, PostgreSQL, Redis, PhonePe
+STACK:     Next.js 15, TypeScript, Tailwind, GSAP, Prisma, PostgreSQL, Redis, Cashfree
 PHASES:    1(Foundation) 2(Products) 3(Cart) 4(Payments) 5(CMS) 6(Launch)
 
 COLORS:    Cream #FDF5E6 | Gold #B8860B | Red #8B0000 | Slate #2F4F4F | Dark #1A1208
@@ -1237,7 +1238,7 @@ TOP 5 BACKEND RULES:
 
 TOP 5 SECURITY RULES:
   S-2  Database sessions, not JWT
-  S-5  PhonePe: verify checksum before processing
+  S-5  Cashfree: verify webhook/status before processing
   S-6  Verify payment amount server-side
   S-8  Security headers in next.config.js
   S-9  No secrets with NEXT_PUBLIC_ prefix

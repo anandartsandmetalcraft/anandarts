@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Filter, ChevronDown, Check, X, ArrowUpDown, Sparkles } from "lucide-react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
- 
+
 import { getProducts, getCategories } from "@/actions/products";
 import { ProductGridSkeleton } from "@/components/shared/Skeleton";
 import { formatCouponDiscount } from "@/lib/coupons";
@@ -53,11 +53,11 @@ export default function CatalogView() {
   const [activeSort, setActiveSort] = useState("Featured");
   const [activeSearch, setActiveSearch] = useState("");
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [page, setPage] = useState(1);
   const limit = 18;
- 
+
   // Fetch initial categories
   useEffect(() => {
     const loadCategories = async () => {
@@ -72,14 +72,14 @@ export default function CatalogView() {
     const fetchItems = async () => {
       setIsLoading(true);
       const range = priceRanges.find(r => r.label === activePriceRange);
-      
+
       const sortMap: any = {
         "Featured": "newest",
         "Price: Low to High": "price_asc",
         "Price: High to Low": "price_desc",
         "Newest": "newest"
       };
- 
+
       const result = await getProducts({
         category: activeCategory === "All" ? undefined : activeCategory.toLowerCase(),
         material: activeMaterial === "All" ? undefined : activeMaterial,
@@ -91,7 +91,7 @@ export default function CatalogView() {
         page,
         limit
       });
- 
+
       if (page === 1) {
         setProducts(result.products);
       } else {
@@ -120,17 +120,17 @@ export default function CatalogView() {
       document.removeEventListener("visibilitychange", syncProducts);
     };
   }, [activeCategory, activeMaterial, activeSize, activePriceRange, activeSort, activeSearch, page]);
- 
+
   // Sync URL params to internal state
   useEffect(() => {
     // 1. Category (matches name or slug)
     const featuredNames = ["Divine Gods", "Divine Goddess", "Divine Sets", "Copper", "Miniature", "Vintage", "Brass"];
-    const dbMatch = dbCategories.find(c => 
-      c.slug.toLowerCase() === urlCategory.toLowerCase() || 
+    const dbMatch = dbCategories.find(c =>
+      c.slug.toLowerCase() === urlCategory.toLowerCase() ||
       c.name.toLowerCase() === urlCategory.toLowerCase()
     );
     const featuredMatch = featuredNames.find(f => f.toLowerCase() === urlCategory.toLowerCase());
-    
+
     if (urlCategory === 'All') {
       setActiveCategory("All");
     } else if (dbMatch) {
@@ -215,33 +215,33 @@ export default function CatalogView() {
     }
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
- 
+
   const clearFilters = () => {
     router.push(pathname, { scroll: false });
     setPage(1);
   };
- 
+
   return (
     <div className="max-w-[1320px] mx-auto px-4 md:px-12">
-      
+
       {/* Mobile Top Bar (Filter Toggle & Sort) */}
       <div className="md:hidden flex justify-between items-center mb-6 gap-2">
-        <button 
+        <button
           onClick={() => setIsMobileFilterOpen(true)}
           className="flex-1 flex items-center justify-center gap-2 font-ui text-xs font-bold uppercase tracking-widest text-[var(--color-brand-char)] bg-white px-4 py-3.5 rounded-sm shadow-sm border border-black/10"
         >
           <Filter size={16} /> Filters
         </button>
-        
+
         {/* Mobile quick sort toggle */}
-        <button 
+        <button
           onClick={() => {
             const nextIdx = (sorts.indexOf(activeSort) + 1) % sorts.length;
             setActiveSort(sorts[nextIdx]);
           }}
           className="flex-1 flex items-center justify-center gap-2 font-ui text-xs font-bold uppercase tracking-widest text-[var(--color-brand-char)] bg-white px-4 py-3.5 rounded-sm shadow-sm border border-black/10"
         >
-        <ArrowUpDown size={16} /> Sort
+          <ArrowUpDown size={16} /> Sort
         </button>
       </div>
 
@@ -253,16 +253,16 @@ export default function CatalogView() {
             <span>Search: "{activeSearch}"</span>
           </div>
           <button onClick={() => setActiveSearch("")}>
-             <X size={16} />
+            <X size={16} />
           </button>
         </div>
       )}
- 
+
       <div className="flex flex-col md:flex-row gap-8 lg:gap-12">
-        
+
         {/* Sidebar Filters */}
         <div className={`fixed inset-0 z-50 bg-[var(--color-brand-cream)] overflow-y-auto px-6 py-8 md:p-0 md:bg-transparent md:static md:block md:w-[260px] flex-shrink-0 transition-transform duration-300 ${isMobileFilterOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}>
-          
+
           <div className="flex justify-between items-center mb-8 md:hidden border-b border-black/5 pb-4">
             <h3 className="font-display text-2xl text-[var(--color-brand-char)] flex items-center gap-2">
               <Filter size={20} /> Advanced Filters
@@ -271,7 +271,7 @@ export default function CatalogView() {
               <X size={24} className="text-[var(--color-brand-char)]" />
             </button>
           </div>
- 
+
           <div className="space-y-8">
             {/* Category Filter */}
             <div>
@@ -282,7 +282,7 @@ export default function CatalogView() {
                 {(() => {
                   const featuredNames = ["Divine Gods", "Divine Goddess", "Divine Sets", "Copper", "Miniature", "Vintage", "Brass"];
                   const allCats = [...dbCategories];
-                  
+
                   // Ensure all featured names exist in the list
                   featuredNames.forEach(name => {
                     if (!allCats.find(c => c.name.toLowerCase() === name.toLowerCase())) {
@@ -300,8 +300,8 @@ export default function CatalogView() {
                   }).map((cat: any) => {
                     const isSelected = activeCategory.toLowerCase() === cat.name.toLowerCase();
                     return (
-                      <button 
-                        key={cat.id} 
+                      <button
+                        key={cat.id}
                         type="button"
                         onClick={() => { updateURL('category', cat.slug); setPage(1); }}
                         className="flex items-center gap-3 cursor-pointer group w-full text-left outline-none"
@@ -318,7 +318,7 @@ export default function CatalogView() {
                 })()}
               </div>
             </div>
- 
+
             {/* Material Filter */}
             <div>
               <h4 className="font-ui text-xs font-bold uppercase tracking-[0.15em] text-[var(--color-brand-char)] mb-5 border-b border-black/10 pb-3">
@@ -326,8 +326,8 @@ export default function CatalogView() {
               </h4>
               <div className="flex flex-col gap-3">
                 {materialsList.map(mat => (
-                  <button 
-                    key={mat} 
+                  <button
+                    key={mat}
                     type="button"
                     onClick={() => { updateURL('material', mat); setPage(1); }}
                     className="flex items-center gap-3 cursor-pointer group w-full text-left outline-none"
@@ -341,7 +341,7 @@ export default function CatalogView() {
                 ))}
               </div>
             </div>
- 
+
             {/* Dimensions Filter */}
             <div>
               <h4 className="font-ui text-xs font-bold uppercase tracking-[0.15em] text-[var(--color-brand-char)] mb-5 border-b border-black/10 pb-3">
@@ -349,7 +349,7 @@ export default function CatalogView() {
               </h4>
               <div className="flex flex-wrap gap-2">
                 {sizeRanges.map(rng => (
-                  <button 
+                  <button
                     key={rng.label}
                     onClick={() => { updateSizeURL(rng); setPage(1); }}
                     className={`px-3 py-1.5 font-ui text-[11px] uppercase tracking-wide border rounded transition-colors ${activeSize === rng.label ? 'bg-[var(--color-brand-char)] border-[var(--color-brand-char)] text-[var(--color-brand-gold-light)] font-bold' : 'bg-transparent border-black/20 text-black/60 hover:border-black/50'}`}
@@ -359,7 +359,7 @@ export default function CatalogView() {
                 ))}
               </div>
             </div>
- 
+
             {/* Price Range */}
             <div>
               <h4 className="font-ui text-xs font-bold uppercase tracking-[0.15em] text-[var(--color-brand-char)] mb-5 border-b border-black/10 pb-3">
@@ -367,8 +367,8 @@ export default function CatalogView() {
               </h4>
               <div className="flex flex-col gap-3">
                 {priceRanges.map(rng => (
-                  <button 
-                    key={rng.label} 
+                  <button
+                    key={rng.label}
                     type="button"
                     onClick={() => { updatePriceURL(rng); setPage(1); }}
                     className="flex items-center gap-3 cursor-pointer group w-full text-left outline-none"
@@ -382,9 +382,9 @@ export default function CatalogView() {
                 ))}
               </div>
             </div>
- 
+
             {/* Reset Button */}
-            <button 
+            <button
               onClick={() => { clearFilters(); if (window.innerWidth < 768) setIsMobileFilterOpen(false); }}
               className="w-full py-4 bg-white border border-[#2A2621]/20 font-ui text-[11px] font-bold uppercase tracking-widest text-[#2A2621] hover:bg-black/5 transition-colors rounded-sm shadow-sm"
             >
@@ -392,10 +392,10 @@ export default function CatalogView() {
             </button>
           </div>
         </div>
- 
+
         {/* Main Product Grid */}
         <div className="flex-1">
-          
+
           {/* Top Bar (Desktop) */}
           <div className="hidden md:flex justify-between items-center mb-8 pb-4 border-b border-black/5">
             <div className="flex items-center gap-4">
@@ -410,7 +410,7 @@ export default function CatalogView() {
                 </div>
               )}
             </div>
-            
+
             <div className="flex items-center gap-4">
               <span className="font-ui text-xs uppercase tracking-widest text-black/50 font-bold">Sort By:</span>
               <div className="relative group">
@@ -419,7 +419,7 @@ export default function CatalogView() {
                 </button>
                 <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-black/10 shadow-xl rounded-sm opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-20 overflow-hidden">
                   {sorts.map(sort => (
-                    <button 
+                    <button
                       key={sort}
                       onClick={() => { updateURL('sort', sortMap[sort]); setPage(1); }}
                       className={`w-full text-left px-4 py-3 font-ui text-sm transition-colors ${activeSort === sort ? 'bg-[var(--color-brand-cream)] font-bold text-[var(--color-brand-char)]' : 'hover:bg-black/5 text-black/70'}`}
@@ -431,7 +431,7 @@ export default function CatalogView() {
               </div>
             </div>
           </div>
- 
+
           {/* Grid View */}
           {isLoading ? (
             <div className="space-y-16">
@@ -443,34 +443,38 @@ export default function CatalogView() {
                 {products.map(product => (
                   <Link href={`/product/${product.id}`} key={product.id} className="group block">
                     <div className="relative aspect-[4/5] bg-[#E8E1D5] mb-3 md:mb-4 overflow-hidden rounded-sm shadow-sm group-hover:shadow-md transition-shadow">
-                      {product.tag && (
-                        <div className="absolute top-2 left-2 md:top-4 md:left-4 z-10 bg-[var(--color-brand-char)] text-[var(--color-brand-gold-light)] text-[8px] md:text-[10px] uppercase tracking-widest font-bold px-2 py-1 md:px-3 md:py-1.5 rounded-[2px] shadow-sm">
-                          {product.tag}
+                      {/* Tags: stacked flex column top-left, avoids overlap on mobile */}
+                      {(product.tag || product.coupon) && (
+                        <div className="absolute top-2 left-2 md:top-3 md:left-3 z-10 flex flex-col items-start gap-1">
+                          {product.tag && (
+                            <div className="bg-[var(--color-brand-char)] text-[var(--color-brand-gold-light)] text-[7px] md:text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 md:px-3 md:py-1.5 rounded-[2px] shadow-sm max-w-[90px] md:max-w-none truncate">
+                              {product.tag}
+                            </div>
+                          )}
+                          {product.coupon && (
+                            <div className="bg-white/90 backdrop-blur-md text-[var(--color-brand-char)] text-[7px] md:text-[10px] uppercase tracking-widest font-bold px-2 py-0.5 md:px-3 md:py-1.5 rounded-[2px] shadow-sm max-w-[90px] md:max-w-none truncate">
+                              {product.coupon.code} • {formatCouponDiscount(product.coupon.discount)}
+                            </div>
+                          )}
                         </div>
                       )}
 
-                      {product.coupon && (
-                        <div className="absolute top-2 right-2 md:top-4 md:right-4 z-10 bg-white/90 backdrop-blur-md text-[var(--color-brand-char)] text-[8px] md:text-[10px] uppercase tracking-widest font-bold px-2 py-1 md:px-3 md:py-1.5 rounded-[2px] shadow-sm">
-                          {product.coupon.code} • {formatCouponDiscount(product.coupon.discount)}
-                        </div>
-                      )}
-                      
-                      <Image 
-                        src={product.images?.[0]?.url || product.img || "/placeholder.jpg"} 
-                        alt={product.name} 
-                        fill 
+                      <Image
+                        src={product.images?.[0]?.url || product.img || "/placeholder.jpg"}
+                        alt={product.name}
+                        fill
                         sizes="(max-width: 768px) 50vw, 33vw"
                         className="object-cover transition-all duration-1000 ease-out group-hover:scale-110 group-hover:opacity-0"
                         loading="lazy"
                         placeholder="blur"
                         blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z"
                       />
- 
+
                       {product.images && product.images.length > 1 && (
-                        <Image 
-                          src={product.images[1].url} 
-                          alt={`${product.name} alternate`} 
-                          fill 
+                        <Image
+                          src={product.images[1].url}
+                          alt={`${product.name} alternate`}
+                          fill
                           sizes="(max-width: 768px) 50vw, 33vw"
                           className="object-cover transition-all duration-1000 ease-out scale-105 opacity-0 group-hover:opacity-100 group-hover:scale-110"
                           loading="lazy"
@@ -478,7 +482,7 @@ export default function CatalogView() {
                           blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z"
                         />
                       )}
- 
+
                       <div className="absolute inset-x-1 md:inset-x-2 bottom-2 md:bottom-4 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-10 flex gap-1 md:gap-1.5">
                         <button className="flex-[1.2] border border-[var(--color-brand-gold)] text-[var(--color-brand-char)] bg-[var(--color-brand-cream)]/80 backdrop-blur-md font-ui text-[7px] md:text-[9px] uppercase font-bold tracking-widest py-2.5 rounded-sm hover:bg-[var(--color-brand-gold)] hover:text-white transition-all shadow-lg flex items-center justify-center">
                           Add to Cart
@@ -489,10 +493,10 @@ export default function CatalogView() {
                       </div>
                       <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-brand-char)]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
-                    
+
                     <div className="flex flex-col items-center text-center px-1">
                       <span className="font-ui text-[9px] md:text-[10px] uppercase tracking-widest text-[#8B8375] mb-1 flex items-center gap-1.5 flex-wrap justify-center line-clamp-1">
-                        <span className="w-1 h-1 rounded-full bg-[#8B8375] hidden sm:block"></span> 
+                        <span className="w-1 h-1 rounded-full bg-[#8B8375] hidden sm:block"></span>
                         {product.material ? `${product.material} • ` : ''}{product.size}
                       </span>
                       <h3 className="font-display text-[14px] md:text-[18px] text-[var(--color-brand-char)] mb-1 group-hover:text-[var(--color-brand-gold)] transition-colors line-clamp-1">
@@ -517,27 +521,27 @@ export default function CatalogView() {
                   </Link>
                 ))}
               </div>
- 
+
               {/* Pagination Reveal */}
               {products.length < totalCount && (
                 <div className="flex flex-col items-center pt-8 border-t border-black/5">
-                   <p className="font-ui text-[10px] uppercase font-bold tracking-[0.3em] text-black/30 mb-8">
-                      Viewing {products.length} of {totalCount} Products
-                   </p>
-                   <button 
-                     onClick={() => {
-                        setPage(prev => prev + 1);
-                     }}
-                     disabled={isLoading}
-                     className="relative px-12 py-5 bg-[var(--color-brand-char)] text-white font-ui text-[12px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black transition-all shadow-2xl disabled:opacity-50 overflow-hidden group"
-                   >
-                      <span className={isLoading ? 'opacity-0' : 'opacity-100'}>Load More Products</span>
-                      {isLoading && (
-                        <div className="absolute inset-0 flex items-center justify-center">
-                           <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
-                        </div>
-                      )}
-                   </button>
+                  <p className="font-ui text-[10px] uppercase font-bold tracking-[0.3em] text-black/30 mb-8">
+                    Viewing {products.length} of {totalCount} Products
+                  </p>
+                  <button
+                    onClick={() => {
+                      setPage(prev => prev + 1);
+                    }}
+                    disabled={isLoading}
+                    className="relative px-12 py-5 bg-[var(--color-brand-char)] text-white font-ui text-[12px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black transition-all shadow-2xl disabled:opacity-50 overflow-hidden group"
+                  >
+                    <span className={isLoading ? 'opacity-0' : 'opacity-100'}>Load More Products</span>
+                    {isLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+                      </div>
+                    )}
+                  </button>
                 </div>
               )}
             </div>
@@ -545,15 +549,15 @@ export default function CatalogView() {
             <div className="w-full py-24 md:py-32 flex flex-col items-center justify-center text-center bg-white/50 border border-black/5 border-dashed rounded-lg px-4">
               <p className="font-script text-2xl text-black/40 mb-4">No products found.</p>
               <p className="font-ui text-sm text-black/50 max-w-md">Try adjusting your filters or browse our full collection to find what you're looking for.</p>
-              <button 
+              <button
                 onClick={clearFilters}
                 className="mt-8 border border-[var(--color-brand-gold)] text-[var(--color-brand-char)] px-6 py-3 uppercase text-xs tracking-widest font-bold hover:bg-[var(--color-brand-gold)] transition-colors cursor-pointer rounded-sm"
-               >
+              >
                 Clear all filters
               </button>
             </div>
           )}
- 
+
         </div>
       </div>
     </div>

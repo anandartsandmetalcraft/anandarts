@@ -15,6 +15,14 @@ export async function getAdminContext() {
     return { allowed: false as const, bypass: false as const, reason: "unauthenticated" as const };
   }
 
+  if (
+    session.user.role === "ADMIN" &&
+    (session.user.adminSessionExpired ||
+      (session.user.adminSessionExpiresAt && Date.now() > session.user.adminSessionExpiresAt))
+  ) {
+    return { allowed: false as const, bypass: false as const, reason: "expired" as const };
+  }
+
   const dbUser = await db.user.findUnique({
     where: { id: session.user.id },
     select: { role: true },

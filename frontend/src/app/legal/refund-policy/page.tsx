@@ -35,11 +35,16 @@ export default function RefundPolicyPage() {
                   "<strong>Anand Arts and Metal Craft</strong> endeavors to ensure that every transaction at our website is seamless. We take great care in delivering our products and adhere to the highest quality standards."
                 </p>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
-                  As a policy, we do not offer Refund on products which are delivered in perfect condition as per the order placed. However, if the product is wrongfully delivered (product doesn't match the item in the order confirmation) or has a genuine quality/manufacturing defect or damaged during shipping, we are open to extending Return or Exchange for your order.
+                  As a policy, we do not offer refunds on products delivered in correct and good condition as per the order placed. Refunds are considered only when the product delivered is different from the order confirmation, has a confirmed manufacturing or quality defect, or is damaged during shipping.
                 </p>
+                <div className="p-8 bg-red-50 border border-red-100 rounded-3xl mb-10">
+                   <p className="text-red-800 italic text-sm leading-relaxed m-0">
+                     <strong>Custom Orders:</strong> Custom-made, commissioned, personalized, altered-size, specially sourced, or made-to-order products are not eligible for cancellation, return, exchange, or refund once confirmed, except where the item is wrongfully delivered or has verified transit damage or manufacturing defect.
+                   </p>
+                </div>
                 <div className="p-8 bg-blue-50 border border-blue-100 rounded-3xl mb-10">
                    <p className="text-blue-800 italic text-sm leading-relaxed m-0">
-                     <strong>Unavailability Resolution:</strong> In case of unavailability of the same product, Anand Arts and Metal Craft will proceed for full Refund. Refund will be processed to your original method of payment.
+                     <strong>Normal Catalog Products:</strong> Ready-stock products, including copper and metal craft items, must be received back at our store and validated once by our team. If the return is approved after quality check, the eligible refund amount will be processed to the original payment method.
                    </p>
                 </div>
                 <div className="p-8 bg-green-50 border border-green-100 rounded-3xl">
@@ -61,7 +66,7 @@ export default function RefundPolicyPage() {
                   <div className="space-y-4">
                     <h4 className="font-bold text-[var(--color-brand-char)] text-xs uppercase tracking-widest">Natural Materials</h4>
                     <p className="text-xs text-[#8B8375] leading-relaxed">
-                      Wooden products may develop hairline cracks with change of temperature & climate and with time. This is a natural process. Refund will not be applicable in such scenario.
+                      Copper, brass, wood, and other natural or hand-finished materials may show patina, shade variation, minor tool marks, hairline changes, or aging with temperature, climate, handling, and time. Refund will not be applicable for such natural characteristics.
                     </p>
                   </div>
                   <div className="space-y-4">
@@ -82,6 +87,7 @@ export default function RefundPolicyPage() {
                   <li className="text-sm text-[#4A453E]">Any dispute must be reported within <strong>3 Business Days</strong> from delivery.</li>
                   <li className="text-sm text-[#4A453E]">Refund is applicable only on products returned in <strong>original condition</strong>, unused, and unwashed.</li>
                   <li className="text-sm text-[#4A453E]">Original packaging and all tags must be intact.</li>
+                  <li className="text-sm text-[#4A453E]">Custom-made and commissioned products are not refundable unless the claim is approved for wrong delivery, transit damage, or verified manufacturing defect.</li>
                   <li className="text-sm text-[#4A453E]">Address errors or refusal to accept delivery after 3 attempts will void the refund policy.</li>
                   <li className="text-sm text-[#4A453E]">For International orders, refusal to pay mandated customs duty will void the refund policy.</li>
                 </ul>
@@ -119,10 +125,10 @@ export default function RefundPolicyPage() {
                     <div className="flex-1">
                       <h4 className="font-bold uppercase tracking-widest text-sm mb-4">Review & Solution</h4>
                       <p className="text-sm text-[#4A453E] leading-relaxed mb-4">
-                        Our team will review your concern and revert within <strong>7 Business Days</strong>. 
+                        Our team will review your concern and revert within <strong>7 Business Days</strong>. For normal catalog products, approval is confirmed only after the product reaches our store and passes validation by our team. 
                       </p>
                       <p className="text-xs text-[#8B8375] italic">
-                        Note: Return or Exchange will always be the first solution offered. Refund is processed only if the same product is unavailable.
+                        Note: Return or Exchange will usually be the first solution offered. Refund is processed only after approval under this policy.
                       </p>
                     </div>
                   </div>
@@ -131,14 +137,14 @@ export default function RefundPolicyPage() {
                     <div className="w-12 h-12 rounded-full bg-[var(--color-brand-char)] text-white flex items-center justify-center shrink-0 font-display">3</div>
                     <div className="flex-1">
                       <h4 className="font-bold uppercase tracking-widest text-sm mb-4">Pickup & Verification</h4>
-                      <p className="text-sm text-[#4A453E]">A Reverse Pick Up will be arranged. Once the product is received in original condition and passes our Quality Check (QC), we will initiate the Refund to your original payment method. <strong>Please note: Forward and Reverse shipping charges will be deducted from the final refund amount</strong> unless the return is due to a confirmed manufacturing defect or transit damage.</p>
+                      <p className="text-sm text-[#4A453E]">A Reverse Pick Up may be arranged for approved claims where service is available. Once the product is received at our store in original condition and passes our Quality Check (QC), we will initiate the eligible refund to your original Cashfree payment method. <strong>Please note: Forward and Reverse shipping charges may be deducted from the final refund amount</strong> unless the return is due to confirmed manufacturing defect, wrong delivery, or transit damage.</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-16 p-8 border border-[var(--color-brand-gold)]/20 rounded-[32px] text-center">
                    <p className="font-display text-xl text-[var(--color-brand-char)] uppercase tracking-widest mb-2">Refund Timeline</p>
-                   <p className="text-sm text-[#8B8375]">It usually takes <strong>15 Business Days</strong> to complete the refund process from the day of reporting.</p>
+                   <p className="text-sm text-[#8B8375]">Once approved after store receipt and QC validation, refunds are initiated to the original payment method. Bank or payment gateway settlement may take <strong>5 to 10 Business Days</strong>. The complete review-to-refund process usually takes up to <strong>15 Business Days</strong>.</p>
                    <p className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#8B8375] mt-8 opacity-40">Disclaimer: All policies are subject to change without prior notice.</p>
                 </div>
               </section>

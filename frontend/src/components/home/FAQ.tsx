@@ -1,5 +1,6 @@
 "use client";
 import React, { useState } from "react";
+import Link from "next/link";
 import { Plus, Minus } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -55,9 +56,9 @@ export default function FAQ() {
             <div className="absolute inset-0 bg-white/5 backdrop-blur-md border border-white/10 group-hover:bg-white/10 transition-all duration-500" />
             <div className="relative z-10">
               <p className="font-display text-2xl text-[var(--color-brand-cream)] mb-4">Still seeking?</p>
-              <button className="flex items-center gap-3 text-[var(--color-brand-gold)] font-ui text-xs font-bold uppercase tracking-widest group-hover:gap-5 transition-all">
+              <Link href="/contact" className="flex items-center gap-3 text-[var(--color-brand-gold)] font-ui text-xs font-bold uppercase tracking-widest group-hover:gap-5 transition-all">
                 CONTACT US <span className="text-xl">→</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>

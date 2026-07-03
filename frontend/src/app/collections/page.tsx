@@ -5,14 +5,28 @@ import CategoryBar from "@/components/collections/CategoryBar";
 import { getCategories } from "@/actions/products";
 import { Metadata } from "next";
 import Schema from "@/components/shared/Schema";
+import { siteUrl } from "@/lib/seo";
+
+export const revalidate = 1800; // revalidate every 30 minutes
 
 export const metadata: Metadata = {
   title: "Collections & Catalog",
   description: "Browse our complete catalog of Divine Gods, Divine Goddess, Copper, Miniature, Vintage, and Brass temple art. Handcrafted masterpieces by Anand Arts.",
+  alternates: {
+    canonical: `${siteUrl}/collections`,
+  },
+  keywords: [
+    "brass idols online India",
+    "bronze idols online",
+    "copper god idols online",
+    "panchaloha idols online",
+    "pooja room idols",
+    "South Indian temple art",
+  ],
   openGraph: {
     title: "Anand Arts Collections",
     description: "Browse our complete catalog of Divine Gods, Divine Goddess, Copper, Miniature, Vintage, and Brass temple art.",
-    url: "https://anandarts.com/collections",
+    url: `${siteUrl}/collections`,
   }
 };
 
@@ -23,8 +37,21 @@ export default async function CollectionsPage() {
   const collectionSchema = {
     "@type": "CollectionPage",
     "name": "Anand Arts Collections",
-    "description": "Browse Divine Gods, Divine Goddess, Copper, Miniature, Vintage, and Brass creations crafted for your sacred spaces.",
-    "url": "https://anandarts.com/collections"
+    "description": "Browse brass idols, bronze idols, copper idols, panchaloha idols, deepams, bells, pooja room decor, and custom temple art crafted for sacred spaces.",
+    "url": `${siteUrl}/collections`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "name": "Temple art and sacred metal craft collections",
+      "itemListElement": [
+        "Brass idols",
+        "Bronze idols",
+        "Copper idols",
+        "Panchaloha idols",
+        "Temple bells",
+        "Deepams and lamps",
+        "Custom commissions"
+      ]
+    }
   };
 
   return (

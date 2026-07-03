@@ -94,7 +94,7 @@ export const InvoicePDF = ({ order }: InvoiceProps) => {
             <Text style={styles.companyName}>ANAND ARTS & METAL CRAFT</Text>
             <Text style={styles.companyDetails}>No. 12, 1st Cross, Srirampura</Text>
             <Text style={styles.companyDetails}>Bengaluru, Karnataka 560021</Text>
-            <Text style={styles.companyDetails}>+91 84318 38722  |  support@anandarts.com</Text>
+            <Text style={styles.companyDetails}>+91 84318 38722  |  support@anandartsandmetalcrafts.com</Text>
             <Text style={[styles.companyDetails, { marginTop: 4 }]}>GSTIN: <Text style={styles.goldText}>29PTJPS2898B1ZQ</Text></Text>
           </View>
         </View>

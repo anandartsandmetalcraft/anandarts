@@ -52,7 +52,7 @@ export default function CustomCommissions() {
                <Link href="/custom-commissions" className="bg-[var(--color-brand-red)] text-white font-ui text-[14px] font-semibold uppercase tracking-wider px-8 py-4 rounded-sm hover:scale-[1.03] transition-transform duration-300 w-full sm:w-auto text-center inline-block">
                   Start Your Commission
                </Link>
-               <a href="https://wa.me/919876543210?text=Hi%2C%20I%27m%20interested%20in%20a%20custom%20commission%20from%20Anand%20Arts." target="_blank" rel="noopener noreferrer" className="border border-[var(--color-brand-gold)] text-[var(--color-brand-gold-light)] font-ui text-[14px] font-semibold uppercase tracking-wider px-8 py-4 rounded-sm hover:bg-[var(--color-brand-gold)] hover:text-[var(--color-brand-char)] transition-colors duration-300 w-full sm:w-auto text-center inline-block">
+               <a href="https://wa.me/9187542 62271?text=Hi%2C%20I%27m%20interested%20in%20a%20custom%20commission%20from%20Anand%20Arts." target="_blank" rel="noopener noreferrer" className="border border-[var(--color-brand-gold)] text-[var(--color-brand-gold-light)] font-ui text-[14px] font-semibold uppercase tracking-wider px-8 py-4 rounded-sm hover:bg-[var(--color-brand-gold)] hover:text-[var(--color-brand-char)] transition-colors duration-300 w-full sm:w-auto text-center inline-block">
                   Chat on WhatsApp
                </a>
             </div>

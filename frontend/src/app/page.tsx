@@ -1,7 +1,10 @@
 import dynamic from "next/dynamic";
 import Hero from "@/components/home/Hero";
+import HeroCategories from "@/components/home/HeroCategories";
 import TrustTicker from "@/components/home/TrustTicker";
+import LoginOfferPrompt from "@/components/home/LoginOfferPrompt";
 import Schema from "@/components/shared/Schema";
+import { siteUrl } from "@/lib/seo";
 
 // Lazy load below-the-fold components
 const PriceFilters = dynamic(() => import("@/components/home/PriceFilters"));
@@ -20,10 +23,10 @@ const FAQ = dynamic(() => import("@/components/home/FAQ"));
 export default function Home() {
   const websiteSchema = {
     name: "Anand Arts",
-    url: "https://anandarts.com",
+    url: siteUrl,
     potentialAction: {
       "@type": "SearchAction",
-      "target": "https://anandarts.com/catalog?search={search_term_string}",
+      "target": `${siteUrl}/collections?search={search_term_string}`,
       "query-input": "required name=search_term_string"
     }
   };
@@ -61,7 +64,8 @@ export default function Home() {
   return (
     <main className="relative">
       <Schema type="WebSite" data={websiteSchema} />
-      <Schema type="WebSite" data={faqSchema} /> {/* Note: Schema component uses type as root, FAQPage is a specific type, I'll adjust the component if needed but this works for injection */}
+      <Schema type="FAQPage" data={faqSchema} />
+      <HeroCategories />
       <Hero />
       <TrustTicker />
       <PriceFilters />
@@ -76,6 +80,7 @@ export default function Home() {
       <TrustCounter />
       <Testimonials />
       <FAQ />
+      <LoginOfferPrompt />
     </main>
   );
 }

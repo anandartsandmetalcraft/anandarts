@@ -84,7 +84,7 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
             <div className="text-left md:text-right space-y-1">
                <p className="text-[13px] text-slate-500 font-ui font-bold"><span className="text-slate-400 font-bold uppercase text-[10px] mr-2">GST Registration No:</span> 29PTJPS2898B1ZQ</p>
                <p className="text-[13px] text-slate-500 font-ui font-bold">Email: anandartsandmetalcraft@gmail.com</p>
-               <p className="text-[13px] text-slate-500 font-ui font-bold underline">Website: www.anandarts.com</p>
+               <p className="text-[13px] text-slate-500 font-ui font-bold underline">Website: www.anandartsandmetalcrafts.com</p>
                <p className="text-[13px] text-slate-500 font-ui font-bold">Contact No: +91 84318 38722</p>
             </div>
          </div>

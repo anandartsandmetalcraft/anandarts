@@ -89,10 +89,10 @@ export default function TermsOfServicePage() {
                   If you have any questions about these terms, please contact our support team.
                 </p>
                 <a 
-                  href="mailto:contact@anandarts.com" 
+                  href="mailto:contact@anandartsandmetalcrafts.com" 
                   className="text-xl font-display text-[var(--color-brand-gold)] hover:underline"
                 >
-                  contact@anandarts.com
+                  contact@anandartsandmetalcrafts.com
                 </a>
               </section>
             </div>

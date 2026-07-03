@@ -213,7 +213,7 @@ export function generateOrderConfirmationEmail(order: OrderData): string {
                     Need assistance? Contact our master curators.
                   </p>
                   <p style="margin: 0 0 16px 0; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 12px; font-weight: 600; color: ${colors.gold};">
-                    support@anandarts.com | +91 84318 38722
+                    support@anandartsandmetalcrafts.com | +91 84318 38722
                   </p>
                   <p style="margin: 0; font-family: Georgia, serif; font-size: 10px; font-style: italic; color: #A0A0A0;">
                     "Preserving Heritage, Crafting Devotion"

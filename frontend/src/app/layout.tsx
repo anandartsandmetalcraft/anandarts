@@ -9,6 +9,7 @@ import ScrollControls from "@/components/shared/ScrollControls";
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "sonner";
 import Schema, { AnandArtsSchema } from "@/components/shared/Schema";
+import { priorityKeywords, siteUrl } from "@/lib/seo";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -50,18 +51,27 @@ export const viewport = {
 };
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://anandarts.com'),
+  metadataBase: new URL(siteUrl),
   title: {
-    default: "Anand Arts | Timeless Indian Heritage & Master Craftsmanship",
+    default: "Anand Arts | Brass Idols, Temple Art & Custom Sacred Commissions",
     template: "%s | Anand Arts"
   },
-  description: "Authentic South Indian wood carvings, temple art, and metal crafts. Handcrafted by master artisans in Bengaluru. Custom commissions and worldwide shipping available.",
-  keywords: [
-    "Anand Arts", "South Indian Wood Carvings", "Temple Art Bengaluru", 
-    "Traditional Metal Crafts", "Brass Idols India", "Bronze Murthis", 
-    "Master Artisans", "Heritage Handicrafts", "Custom Religious Art",
-    "Pooja Room Decor", "Indian Sculpture Commissions"
-  ],
+  description: "Buy authentic handcrafted brass idols, bronze idols, copper idols, panchaloha idols, South Indian temple art, and custom sacred commissions from Anand Arts Bengaluru.",
+  keywords: priorityKeywords,
+  alternates: {
+    canonical: siteUrl,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
   authors: [{ name: "Anand Arts & Metal Craft" }],
   creator: "Anand Arts",
   publisher: "Anand Arts",
@@ -73,10 +83,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_IN",
-    url: "https://anandarts.com",
+    url: siteUrl,
     siteName: "Anand Arts",
-    title: "Anand Arts | Masterpieces of Indian Craftsmanship",
-    description: "Experience the legacy of master artisans. From divine wood carvings to intricate metal crafts.",
+    title: "Anand Arts | Brass Idols, Temple Art & Custom Sacred Commissions",
+    description: "Authentic South Indian brass, bronze, copper, panchaloha and wood temple art handcrafted in Bengaluru.",
     images: [
       {
         url: "/og-image.jpg",
@@ -88,8 +98,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Anand Arts | Timeless Indian Heritage",
-    description: "Discover handcrafted temple art and master craftsmanship from South India.",
+    title: "Anand Arts | Brass Idols & South Indian Temple Art",
+    description: "Discover handcrafted temple art, pooja room idols, and custom sacred commissions from Bengaluru.",
     images: ["/og-image.jpg"],
   },
   icons: {

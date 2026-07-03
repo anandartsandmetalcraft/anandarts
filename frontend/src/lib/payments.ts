@@ -2,11 +2,11 @@ import crypto from "crypto";
 import axios from "axios";
 
 /**
- * PhonePe Payment Gateway Helper
- * Handles checksum generation and API requests for payment initiation and status checks.
+ * Payment Gateway Helper
+ * Cashfree is the primary gateway. PhonePe utilities are retained for legacy compatibility.
  */
 
-// --- PhonePe Constants ---
+// --- Legacy PhonePe Constants ---
 const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID || "";
 const SALT_KEY = process.env.PHONEPE_SALT_KEY || "";
 const SALT_INDEX = process.env.PHONEPE_SALT_INDEX || "1";

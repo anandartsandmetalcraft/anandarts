@@ -95,7 +95,7 @@ export default function CatalogPreview() {
                     {p.coupon.code} • {formatCouponDiscount(p.coupon.discount)}
                   </div>
                 )}
-                
+
                 {typeof p.stock === "number" && (
                   p.stock <= 0 ? (
                     <div className="bg-black/70 text-white font-ui text-[11px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-sm pointer-events-auto">
