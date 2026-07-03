@@ -10,6 +10,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useUIStore } from "@/store/uiStore";
 import { FREE_SHIPPING_THRESHOLD_PAISE, calculateGiftWrapFeePaise, remainingForFreeShippingPaise } from "@/lib/shipping";
 import { getFeedProducts } from "@/actions/products";
+import PaymentTrustStrip from "@/components/shared/PaymentTrustStrip";
 
 interface CartDrawerProps {
   isOpen: boolean;
@@ -69,16 +70,16 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       {isOpen && (
         <>
           {/* Backdrop */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
           />
-          
+
           {/* Drawer */}
-          <motion.div 
+          <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -108,8 +109,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   <p className="font-ui text-sm text-[#8B8375] mb-10 leading-relaxed">
                     Explore our collection of handcrafted temple art and pieces to find what fits your home.
                   </p>
-                  <Link 
-                    href="/collections" 
+                  <Link
+                    href="/collections"
                     onClick={onClose}
                     className="w-full bg-[var(--color-brand-char)] text-[var(--color-brand-cream)] font-ui text-xs font-bold uppercase tracking-widest py-4 rounded-full hover:bg-[var(--color-brand-slate)] transition-all flex items-center justify-center gap-3 shadow-lg group"
                   >
@@ -121,7 +122,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 /* Items List */
                 <div className="space-y-6">
                   {items.map((item) => (
-                    <motion.div 
+                    <motion.div
                       key={item.id}
                       layout
                       initial={{ opacity: 0, y: 20 }}
@@ -142,7 +143,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                           <p className="font-ui text-[10px] text-[#8B8375] uppercase tracking-widest">{item.material} / {item.size}</p>
                           <p className="font-display text-base text-[var(--color-brand-char)] mt-1">₹{(item.price / 100).toLocaleString("en-IN")}</p>
                         </div>
-                        
+
                         <div className="flex items-center gap-4 mt-2">
                           <div className="flex items-center border border-black/10 rounded-full h-8 px-2 bg-gray-50/50">
                             <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="p-1 hover:text-black">
@@ -164,72 +165,72 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             {/* Footer - Checkout & Trust */}
             {items.length > 0 && (
               <div className="p-8 bg-white border-t border-black/10 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
-                
+
                 {/* Shipping Progress Bar */}
                 <div className="mb-6">
                   <div className="flex justify-between items-end mb-2">
                     <span className="font-ui text-[10px] font-bold text-[#8B8375]">
-                      {remainingForFree > 0 
-                        ? `Add ₹${(remainingForFree / 100).toLocaleString("en-IN")} more to get FREE SHIPPING!` 
+                      {remainingForFree > 0
+                        ? `Add ₹${(remainingForFree / 100).toLocaleString("en-IN")} more to get FREE SHIPPING!`
                         : "You've unlocked FREE SHIPPING!"}
                     </span>
                   </div>
-                <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                  <motion.div 
-                    initial={{ width: 0 }}
-                    animate={{ width: `${progressPercent}%` }}
-                    className={`h-full ${remainingForFree > 0 ? 'bg-[var(--color-brand-gold)]' : 'bg-green-500'}`}
-                  />
+                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${progressPercent}%` }}
+                      className={`h-full ${remainingForFree > 0 ? 'bg-[var(--color-brand-gold)]' : 'bg-green-500'}`}
+                    />
+                  </div>
                 </div>
-              </div>
 
-              {/* Bundle Suggestions */}
-              {suggestions.length > 0 && (
-                <div className="mb-6 rounded-2xl border border-black/5 bg-gray-50/50 p-4">
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="font-ui text-[10px] font-extrabold uppercase tracking-[0.2em] text-[var(--color-brand-char)]">
-                      {remainingForFree > 0 ? "Add a piece to unlock free shipping" : "You might also like"}
-                    </span>
-                    {remainingForFree > 0 && (
-                      <span className="font-ui text-[10px] font-bold text-[#8B8375]">
-                        Need â‚¹{(remainingForFree / 100).toLocaleString("en-IN")}
+                {/* Bundle Suggestions */}
+                {suggestions.length > 0 && (
+                  <div className="mb-6 rounded-2xl border border-black/5 bg-gray-50/50 p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-ui text-[10px] font-extrabold uppercase tracking-[0.2em] text-[var(--color-brand-char)]">
+                        {remainingForFree > 0 ? "Add a piece to unlock free shipping" : "You might also like"}
                       </span>
-                    )}
-                  </div>
+                      {remainingForFree > 0 && (
+                        <span className="font-ui text-[10px] font-bold text-[#8B8375]">
+                          Need {(remainingForFree / 100).toLocaleString("en-IN")}
+                        </span>
+                      )}
+                    </div>
 
-                  <div className="space-y-3">
-                    {suggestions.map((p) => {
-                      const isSuggestionOut = typeof p.stock === "number" && p.stock <= 0;
-                      return (
-                        <div key={p.id} className="flex items-center gap-3">
-                          <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-white border border-black/5 flex-shrink-0">
-                            <Image src={p.img || "/placeholder.jpg"} alt={p.name} fill sizes="48px" className="object-cover" />
+                    <div className="space-y-3">
+                      {suggestions.map((p) => {
+                        const isSuggestionOut = typeof p.stock === "number" && p.stock <= 0;
+                        return (
+                          <div key={p.id} className="flex items-center gap-3">
+                            <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-white border border-black/5 flex-shrink-0">
+                              <Image src={p.img || "/placeholder.jpg"} alt={p.name} fill sizes="48px" className="object-cover" />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <p className="font-ui text-[11px] font-bold text-[var(--color-brand-char)] truncate">{p.name}</p>
+                              <p className="font-ui text-[10px] text-[#8B8375]">
+                                {(Number(p.price || 0) / 100).toLocaleString("en-IN")}
+                              </p>
+                            </div>
+                            <button
+                              disabled={isSuggestionOut}
+                              onClick={() => addItem(p, 1)}
+                              className="px-4 py-2 rounded-full bg-white border border-black/10 font-ui text-[10px] font-extrabold uppercase tracking-widest hover:bg-[var(--color-brand-char)] hover:text-white transition-all disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed"
+                            >
+                              {isSuggestionOut ? "Out" : "Add"}
+                            </button>
                           </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="font-ui text-[11px] font-bold text-[var(--color-brand-char)] truncate">{p.name}</p>
-                            <p className="font-ui text-[10px] text-[#8B8375]">
-                              â‚¹{(Number(p.price || 0) / 100).toLocaleString("en-IN")}
-                            </p>
-                          </div>
-                          <button
-                            disabled={isSuggestionOut}
-                            onClick={() => addItem(p, 1)}
-                            className="px-4 py-2 rounded-full bg-white border border-black/10 font-ui text-[10px] font-extrabold uppercase tracking-widest hover:bg-[var(--color-brand-char)] hover:text-white transition-all disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed"
-                          >
-                            {isSuggestionOut ? "Out" : "Add"}
-                          </button>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
                 {/* Gift Wrap */}
                 <label className="flex items-center gap-3 mb-6 p-4 rounded-xl border border-black/5 bg-gray-50/50 cursor-pointer">
-                  <input 
-                    type="checkbox" 
-                    checked={isGiftWrapped} 
+                  <input
+                    type="checkbox"
+                    checked={isGiftWrapped}
                     onChange={(e) => setGiftWrapped(e.target.checked)}
                     className="w-4 h-4 accent-[var(--color-brand-char)]"
                   />
@@ -242,30 +243,22 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                 <div className="flex justify-between items-center mb-6">
                   <span className="font-ui text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#8B8375]">Order Subtotal</span>
                   <span className="font-display text-2xl text-[var(--color-brand-char)]">₹{((cartSubtotalPaise + giftWrapFeePaise) / 100).toLocaleString("en-IN")}</span>
-              </div>
-              
-              <button 
-                onClick={handleCheckout}
-                className="w-full bg-[var(--color-brand-char)] text-white font-ui text-xs font-bold uppercase tracking-[0.2em] py-5 rounded-full shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3 group mb-4"
-              >
-                {isLoggedIn ? "PROCEED TO CHECKOUT" : "LOGIN TO CHECKOUT"}
-                <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </button>
-              <p className="text-center font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375]">Taxes & shipping calculated at checkout</p>
+                </div>
+
+                <button
+                  onClick={handleCheckout}
+                  className="w-full bg-[var(--color-brand-char)] text-white font-ui text-xs font-bold uppercase tracking-[0.2em] py-5 rounded-full shadow-xl hover:bg-black transition-all flex items-center justify-center gap-3 group mb-4"
+                >
+                  {isLoggedIn ? "PROCEED TO CHECKOUT" : "LOGIN TO CHECKOUT"}
+                  <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </button>
+                <p className="text-center font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375]">Taxes & shipping calculated at checkout</p>
               </div>
             )}
 
             {/* Bottom Info */}
             <div className={`p-8 border-t border-black/5 ${items.length > 0 ? "bg-gray-50" : "bg-white"}`}>
-               <div className="flex items-center gap-4 grayscale opacity-60 transition-all hover:grayscale-0 hover:opacity-100">
-                  <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
-                    <ShieldCheck size={20} />
-                  </div>
-                  <div>
-                    <h4 className="font-ui text-[12px] font-bold uppercase tracking-wider text-[var(--color-brand-char)]">Secure Payment Guarantee</h4>
-                    <p className="text-[11px] text-[#8B8375]">Safe transactions and careful delivery.</p>
-                  </div>
-                </div>
+              <PaymentTrustStrip compact />
             </div>
           </motion.div>
         </>

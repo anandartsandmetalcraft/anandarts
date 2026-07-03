@@ -34,6 +34,7 @@ import { processOrderPayment, simulatePaymentSuccess } from "@/actions/payments"
 import { getUserAddresses, createAddress } from "@/actions/addresses";
 import { validateCoupon } from "@/actions/coupons";
 import { parseCouponDiscount } from "@/lib/coupons";
+import PaymentTrustStrip from "@/components/shared/PaymentTrustStrip";
 import {
    FREE_SHIPPING_THRESHOLD_PAISE,
    GIFT_WRAP_FEE_PAISE,
@@ -44,12 +45,12 @@ import {
 } from "@/lib/shipping";
 
 const INDIAN_STATES = [
-   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat", 
-   "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh", 
-   "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab", 
-   "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh", 
-   "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh", 
-   "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir", 
+   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar", "Chhattisgarh", "Goa", "Gujarat",
+   "Haryana", "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala", "Madhya Pradesh",
+   "Maharashtra", "Manipur", "Meghalaya", "Mizoram", "Nagaland", "Odisha", "Punjab",
+   "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana", "Tripura", "Uttar Pradesh",
+   "Uttarakhand", "West Bengal", "Andaman and Nicobar Islands", "Chandigarh",
+   "Dadra and Nagar Haveli and Daman and Diu", "Delhi", "Jammu and Kashmir",
    "Ladakh", "Lakshadweep", "Puducherry"
 ];
 
@@ -335,14 +336,49 @@ export default function CheckoutPage() {
                                              <div className="space-y-2">
                                                 <label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">State</label>
                                                 {shipping.country === "India" ? (
-                                                   <select value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none">{INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}</select>
+                                                   <div className="relative">
+                                                      <select value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none appearance-none cursor-pointer">
+                                                         {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                                                      </select>
+                                                      <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
+                                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                                                      </div>
+                                                   </div>
                                                 ) : (
-                                                   <input required type="text" value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" />
+                                                   <input required type="text" value={shipping.state} onChange={(e) => setShipping({ ...shipping, state: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" placeholder="State/Region" />
                                                 )}
                                              </div>
-                                             <div className="space-y-2"><label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">ZIP</label><input required type="text" value={shipping.postalCode} onChange={(e) => setShipping({ ...shipping, postalCode: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" /></div>
+                                             <div className="space-y-2"><label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">ZIP / Postal Code</label><input required type="text" value={shipping.postalCode} onChange={(e) => setShipping({ ...shipping, postalCode: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none" /></div>
                                           </div>
-                                          <div className="space-y-2"><label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Country</label><select value={shipping.country} onChange={(e) => setShipping({ ...shipping, country: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none"><option value="India">India 🇮🇳</option><option value="USA">USA 🇺🇸</option><option value="UK">UK 🇬🇧</option><option value="Other">Other</option></select></div>
+                                          <div className="space-y-2">
+                                             <label className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Country</label>
+                                             <div className="relative">
+                                                <select value={shipping.country} onChange={(e) => setShipping({ ...shipping, country: e.target.value })} className="w-full bg-[#FAF9F6] border border-black/5 px-6 py-4 rounded-2xl outline-none appearance-none cursor-pointer">
+                                                   <option value="India">India 🇮🇳</option>
+                                                   <option value="USA">United States 🇺🇸</option>
+                                                   <option value="UK">United Kingdom 🇬🇧</option>
+                                                   <option value="UAE">United Arab Emirates 🇦🇪</option>
+                                                   <option value="Japan">Japan 🇯🇵</option>
+                                                   <option value="France">France 🇫🇷</option>
+                                                   <option value="Australia">Australia 🇦🇺</option>
+                                                   <option value="Canada">Canada 🇨🇦</option>
+                                                   <option value="Singapore">Singapore 🇸🇬</option>
+                                                   <option value="Germany">Germany 🇩🇪</option>
+                                                   <option value="Other">Other Country</option>
+                                                </select>
+                                                <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
+                                                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+                                                </div>
+                                             </div>
+                                             {shipping.country !== "India" && (
+                                                <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
+                                                   <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={16} />
+                                                   <p className="text-[10px] text-amber-800 font-medium leading-relaxed">
+                                                      <strong>International Delivery:</strong> For secure and fast international shipping, please contact our team via WhatsApp at <strong>+91 8754262271</strong> before placing your order.
+                                                   </p>
+                                                </div>
+                                             )}
+                                          </div>
                                        </form>
                                     </div>
                                  )}
@@ -350,7 +386,10 @@ export default function CheckoutPage() {
                            )}
 
                            <div className="pt-4 flex justify-end">
-                              <button onClick={handleSaveAddress} disabled={isProcessing} className="bg-[var(--color-brand-char)] text-white font-ui text-xs font-bold uppercase tracking-[0.2em] px-12 py-5 rounded-full shadow-2xl hover:bg-black transition-all group flex items-center gap-3 disabled:opacity-50">{isProcessing ? 'Processing...' : 'Continue to Payment'}<ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" /></button>
+                              <button onClick={handleSaveAddress} disabled={isProcessing || shipping.country !== "India"} className="bg-[var(--color-brand-char)] text-white font-ui text-xs font-bold uppercase tracking-[0.2em] px-12 py-5 rounded-full shadow-2xl hover:bg-black transition-all group flex items-center gap-3 disabled:opacity-50">
+                                 {shipping.country !== "India" ? 'Contact for International' : isProcessing ? 'Processing...' : 'Continue to Payment'}
+                                 {shipping.country === "India" && <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />}
+                              </button>
                            </div>
                         </motion.div>
                      )}
@@ -360,7 +399,7 @@ export default function CheckoutPage() {
                            <h2 className="font-display text-2xl text-[var(--color-brand-char)] mb-10 flex items-center gap-4 uppercase tracking-widest">Select Payment <div className="h-[1px] flex-1 bg-black/10" /></h2>
                            <div className="space-y-4">
                               <button onClick={() => setPaymentMethod("upi")} className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all ${paymentMethod === 'upi' ? 'border-[var(--color-brand-gold)] bg-[var(--color-brand-cream-dark)]/20 shadow-sm' : 'border-black/5 hover:border-black/10'}`}>
-                                 <div className="flex items-center gap-4"><div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center"><Smartphone size={20} /></div><div className="text-left"><p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-char)]">UPI / G-Pay / PhonePe</p><p className="font-ui text-[9px] text-[#8B8375]">Fast & Secure with QR Code</p></div></div>
+                                 <div className="flex items-center gap-4"><div className="w-10 h-10 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center"><Smartphone size={20} /></div><div className="text-left"><p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-char)]">UPI / GPay / QR</p><p className="font-ui text-[9px] text-[#8B8375]">Fast & Secure with Cashfree</p></div></div>
                                  <CheckCircle2 size={20} className={paymentMethod === 'upi' ? 'text-[var(--color-brand-gold)]' : 'text-transparent'} />
                               </button>
                               <button onClick={() => setPaymentMethod("card")} className={`w-full flex items-center justify-between p-6 rounded-2xl border-2 transition-all ${paymentMethod === 'card' ? 'border-[var(--color-brand-gold)] bg-[var(--color-brand-cream-dark)]/20 shadow-sm' : 'border-black/5 hover:border-black/10'}`}>
@@ -412,32 +451,94 @@ export default function CheckoutPage() {
                         </div>
 
                         <div className="space-y-4 pt-8 border-t border-black/5">
-                           <div className="flex justify-between items-center"><span className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375]">Subtotal</span><span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{(getTotalPrice() / 100).toLocaleString("en-IN")}</span></div>
-                           <div className="flex justify-between items-center">
-                              <span className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375]">Shipping</span>
-                              {(() => {
-                                 const activeAddress = savedAddresses.find(a => a.id === selectedAddressId) || shipping;
-                                 const pin = activeAddress?.postalCode || "";
-                                 const cost = calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: pin });
-                                 return <span className={`font-ui text-[12px] font-bold ${cost === 0 ? 'text-green-600 uppercase' : 'text-[var(--color-brand-char)]'}`}>{cost === 0 ? 'Free' : `₹${(cost / 100).toLocaleString("en-IN")}`}</span>;
-                              })()}
-                           </div>
-                           {isGiftWrapped && <div className="flex justify-between items-center"><span className="font-ui text-[10px] font-bold uppercase tracking-widest text-[#8B8375]">Gift Wrap</span><span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{(giftWrapFeePaise / 100).toLocaleString("en-IN")}</span></div>}
-                           <div className="flex justify-between items-center pt-6 border-t border-black/10">
-                              <span className="font-display text-xl text-[var(--color-brand-char)] uppercase tracking-widest">Total</span>
-                              <span className="font-display text-2xl text-[var(--color-brand-char)]">₹{((getTotalPrice() + giftWrapFeePaise + calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: (savedAddresses.find(a => a.id === selectedAddressId) || shipping).postalCode || "" })) / 100).toLocaleString("en-IN")}</span>
-                           </div>
-                           <div className="mt-8 pt-8 border-t border-black/5 flex flex-col items-center gap-4">
-                              <div className="flex items-center gap-2 px-6 py-2 bg-blue-50 rounded-full border border-blue-100">
-                                 <ShieldCheck size={14} className="text-blue-600" />
-                                 <span className="text-[9px] font-bold uppercase tracking-widest text-blue-800">Secured by Cashfree Payments</span>
+                           <div className="flex justify-between items-center bg-[#FAF9F6] p-4 rounded-2xl border border-black/5 mb-4">
+                              <div className="flex items-center gap-3">
+                                 <Gift className={isGiftWrapped ? "text-[var(--color-brand-gold)]" : "text-[#8B8375]"} size={20} />
+                                 <div>
+                                    <p className="font-ui text-[11px] font-bold uppercase tracking-widest text-[var(--color-brand-char)]">Premium Gift Wrap</p>
+                                    <p className="font-ui text-[9px] text-[#8B8375]">Add a luxury touch to your package</p>
+                                 </div>
                               </div>
-                              <div className="flex gap-4 opacity-40 grayscale hover:grayscale-0 transition-all cursor-default">
-                                 <Image src="https://images.cloudinary.com/dqyqhmnhw/image/upload/v1/assets/payment-visa" alt="Visa" width={30} height={20} />
-                                 <Image src="https://images.cloudinary.com/dqyqhmnhw/image/upload/v1/assets/payment-mastercard" alt="Mastercard" width={30} height={20} />
-                                 <Image src="https://images.cloudinary.com/dqyqhmnhw/image/upload/v1/assets/payment-upi" alt="UPI" width={30} height={20} />
+                              <button onClick={() => setGiftWrapped(!isGiftWrapped)} className={`w-12 h-6 rounded-full transition-all flex items-center p-1 ${isGiftWrapped ? 'bg-[var(--color-brand-gold)] justify-end' : 'bg-black/10 justify-start'}`}>
+                                 <motion.div layout className="w-4 h-4 rounded-full bg-white shadow-sm" />
+                              </button>
+                           </div>
+
+                           <div className="space-y-5">
+                              <div className="flex justify-between items-center">
+                                 <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Base Price</span>
+                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() / 1.05) / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                 <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">GST (5%)</span>
+                                 <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{((getTotalPrice() - (getTotalPrice() / 1.05)) / 100).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+                              </div>
+                              <div className="flex justify-between items-center">
+                                 <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Shipping</span>
+                                 {(() => {
+                                    const activeAddress = savedAddresses.find(a => a.id === selectedAddressId) || shipping;
+                                    const pin = activeAddress?.postalCode || "";
+                                    const cost = calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: pin });
+                                    return (
+                                       <span className={`font-ui text-[12px] font-bold flex items-center gap-2 ${cost === 0 ? 'text-green-600 uppercase' : 'text-[var(--color-brand-char)]'}`}>
+                                          {cost === 0 && <span className="line-through text-gray-400/70 text-[11px]">₹150</span>}
+                                          {cost === 0 ? 'Free' : `₹${(cost / 100).toLocaleString("en-IN")}`}
+                                       </span>
+                                    );
+                                 })()}
+                              </div>
+                              {isGiftWrapped && (
+                                 <div className="flex justify-between items-center">
+                                    <span className="font-ui text-[11px] font-bold uppercase tracking-widest text-[#8B8375]">Gift Wrap</span>
+                                    <span className="font-ui text-[12px] font-bold text-[var(--color-brand-char)]">₹{(giftWrapFeePaise / 100).toLocaleString("en-IN")}</span>
+                                 </div>
+                              )}
+                           </div>
+
+                           <div className="pt-6 mt-2 border-t border-black/10 flex flex-col">
+                              <div className="flex justify-between items-end">
+                                 <div className="flex flex-col">
+                                    <span className="font-display text-2xl text-black">Total Amount</span>
+                                    <span className="font-ui text-[9px] font-bold uppercase tracking-[0.2em] text-[#8B8375] mt-1">Inclusive of all taxes</span>
+                                 </div>
+                                                   <span className="font-display text-3xl text-black">₹{((getTotalPrice() + giftWrapFeePaise + calculateShippingChargePaise({ subtotalPaise: getTotalPrice(), isStorePickup: shippingMode === "pickup", postalCode: (savedAddresses.find(a => a.id === selectedAddressId) || shipping).postalCode || "" })) / 100).toLocaleString("en-IN")}</span>
                               </div>
                            </div>
+
+                           <div className="mt-8 pt-8 border-t border-black/5">
+                               <PaymentTrustStrip />
+ 
+                              {/* Demo Checkout - Visible only for testing/client demo */}
+                              {process.env.NEXT_PUBLIC_ALLOW_TEST_PAYMENTS === "true" && (
+                                 <button
+                                    onClick={async () => {
+                                       if (!orderDbId) {
+                                          toast.error("Please click 'Pay & Place Order' first to create the order draft");
+                                          return;
+                                       }
+                                       setIsProcessing(true);
+                                       try {
+                                          toast.success("Demo Mode: Simulating Payment Success...");
+                                          const res = await simulatePaymentSuccess(orderDbId);
+                                          if (res && 'error' in res) {
+                                             toast.error(res.error || "Demo checkout failed");
+                                          } else {
+                                             toast.success("Payment succeeded in Demo Mode!");
+                                             window.location.href = `/checkout/success?orderId=${orderDbId}`;
+                                          }
+                                       } catch (err) {
+                                          toast.error("Demo checkout failed");
+                                       } finally {
+                                          setIsProcessing(false);
+                                       }
+                                    }}
+                                    type="button"
+                                    className="w-full mt-4 border-2 border-dashed border-[var(--color-brand-gold)] text-[var(--color-brand-gold)] font-ui text-[10px] font-bold uppercase tracking-[0.2em] py-4 rounded-xl hover:bg-[var(--color-brand-gold)] hover:text-white transition-all duration-300 shadow-lg"
+                                 >
+                                    ⚡ Run Client Demo (Simulate Success)
+                                 </button>
+                              )}
+                            </div>
                         </div>
                      </div>
 

@@ -1,13 +1,31 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { MapPin, Banknote, QrCode, CreditCard } from "lucide-react";
+import { MapPin } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { toast } from "sonner";
 import { FlipLink } from "@/components/ui/flip-links";
+import PaymentTrustStrip from "@/components/shared/PaymentTrustStrip";
 
 export default function Footer() {
   const pathname = usePathname();
+  const [newsletterEmail, setNewsletterEmail] = useState("");
+
+  const handleNewsletterSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const email = newsletterEmail.trim();
+    const isValidEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+    if (!isValidEmail) {
+      toast.error("Please enter a valid email address.", { duration: 2000 });
+      return;
+    }
+
+    toast.success("Thank you for joining our newsletter.", { duration: 2000 });
+    setNewsletterEmail("");
+  };
 
   if (pathname.startsWith("/admin")) {
     return null;
@@ -26,16 +44,18 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="w-full md:w-auto flex items-center bg-[#23201D] rounded-full p-1 pl-6 shadow-inner flex-1 max-w-md">
+          <form onSubmit={handleNewsletterSubmit} className="w-full md:w-auto flex items-center bg-[#23201D] rounded-full p-1 pl-6 shadow-inner flex-1 max-w-md">
             <input
               type="email"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
               placeholder="Email Address"
               className="bg-transparent border-none outline-none text-[#E8E1D5] placeholder:text-[#6B6356] w-full text-sm tracking-wide font-ui"
             />
-            <button className="bg-[var(--color-brand-red)] hover:bg-[#A33B32] text-white font-bold uppercase tracking-widest text-[12px] px-8 py-3.5 rounded-full transition-colors ml-2 shadow-md">
+            <button type="submit" className="bg-[var(--color-brand-red)] hover:bg-[#A33B32] text-white font-bold uppercase tracking-widest text-[12px] px-8 py-3.5 rounded-full transition-colors ml-2 shadow-md">
               Subscribe
             </button>
-          </div>
+          </form>
         </div>
       </div>
 
@@ -137,10 +157,6 @@ export default function Footer() {
                 About Us
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--color-brand-gold)] transition-all duration-300 group-hover:w-full"></span>
               </Link></li>
-              <li><Link href="/blogs" className="hover:text-[var(--color-brand-gold)] transition-all relative group w-fit">
-                Blogs
-                <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--color-brand-gold)] transition-all duration-300 group-hover:w-full"></span>
-              </Link></li>
               <li><Link href="/legal/return-and-exchange" className="hover:text-[var(--color-brand-gold)] transition-all relative group w-fit">
                 Return & Exchange
                 <span className="absolute -bottom-1 left-0 w-0 h-[1px] bg-[var(--color-brand-gold)] transition-all duration-300 group-hover:w-full"></span>
@@ -221,11 +237,7 @@ export default function Footer() {
             <div className="h-[1px] w-8 bg-[#2A2621]"></div>
           </div>
 
-          <div className="flex gap-4 text-[#6B6356]">
-            <Banknote size={16} />
-            <QrCode size={16} />
-            <CreditCard size={16} />
-          </div>
+          <PaymentTrustStrip compact className="md:items-end" />
         </div>
       </div>
     </footer>

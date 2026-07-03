@@ -15,6 +15,7 @@ const authSecret =
   (process.env.NODE_ENV !== "production"
     ? "anand-arts-dev-secret-change-in-production"
     : undefined);
+const ADMIN_SESSION_MAX_AGE_MS = 60 * 60 * 1000;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: PrismaAdapter(db),
@@ -145,7 +146,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.firstName = dbUser?.firstName;
         token.lastName = dbUser?.lastName;
         token.phone = dbUser?.phone;
+
+        if (dbUser?.role === "ADMIN") {
+          token.adminSessionExpiresAt = Date.now() + ADMIN_SESSION_MAX_AGE_MS;
+          token.adminSessionExpired = false;
+        }
       }
+
+      if (token.role === "ADMIN") {
+        if (!token.adminSessionExpiresAt) {
+          token.adminSessionExpiresAt = Date.now() + ADMIN_SESSION_MAX_AGE_MS;
+        }
+        token.adminSessionExpired = Date.now() > Number(token.adminSessionExpiresAt);
+      }
+
       return token;
     },
 
@@ -157,6 +171,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         user.firstName = token.firstName;
         user.lastName = token.lastName;
         user.phone = token.phone;
+        user.adminSessionExpiresAt = token.adminSessionExpiresAt;
+        user.adminSessionExpired = token.adminSessionExpired;
       }
       return session;
     },

@@ -12,7 +12,7 @@ export default async function AdminLayout({
   const admin = await getAdminContext();
 
   if (!admin.allowed) {
-    redirect(`/admin-login${admin.reason === "forbidden" ? "?reason=forbidden" : ""}`);
+    redirect(`/admin-login${admin.reason === "forbidden" || admin.reason === "expired" ? `?reason=${admin.reason}` : ""}`);
   }
 
   return (

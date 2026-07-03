@@ -13,6 +13,7 @@ import {
   Tag, 
   CreditCard, 
   User, 
+  Users,
   Menu, 
   X, 
   ChevronDown,
@@ -49,6 +50,7 @@ const MENU_ITEMS = [
       { label: "Order Overview", href: "/admin/orders/overview" },
     ],
   },
+  { label: "Customers", href: "/admin/customers", icon: Users },
   { 
     label: "Shipping", 
     href: "/admin/shipping", 

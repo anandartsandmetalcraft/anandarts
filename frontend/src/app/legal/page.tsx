@@ -112,11 +112,23 @@ export default function LegalPage() {
               <Link href="/contact" className="px-10 py-4 bg-[var(--color-brand-char)] text-white font-ui text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-[var(--color-brand-gold)] transition-all shadow-xl">
                  Contact Us
               </Link>
-              <a href="mailto:support@anandarts.com" className="px-10 py-4 border border-black/10 text-[var(--color-brand-char)] font-ui text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black hover:text-white transition-all">
+              <a href="mailto:support@anandartsandmetalcrafts.com" className="px-10 py-4 border border-black/10 text-[var(--color-brand-char)] font-ui text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black hover:text-white transition-all">
                  Email Support
               </a>
            </div>
         </section>
+
+        <div className="mt-8 text-center font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-[#8B8375]">
+          Website developed by{" "}
+          <a
+            href="https://gagan-portfolio-theta.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-[var(--color-brand-gold)] underline underline-offset-4 transition-colors hover:text-[var(--color-brand-char)]"
+          >
+            Gagan
+          </a>
+        </div>
       </div>
     </main>
   );

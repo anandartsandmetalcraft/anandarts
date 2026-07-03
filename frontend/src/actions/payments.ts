@@ -3,11 +3,14 @@
 import { db } from "@/lib/db";
 import { auth } from "@/lib/auth";
 import { initiateCashfreePayment } from "@/lib/payments";
+import { rateLimit } from "@/lib/ratelimit";
+
 const PaymentStatus = {
   INITIATED: "INITIATED",
   SUCCESS: "SUCCESS",
   FAILED: "FAILED",
 } as const;
+
 const PaymentMethod = {
   CASHFREE: "CASHFREE",
   PHONEPE: "PHONEPE",
@@ -16,12 +19,17 @@ const PaymentMethod = {
 
 /**
  * Payment Server Actions
- * Handles initiating payment with PhonePe gateway and creating associated payment records in DB.
+ * Handles initiating payment with Cashfree gateway and creating associated payment records in DB.
  */
-
 export async function processOrderPayment(orderId: string) {
   const session = await auth();
   if (!session?.user?.id) return { error: "Not authenticated" };
+
+  // Rate Limiting: Max 5 payment requests per minute per user ID
+  const rateLimitResult = await rateLimit("payment", session.user.id);
+  if (!rateLimitResult.allowed) {
+    return { error: rateLimitResult.message || "Too many payment attempts. Please wait a minute." };
+  }
 
   // --- Step 1: Fetch Order & Sanity Checks ---
   const order = await db.order.findUnique({
@@ -49,21 +57,29 @@ export async function processOrderPayment(orderId: string) {
     },
   });
 
-  const callbackUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/callback`;
-
   // --- Step 3: Call Cashfree Initiation ---
   try {
-    const result = await initiateCashfreePayment({
-      orderId: merchantTransactionId,
+    // Enforce customer contact data for gateway integrity
+    const customerEmail = order.user.email;
+    const customerPhone = order.address?.phone || order.user.phone;
+
+    if (!customerPhone) {
+      throw new Error("Customer phone number is required for payment initiation");
+    }
+
+    const cashfreeParams = {
+      orderId: order.id,
       orderAmount: order.total,
       customerDetails: {
-        customerId: session.user.id,
-        customerPhone: order.address.phone || order.user.phone || "9999999999",
-        customerEmail: session.user.email || undefined,
-        customerName: `${order.address.firstName} ${order.address.lastName}`
+        customerId: order.userId,
+        customerPhone: customerPhone,
+        customerEmail: customerEmail || undefined, // Gateway will handle missing email better than a generic one
+        customerName: `${order.address?.firstName || "Customer"} ${order.address?.lastName || ""}`.trim()
       },
-      returnUrl: callbackUrl,
-    });
+      returnUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/payments/callback?orderId=${order.id}`
+    };
+
+    const result = await initiateCashfreePayment(cashfreeParams);
 
     return { success: true, url: result.url };
   } catch (error: any) {

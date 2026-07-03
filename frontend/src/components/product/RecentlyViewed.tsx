@@ -44,7 +44,7 @@ export default function RecentlyViewed({ currentId }: { currentId: string | numb
           href="/collections"
           className="font-ui text-sm font-bold uppercase tracking-widest text-[var(--color-brand-red)] hover:text-[var(--color-brand-gold)] transition-colors"
         >
-          View All â†’
+          View All 
         </Link>
       </div>
 
@@ -68,7 +68,7 @@ export default function RecentlyViewed({ currentId }: { currentId: string | numb
               </h3>
               <p className="font-ui text-sm text-[#8B8375] mb-1">{product.material}</p>
               <p className="font-ui text-base font-bold text-[var(--color-brand-char)]">
-                â‚¹{(Number(product.price || 0) / 100).toLocaleString("en-IN")}
+                {(Number(product.price || 0) / 100).toLocaleString("en-IN")}
               </p>
             </Link>
           );

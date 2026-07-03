@@ -2,11 +2,11 @@ import crypto from "crypto";
 import axios from "axios";
 
 /**
- * PhonePe Payment Gateway Helper
- * Handles checksum generation and API requests for payment initiation and status checks.
+ * Payment Gateway Helper
+ * Cashfree is the primary gateway. PhonePe utilities are retained for legacy compatibility.
  */
 
-// --- PhonePe Constants ---
+// --- Legacy PhonePe Constants ---
 const MERCHANT_ID = process.env.PHONEPE_MERCHANT_ID || "";
 const SALT_KEY = process.env.PHONEPE_SALT_KEY || "";
 const SALT_INDEX = process.env.PHONEPE_SALT_INDEX || "1";
@@ -150,8 +150,8 @@ export async function initiateCashfreePayment({
     customer_details: {
       customer_id: customerDetails.customerId,
       customer_phone: customerDetails.customerPhone,
-      customer_email: customerDetails.customerEmail || "customer@anandarts.com",
-      customer_name: customerDetails.customerName || "Anand Arts Customer"
+      customer_email: customerDetails.customerEmail || undefined,
+      customer_name: customerDetails.customerName || undefined
     },
     order_meta: {
       return_url: returnUrl
@@ -184,8 +184,8 @@ export async function initiateCashfreePayment({
       throw new Error("Invalid response from Cashfree");
     }
   } catch (error: any) {
-    console.error("Cashfree Payment Initiation Error:", error.response?.data || error.message);
-    throw new Error("Could not initiate Cashfree payment. Please check your credentials.");
+    console.error(`[CRITICAL] Cashfree Payment Initiation Error for Order ${orderId}:`, error.response?.data || error.message);
+    throw new Error("Payment initiation failed. Please try again or contact support.");
   }
 }
 

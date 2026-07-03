@@ -29,7 +29,7 @@ export default function HeritageBlogSection() {
               transition={{ delay: 0.1 }}
               className="font-display text-4xl md:text-6xl text-[var(--color-brand-char)] leading-tight"
             >
-              Three Decades of <br />
+              One and halfDecades of <br />
               <span className="italic font-light">Metal & Devotion</span>
             </motion.h2>
           </div>
@@ -59,12 +59,12 @@ export default function HeritageBlogSection() {
               className="prose prose-stone max-w-none"
             >
               <p className="font-display text-2xl text-[var(--color-brand-char)] leading-relaxed italic border-l-4 border-[var(--color-brand-gold)] pl-8 mb-12">
-                "We don't just sell idols; we preserve the lineage of sacred metalcraft that has been part of our family for over 35 years."
-              </p>
+                "We don't just sell idols; we preserve the lineage of sacred metalcraft that has been part of our family for over ."
+              </p>17 years
 
               <div className="space-y-8 font-ui text-lg text-[#8B8375] leading-relaxed">
                 <p>
-                  Established in 1990, Anand Arts began as a humble digital forge in Bengaluru with a singular vision: to bring temple-grade craftsmanship directly to the homes of devotees. While the industry moved towards mass-produced plastic and generic molds, we stayed true to the <strong>lost-wax casting process</strong> and hand-chiseled detailing.
+                  Established in 2009, Anand Arts began as a humble digital forge in Bengaluru with a singular vision: to bring temple-grade craftsmanship directly to the homes of devotees. While the industry moved towards mass-produced plastic and generic molds, we stayed true to the <strong>lost-wax casting process</strong> and hand-chiseled detailing.
                 </p>
                 <p>
                   For three decades, our furnace has never gone cold. Every piece you see on our platform—from the 6-inch miniature brass Krishna to the life-sized bronze Nataraja—is conceived, cast, and finished in our <strong>own manufacturing unit</strong>.

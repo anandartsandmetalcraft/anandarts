@@ -33,7 +33,7 @@ Requirement: "Never fetch the full object... use Prisma 'select' to fetch only r
 Audit: I noticed some of our product feeds (like getProducts) might be fetching too much data (e.g., full reviews) when only the thumbnail is needed. I am optimizing these queries now to use .select() strictly.
 3. Payment Idempotency (Point 16, SYSTEM_DESIGN.md)
 Requirement: "Code must check if the order is already marked as PAID to prevent double-deduction."
-Audit: I am verifying our PhonePe webhook/callback logic to ensure this guard is in place.
+Audit: I am verifying our Cashfree webhook/callback logic to ensure this guard is in place.
 🛠️ Immediate Correction: Optimizing Data Payloads (Compliance with Point 54)
 I am updating the getFeedProducts action to be more "Anti-Bloat." This will make the Homepage load even faster and reduce database costs as we scale to the .com domain.
 

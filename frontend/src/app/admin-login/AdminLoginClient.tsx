@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { ArrowRight, Lock, ShieldCheck, Mail } from "lucide-react";
 import { toast } from "sonner";
 
@@ -17,10 +17,16 @@ export default function AdminLoginClient() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (status === "authenticated" && session?.user?.role === "ADMIN" && session.user.adminSessionExpired) {
+      void signOut({ redirect: false });
+      toast.info("Admin session expired. Please sign in again.");
+      return;
+    }
+
     if (status === "authenticated" && session?.user?.role === "ADMIN") {
       router.replace("/admin");
     }
-  }, [router, session?.user?.role, status]);
+  }, [router, session?.user?.adminSessionExpired, session?.user?.role, status]);
 
   const reason = searchParams.get("reason");
 
@@ -92,6 +98,11 @@ export default function AdminLoginClient() {
               {reason === "forbidden" && (
                 <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold uppercase tracking-widest text-amber-900">
                   This account does not have admin access.
+                </div>
+              )}
+              {reason === "expired" && (
+                <div className="mb-6 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold uppercase tracking-widest text-amber-900">
+                  Your admin session expired after 1 hour. Please sign in again.
                 </div>
               )}
 

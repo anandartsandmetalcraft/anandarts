@@ -436,7 +436,7 @@ export async function getSystemHealth() {
     // 2. Check Other Services (Placeholders for now)
     const services = [
       { name: "Database (PostgreSQL)", status: "HEALTHY", latency: `${dbLatency}ms`, message: "Connection stable." },
-      { name: "Payment Gateway (PhonePe)", status: "HEALTHY", latency: "—", message: "Production API responsive." },
+      { name: "Payment Gateway (Cashfree)", status: "HEALTHY", latency: "—", message: "Production API responsive." },
       { name: "Shipping (Shiprocket)", status: "HEALTHY", latency: "—", message: "Tracking sync active." },
       { name: "Storage (Vercel Blob)", status: "HEALTHY", latency: "—", message: "Assets delivering via CDN." },
     ];
@@ -453,3 +453,118 @@ export async function getSystemHealth() {
     };
   }
 }
+
+/**
+ * GET ALL REGISTERED CUSTOMERS (ADMIN)
+ */
+export async function getAllAdminCustomers() {
+  const admin = await getAdminContext();
+  if (!admin.allowed) {
+    return { error: "Access Denied" };
+  }
+
+  try {
+    const customersRaw = await db.user.findMany({
+      where: { role: "CUSTOMER" },
+      orderBy: { createdAt: "desc" },
+      include: {
+        orders: {
+          select: {
+            total: true,
+            status: true,
+          }
+        },
+        addresses: {
+          where: { isDefault: true },
+          take: 1,
+        }
+      }
+    });
+
+    const successfulStatuses = ["PAID", "CONFIRMED", "SHIPPED", "OUT_FOR_DELIVERY", "DELIVERED"];
+
+    const customers = customersRaw.map((cust) => {
+      const successfulOrders = cust.orders.filter(o => successfulStatuses.includes(o.status));
+      const totalSpend = successfulOrders.reduce((sum, order) => sum + order.total, 0);
+      const defaultAddress = cust.addresses[0] || null;
+
+      return {
+        id: cust.id,
+        firstName: cust.firstName || "Anonymous",
+        lastName: cust.lastName || "User",
+        email: cust.email,
+        phone: cust.phone,
+        image: cust.image,
+        createdAt: cust.createdAt,
+        orderCount: cust.orders.length,
+        successfulOrderCount: successfulOrders.length,
+        totalSpend,
+        city: defaultAddress?.city || "Not Provided",
+        state: defaultAddress?.state || "Not Provided",
+      };
+    });
+
+    return { success: true, customers };
+  } catch (error: any) {
+    console.error("Admin Customers Fetch Error:", error);
+    return { success: false, error: "Failed to load customer list." };
+  }
+}
+
+/**
+ * GET SINGLE CUSTOMER DETAILS AND LEDGER (ADMIN)
+ */
+export async function getAdminCustomerById(userId: string) {
+  const admin = await getAdminContext();
+  if (!admin.allowed) {
+    return { error: "Access Denied" };
+  }
+
+  try {
+    const user = await db.user.findUnique({
+      where: { id: userId },
+      include: {
+        addresses: true,
+        orders: {
+          orderBy: { createdAt: "desc" },
+          include: { invoice: true }
+        }
+      }
+    });
+
+    if (!user) {
+      return { error: "Customer not found." };
+    }
+
+    const successfulStatuses = ["PAID", "CONFIRMED", "SHIPPED", "OUT_FOR_DELIVERY", "DELIVERED"];
+    const successfulOrders = user.orders.filter(o => successfulStatuses.includes(o.status));
+    const totalSpend = successfulOrders.reduce((sum, order) => sum + order.total, 0);
+    const avgOrderValue = successfulOrders.length > 0 ? Math.round(totalSpend / successfulOrders.length) : 0;
+
+    return {
+      success: true,
+      customer: {
+        id: user.id,
+        firstName: user.firstName || "Anonymous",
+        lastName: user.lastName || "User",
+        email: user.email,
+        phone: user.phone,
+        image: user.image,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt,
+        addresses: user.addresses,
+        orders: user.orders,
+        metrics: {
+          totalSpend,
+          orderCount: user.orders.length,
+          successfulOrderCount: successfulOrders.length,
+          avgOrderValue,
+        }
+      }
+    };
+  } catch (error: any) {
+    console.error("Admin Customer Detail Fetch Error:", error);
+    return { error: "Failed to load customer details." };
+  }
+}
+

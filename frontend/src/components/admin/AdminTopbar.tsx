@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState, type ComponentType } from "react";
+import { useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Bell, Maximize2, Settings, ChevronDown, UserCircle, LayoutGrid, Clock, History, ShoppingBag, Truck, FileText, CreditCard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { signOut } from "next-auth/react";
+import { toast } from "sonner";
 import { getAdminActivityFeed, markActivitiesRead } from "@/actions/activity";
 
 export default function AdminTopbar() {
@@ -14,11 +15,42 @@ export default function AdminTopbar() {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [activities, setActivities] = useState<any[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const hasLoadedActivitiesRef = useRef(false);
+  const seenUnreadActivityIdsRef = useRef<Set<string>>(new Set());
 
   const loadActivities = async () => {
     const res = await getAdminActivityFeed(6);
-    setActivities(res.activities ?? []);
-    setUnreadCount(res.unreadCount ?? 0);
+    const nextActivities = res.activities ?? [];
+    const nextUnreadCount = res.unreadCount ?? 0;
+    const unreadActivities = nextActivities.filter((activity) => !activity.isRead);
+    const freshUnreadActivities = unreadActivities.filter((activity) => !seenUnreadActivityIdsRef.current.has(activity.id));
+
+    if (hasLoadedActivitiesRef.current && freshUnreadActivities.length > 0) {
+      const latestActivity = freshUnreadActivities[0];
+      toast.custom(
+        () => (
+          <div className="flex w-[min(360px,calc(100vw-32px))] items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-2xl shadow-slate-900/10">
+            <div className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-[#0F172A] text-white">
+              <Bell size={18} strokeWidth={1.75} />
+              <span className="absolute -right-1 -top-1 h-3 w-3 rounded-full border-2 border-white bg-rose-500" />
+            </div>
+            <div className="min-w-0 flex-1 pt-0.5">
+              <p className="font-display text-sm font-bold text-[#0F172A]">
+                {freshUnreadActivities.length === 1 ? "New notification" : `${freshUnreadActivities.length} new notifications`}
+              </p>
+              <p className="mt-1 truncate text-xs font-semibold text-slate-600">{latestActivity.title}</p>
+              <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-500">{latestActivity.description}</p>
+            </div>
+          </div>
+        ),
+        { duration: 3000 }
+      );
+    }
+
+    unreadActivities.forEach((activity) => seenUnreadActivityIdsRef.current.add(activity.id));
+    hasLoadedActivitiesRef.current = true;
+    setActivities(nextActivities);
+    setUnreadCount(nextUnreadCount);
   };
 
   useEffect(() => {

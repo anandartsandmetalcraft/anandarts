@@ -100,7 +100,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative h-[85vh] md:h-[90vh] w-full overflow-hidden bg-[#1A1208]">
+    <section className="relative h-[55vh] md:h-[70vh] w-full overflow-hidden bg-[#1A1208]">
 
 
 
@@ -142,9 +142,12 @@ export default function Hero() {
             <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#1A1208] to-transparent" />
           </div>
 
+          {/* Invisible Link covering the entire slide */}
+          <Link href={HERO_SLIDES[current].link} className="absolute inset-0 z-10" aria-label={HERO_SLIDES[current].title} />
+
           {/* Content Layer */}
-          <div className="relative h-full max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col justify-center pt-24 md:pt-0">
-            <div className="max-w-2xl space-y-3 md:space-y-6">
+          <div className="relative z-20 h-full max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col justify-center pt-8 md:pt-0 pointer-events-none">
+            <div className="max-w-2xl space-y-3 md:space-y-6 pointer-events-auto">
               <motion.div
                 initial={{ y: prefersReducedMotion ? 0 : 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -205,23 +208,23 @@ export default function Hero() {
       </AnimatePresence>
 
       {/* Navigation Controls - Matching Shilpashastra style */}
-      <div className="absolute inset-x-0 bottom-12 z-30 max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between pointer-events-none">
+      <div className="absolute inset-x-0 bottom-4 md:bottom-6 z-30 max-w-[1440px] mx-auto px-6 md:px-12 flex items-center justify-between pointer-events-none">
 
         {/* Left Arrows */}
-        <div className="flex items-center gap-4 pointer-events-auto">
+        <div className="flex items-center gap-2 md:gap-4 pointer-events-auto">
           <button
             onClick={slidePrev}
-            className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all group"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all group"
             aria-label="Previous Slide"
           >
-            <ChevronLeft size={20} className="group-hover:-translate-x-1 transition-transform" />
+            <ChevronLeft size={16} className="group-hover:-translate-x-1 transition-transform" />
           </button>
           <button
             onClick={slideNext}
-            className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all group"
+            className="w-8 h-8 md:w-10 md:h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all group"
             aria-label="Next Slide"
           >
-            <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
+            <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
 

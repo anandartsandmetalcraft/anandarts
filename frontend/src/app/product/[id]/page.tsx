@@ -4,6 +4,9 @@ import ProductDetails from "../../../components/product/ProductDetails";
 import { notFound } from "next/navigation";
 import Schema from "@/components/shared/Schema";
 import { Metadata } from "next";
+import { absoluteUrl, siteBrand } from "@/lib/seo";
+
+export const revalidate = 3600; // revalidate every 1 hour
 
 const RelatedProducts = dynamic(() => import("../../../components/product/RelatedProducts"));
 const RecentlyViewed = dynamic(() => import("../../../components/product/RecentlyViewed"));
@@ -15,11 +18,24 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   if (!product) return {};
 
   return {
-    title: product.name,
-    description: product.description || `Handcrafted ${product.name} from Anand Arts. ${product.material} craftsmanship at its finest.`,
+    title: `${product.name} | ${product.material || "Handcrafted"} Temple Art`,
+    description: product.description || `Buy ${product.name} from Anand Arts Bengaluru. Handcrafted ${product.material || "temple art"} for pooja rooms, sacred gifting, interiors, and devotional spaces.`,
+    alternates: {
+      canonical: absoluteUrl(`/product/${product.id}`),
+    },
+    keywords: [
+      product.name,
+      product.material || "",
+      product.category || "",
+      "handcrafted idol",
+      "pooja room idol",
+      "temple art Bengaluru",
+      "Anand Arts",
+    ].filter(Boolean),
     openGraph: {
       title: product.name,
-      description: product.description,
+      description: product.description || `Handcrafted ${product.name} from Anand Arts Bengaluru.`,
+      url: absoluteUrl(`/product/${product.id}`),
       images: [product.img],
     },
   };
@@ -57,12 +73,12 @@ export default async function ProductPage({ params }: { params: Promise<{ id: st
     sku: product.id,
     brand: {
       "@type": "Brand",
-      "name": "Anand Arts"
+      "name": siteBrand.name
     },
     material: product.material,
     offers: {
       "@type": "Offer",
-      "url": `https://anandarts.in/product/${product.id}`,
+      "url": absoluteUrl(`/product/${product.id}`),
       "priceCurrency": "INR",
       "price": product.price / 100,
       "availability": product.stock && product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock"

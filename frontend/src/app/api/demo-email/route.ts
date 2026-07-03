@@ -13,7 +13,7 @@ export async function GET() {
     total: 1475000,    // ₹14,750.00
     isPickup: true,    // Toggle this to false in the code to see the delivery version!
     address: "Jaishankar G\nNo. 42, Heritage Lane\nMalleswaram\nBengaluru, Karnataka 560003",
-    trackingLink: "https://anandarts.com/track-order",
+    trackingLink: "https://www.anandartsandmetalcrafts.com/track-order",
     items: [
       {
         name: "Brass Nataraja Masterpiece (24 inch)",

@@ -17,7 +17,7 @@ export async function sendOrderConfirmationEmail(
     const html = generateOrderConfirmationEmail(orderData);
 
     const fromEmail = process.env.NODE_ENV === "production" 
-      ? "Anand Arts <orders@anandarts.com>" 
+      ? "Anand Arts <orders@anandartsandmetalcrafts.com>" 
       : "Anand Arts <onboarding@resend.dev>";
 
     const data = await resend.emails.send({

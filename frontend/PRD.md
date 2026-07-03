@@ -88,7 +88,7 @@ Login/OTP required at payment step.
 Shipping address collected.
 GST details optional (B2B).
 7.3 Payments
-PhonePe integration using checksum verification.
+Cashfree integration for UPI, cards, and netbanking.
 Payment status updated via webhook.
 After successful payment: mark order PAID, deduct stock.
 7.4 Invoicing
@@ -126,7 +126,7 @@ Tailwind CSS + Lucide React
 Server Actions for backend logic
 PostgreSQL (Neon)
 NextAuth v5 (Google OAuth + Phone OTP)
-PhonePe payments
+Cashfree payments
 Cloudinary (images)
 Resend + React-PDF (invoices)
 Anand Arts Website + Admin CMS — PRD & Task List 5
@@ -157,7 +157,7 @@ Auth at payment step (OTP flow)
 Persist user addresses for returning customers
 Phase 4 — Payments & automation
 Anand Arts Website + Admin CMS — PRD & Task List 6
-PhonePe payment initiation + checksum
+Cashfree payment initiation + webhook verification
 Webhook endpoint with verification + idempotency
 Order state machine (CREATED → PAYMENT_INITIATED → PAID →
 FULFILLED/CANCELLED)

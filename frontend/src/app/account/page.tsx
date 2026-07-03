@@ -12,6 +12,7 @@ import { useAuthStore } from "@/store/authStore";
 import { useUIStore } from "@/store/uiStore";
 import { getUserOrders } from "@/actions/orders";
 import { updateProfile } from "@/actions/user";
+import { getUserAddresses, updateAddress, createAddress } from "@/actions/addresses";
 import { OrderTracking } from "@/components/ui/order-tracking";
  
 export default function AccountPage() {
@@ -35,16 +36,14 @@ export default function AccountPage() {
     }
   }, [isLoggedIn, setIsAuthOpen]);
  
-  // Profile editing state
-  const [profileData, setProfileData] = useState({ 
-    firstName: "", 
-    lastName: "",
-    email: "", 
-  });
+  // Profile & Address editing state
+  const [profileData, setProfileData] = useState({ firstName: "", lastName: "", email: "" });
+  const [addressData, setAddressData] = useState({ houseNo: "", street: "", landmark: "", city: "", state: "", postalCode: "", country: "India" });
+  const [addressId, setAddressId] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
  
-  // Fetch real order history
+  // Fetch real order history and addresses
   useEffect(() => {
     if (isLoggedIn) {
       const fetchOrders = async () => {
@@ -54,11 +53,29 @@ export default function AccountPage() {
         setIsLoading(false);
       };
 
+      const fetchAddresses = async () => {
+        const addr = await getUserAddresses();
+        if (addr && addr.length > 0) {
+          setAddressId(addr[0].id);
+          setAddressData({
+            houseNo: addr[0].houseNo || "",
+            street: addr[0].street || "",
+            landmark: addr[0].landmark || "",
+            city: addr[0].city || "",
+            state: addr[0].state || "",
+            postalCode: addr[0].postalCode || "",
+            country: addr[0].country || "India",
+          });
+        }
+      };
+
       const syncOrders = () => {
         void fetchOrders();
       };
 
       syncOrders();
+      fetchAddresses();
+      
       const interval = window.setInterval(syncOrders, 20000);
       window.addEventListener("focus", syncOrders);
       document.addEventListener("visibilitychange", syncOrders);
@@ -100,15 +117,35 @@ export default function AccountPage() {
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsUpdating(true);
-    const result = await updateProfile(profileData);
+    
+    const profileResult = await updateProfile(profileData);
+    
+    const fullAddressPayload = {
+      firstName: profileData.firstName,
+      lastName: profileData.lastName,
+      phone: user?.phone || "",
+      ...addressData,
+      isDefault: true
+    };
+    
+    let addressResult;
+    if (addressId) {
+      addressResult = await updateAddress(addressId, fullAddressPayload);
+    } else {
+      addressResult = await createAddress(fullAddressPayload);
+      if (addressResult.success && addressResult.address) {
+         setAddressId(addressResult.address.id);
+      }
+    }
+
     setIsUpdating(false);
  
-    if (result.success) {
-      toast.success("Profile updated.");
+    if (profileResult.success && addressResult?.success) {
+      toast.success("Profile and Shipping Address updated.");
       setIsEditing(false);
       router.refresh();
     } else {
-      toast.error(result.error);
+      toast.error(profileResult.error || addressResult?.error || "Failed to update.");
     }
   };
  
@@ -319,6 +356,79 @@ export default function AccountPage() {
                            )}
                         </div>
                       </div>
+
+                      <div className="pt-6 mt-6 border-t border-black/5">
+                        <h4 className="font-ui text-[10px] uppercase font-bold tracking-[0.2em] text-[var(--color-brand-char)] mb-6">Default Shipping Address</h4>
+                        
+                        {isEditing ? (
+                          <div className="space-y-6">
+                            <div className="grid md:grid-cols-2 gap-8">
+                               <div className="space-y-1">
+                                  <label className="font-ui text-[10px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">Flat / House No.</label>
+                                  <input required value={addressData.houseNo} onChange={(e) => setAddressData({...addressData, houseNo: e.target.value})} className="w-full border-b border-black/10 py-2 outline-none font-display text-lg bg-transparent" placeholder="House/Flat no." />
+                               </div>
+                               <div className="space-y-1">
+                                  <label className="font-ui text-[10px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">Street</label>
+                                  <input required value={addressData.street} onChange={(e) => setAddressData({...addressData, street: e.target.value})} className="w-full border-b border-black/10 py-2 outline-none font-display text-lg bg-transparent" placeholder="Street name" />
+                               </div>
+                            </div>
+                            <div className="grid md:grid-cols-3 gap-8">
+                               <div className="space-y-1">
+                                  <label className="font-ui text-[10px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">Landmark</label>
+                                  <input value={addressData.landmark} onChange={(e) => setAddressData({...addressData, landmark: e.target.value})} className="w-full border-b border-black/10 py-2 outline-none font-display text-lg bg-transparent" placeholder="Optional" />
+                               </div>
+                               <div className="space-y-1">
+                                  <label className="font-ui text-[10px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">City</label>
+                                  <input required value={addressData.city} onChange={(e) => setAddressData({...addressData, city: e.target.value})} className="w-full border-b border-black/10 py-2 outline-none font-display text-lg bg-transparent" />
+                               </div>
+                               <div className="space-y-1">
+                                  <label className="font-ui text-[10px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">ZIP Code</label>
+                                  <input required value={addressData.postalCode} onChange={(e) => setAddressData({...addressData, postalCode: e.target.value})} className="w-full border-b border-black/10 py-2 outline-none font-display text-lg bg-transparent" />
+                               </div>
+                            </div>
+                            <div className="grid md:grid-cols-2 gap-8">
+                               <div className="space-y-1">
+                                  <label className="font-ui text-[10px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">State</label>
+                                  <input required value={addressData.state} onChange={(e) => setAddressData({...addressData, state: e.target.value})} className="w-full border-b border-black/10 py-2 outline-none font-display text-lg bg-transparent" />
+                               </div>
+                               <div className="space-y-1">
+                                  <label className="font-ui text-[10px] uppercase font-bold tracking-widest text-[var(--color-brand-red)]">Country</label>
+                                  <div className="relative">
+                                     <select value={addressData.country} onChange={(e) => setAddressData({...addressData, country: e.target.value})} className="w-full border-b border-black/10 py-2 outline-none font-display text-lg bg-transparent appearance-none cursor-pointer">
+                                        <option value="India">India</option>
+                                        <option value="USA">United States</option>
+                                        <option value="UK">United Kingdom</option>
+                                        <option value="UAE">United Arab Emirates</option>
+                                        <option value="Japan">Japan</option>
+                                        <option value="France">France</option>
+                                        <option value="Australia">Australia</option>
+                                        <option value="Canada">Canada</option>
+                                        <option value="Singapore">Singapore</option>
+                                        <option value="Germany">Germany</option>
+                                        <option value="Other">Other</option>
+                                     </select>
+                                     <div className="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-black/40">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                                     </div>
+                                  </div>
+                               </div>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="bg-[#FAF9F6] p-6 rounded-2xl border border-black/5">
+                            {addressData.houseNo ? (
+                              <div className="space-y-1 text-[var(--color-brand-char)] font-display text-lg">
+                                <p>{addressData.houseNo}, {addressData.street}</p>
+                                {addressData.landmark && <p className="text-[#8B8375] font-ui text-sm">Near {addressData.landmark}</p>}
+                                <p>{addressData.city}, {addressData.state} {addressData.postalCode}</p>
+                                <p className="font-ui text-xs font-bold uppercase tracking-widest mt-2">{addressData.country}</p>
+                              </div>
+                            ) : (
+                              <p className="text-[#8B8375] font-ui text-sm">No default address saved yet. Click edit to add one.</p>
+                            )}
+                          </div>
+                        )}
+                      </div>
  
                       {isEditing && (
                         <div className="flex gap-6 pt-6">
@@ -327,7 +437,7 @@ export default function AccountPage() {
                              type="submit" 
                              className="bg-black text-white font-ui text-xs font-bold uppercase tracking-widest px-10 py-5 rounded-full hover:bg-[var(--color-brand-red)] transition-all shadow-xl disabled:opacity-50"
                            >
-                            {isUpdating ? 'Updating...' : 'Save Changes'}
+                            {isUpdating ? 'Saving...' : 'Save Changes'}
                            </button>
                            <button type="button" onClick={() => setIsEditing(false)} className="font-ui text-xs font-bold uppercase tracking-widest text-[#8B8375] hover:text-black transition-all">
                             Cancel

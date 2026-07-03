@@ -1,7 +1,8 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 import { 
   ArrowLeft, 
   Send, 
@@ -27,7 +28,8 @@ interface InvoiceItem {
   hsn: string;
 }
 
-export default function CreateInvoicePage() {
+function InvoiceForm() {
+  const searchParams = useSearchParams();
   const [invoiceType, setInvoiceType] = useState<"POS" | "WEB">("POS");
   const [invoiceNo, setInvoiceNo] = useState("#AAS001");
   const [items, setItems] = useState<InvoiceItem[]>([
@@ -38,6 +40,41 @@ export default function CreateInvoicePage() {
   const [isSameAddress, setIsSameAddress] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [contactNo, setContactNo] = useState("+91 84318 38722");
+
+  // Controlled customer details
+  const [billingName, setBillingName] = useState("");
+  const [billingAddress, setBillingAddress] = useState("");
+  const [billingPhone, setBillingPhone] = useState("");
+
+  const [shippingName, setShippingName] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
+  const [shippingPhone, setShippingPhone] = useState("");
+
+  // Load from search parameters
+  useEffect(() => {
+    const name = searchParams.get("name") || "";
+    const email = searchParams.get("email") || "";
+    const phone = searchParams.get("phone") || "";
+    const address = searchParams.get("address") || "";
+
+    if (name) {
+      setBillingName(name);
+      setShippingName(name);
+    }
+    if (phone) {
+      setBillingPhone(phone);
+      setShippingPhone(phone);
+    }
+    
+    let constructedAddress = address;
+    if (!constructedAddress && email) {
+      constructedAddress = `Email: ${email}`;
+    }
+    if (constructedAddress) {
+      setBillingAddress(constructedAddress);
+      setShippingAddress(constructedAddress);
+    }
+  }, [searchParams]);
 
   // Auto-generate non-editable ID based on type
   useEffect(() => {
@@ -137,19 +174,26 @@ export default function CreateInvoicePage() {
          <div className="px-8 py-4 grid grid-cols-2 gap-10 border-b border-slate-50 print:py-2 print:border-none">
             <div className="space-y-2">
                <p className="text-[10px] font-black uppercase tracking-widest text-[#0F172A]">Billing To:</p>
-               <input placeholder="Full Name / Company" className="w-full font-bold text-[#0F172A] text-[13px] outline-none" />
-               <textarea placeholder="Complete Address" rows={2} className="w-full text-slate-500 text-[12px] outline-none resize-none leading-tight" />
-               <input placeholder="Phone: +91" className="w-full text-slate-400 text-[11px] outline-none" />
+               <input value={billingName} onChange={e => setBillingName(e.target.value)} placeholder="Full Name / Company" className="w-full font-bold text-[#0F172A] text-[13px] outline-none" />
+               <textarea value={billingAddress} onChange={e => setBillingAddress(e.target.value)} placeholder="Complete Address" rows={2} className="w-full text-slate-500 text-[12px] outline-none resize-none leading-tight" />
+               <input value={billingPhone} onChange={e => setBillingPhone(e.target.value)} placeholder="Phone: +91" className="w-full text-slate-400 text-[11px] outline-none" />
             </div>
             <div className="space-y-2">
                <div className="flex items-center gap-2">
                   <p className="text-[10px] font-black uppercase tracking-widest text-[#0F172A]">Shipping To:</p>
-                  <button onClick={() => setIsSameAddress(!isSameAddress)} className="text-[8px] font-bold uppercase px-1.5 py-0.5 bg-slate-50 text-slate-400 rounded no-print hover:bg-blue-50 hover:text-blue-500 transition-colors">Same as Billing?</button>
+                  <button onClick={() => {
+                    setIsSameAddress(!isSameAddress);
+                    if (isSameAddress) {
+                      setShippingName(billingName);
+                      setShippingAddress(billingAddress);
+                      setShippingPhone(billingPhone);
+                    }
+                  }} className="text-[8px] font-bold uppercase px-1.5 py-0.5 bg-slate-50 text-slate-400 rounded no-print hover:bg-blue-50 hover:text-blue-500 transition-colors">Same as Billing?</button>
                </div>
                <div className={isSameAddress ? "opacity-30 print:opacity-100" : "opacity-100"}>
-                  <input placeholder="Full Name / Receiver" className="w-full font-bold text-[#0F172A] text-[13px] outline-none" />
-                  <textarea placeholder="Delivery Address" rows={2} className="w-full text-slate-500 text-[12px] outline-none resize-none leading-tight" />
-                  <input placeholder="Phone: +91" className="w-full text-slate-400 text-[11px] outline-none" />
+                  <input value={isSameAddress ? billingName : shippingName} onChange={e => setShippingName(e.target.value)} disabled={isSameAddress} placeholder="Full Name / Receiver" className="w-full font-bold text-[#0F172A] text-[13px] outline-none" />
+                  <textarea value={isSameAddress ? billingAddress : shippingAddress} onChange={e => setShippingAddress(e.target.value)} disabled={isSameAddress} placeholder="Delivery Address" rows={2} className="w-full text-slate-500 text-[12px] outline-none resize-none leading-tight" />
+                  <input value={isSameAddress ? billingPhone : shippingPhone} onChange={e => setShippingPhone(e.target.value)} disabled={isSameAddress} placeholder="Phone: +91" className="w-full text-slate-400 text-[11px] outline-none" />
                </div>
             </div>
          </div>
@@ -193,7 +237,7 @@ export default function CreateInvoicePage() {
                         <td className="py-4 text-right no-print">
                            <button onClick={() => removeItem(item.id)} className="text-rose-400 opacity-0 group-hover:opacity-100"><X size={14}/></button>
                         </td>
-                     </tr>
+                      </tr>
                   ))}
                </tbody>
             </table>
@@ -211,7 +255,7 @@ export default function CreateInvoicePage() {
                         <span className="text-[10px] font-bold text-slate-500">Method:</span>
                         <select value={paymentMethod} onChange={e => setPaymentMethod(e.target.value)} className="bg-white border border-slate-200 rounded px-2 py-1 text-[11px] font-bold text-blue-600 outline-none print:bg-transparent print:border-none">
                            <option>Cash</option>
-                           <option>UPI / PhonePe</option>
+                           <option>UPI / Cashfree</option>
                            <option>Card Payment</option>
                            <option>Netbanking</option>
                         </select>
@@ -262,5 +306,18 @@ export default function CreateInvoicePage() {
          Anand Arts | Professional Billing Suite v2.0
       </p>
     </div>
+  );
+}
+
+export default function CreateInvoicePage() {
+  return (
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4">
+        <div className="h-10 w-10 border-4 border-slate-200 border-t-blue-500 rounded-full animate-spin" />
+        <p className="font-ui text-xs font-bold uppercase tracking-widest text-slate-400">Loading Invoice Studio...</p>
+      </div>
+    }>
+      <InvoiceForm />
+    </Suspense>
   );
 }

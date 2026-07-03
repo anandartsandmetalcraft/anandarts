@@ -34,7 +34,8 @@ export default function Navbar() {
   };
 
   const isDarkHero = pathname === '/';
-  const useLightText = !isScrolled && isDarkHero;
+  // Homepage top section is now white (HeroCategories), so we no longer need light text initially.
+  const useLightText = false;
 
   const navStyle = {
     backgroundColor: isScrolled ? "rgba(253, 245, 230, 0.88)" : "rgba(253, 245, 230, 0)",

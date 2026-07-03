@@ -239,7 +239,7 @@ export default async function AdminOrderDetailPage({ params }: { params: { id: s
                  <div className="flex justify-between items-center">
                     <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400">Method:</span>
                     <span className="flex items-center gap-2 text-sm font-bold text-[#0F172A]">
-                       <CreditCard size={14} className="text-slate-400" /> PhonePe UPI
+                       <CreditCard size={14} className="text-slate-400" /> Cashfree UPI
                     </span>
                  </div>
                  <div className="flex justify-between items-center">

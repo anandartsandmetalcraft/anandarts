@@ -1,20 +1,24 @@
 import { MetadataRoute } from 'next'
+import { siteUrl } from '@/lib/seo'
  
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://anandarts.com'
-
   return {
-    rules: {
-      userAgent: '*',
-      allow: '/',
-      disallow: [
-        '/admin',
-        '/checkout',
-        '/api',
-        '/account',
-        '/_next',
-      ],
-    },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    rules: [
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: [
+          '/admin',
+          '/admin-login',
+          '/checkout',
+          '/api',
+          '/account',
+          '/_next',
+          '/*?*sort=',
+          '/*?*page=',
+        ],
+      },
+    ],
+    sitemap: `${siteUrl}/sitemap.xml`,
   }
 }

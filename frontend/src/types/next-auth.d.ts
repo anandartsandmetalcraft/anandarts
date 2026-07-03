@@ -9,6 +9,8 @@ declare module "next-auth" {
       firstName: string | null;
       lastName: string | null;
       phone?: string | null;
+      adminSessionExpiresAt?: number;
+      adminSessionExpired?: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -19,5 +21,7 @@ declare module "next-auth/jwt" {
     firstName?: string | null;
     lastName?: string | null;
     phone?: string | null;
+    adminSessionExpiresAt?: number;
+    adminSessionExpired?: boolean;
   }
 }

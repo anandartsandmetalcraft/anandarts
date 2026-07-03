@@ -1,21 +1,25 @@
 import React from "react";
-import Image from "next/image";
 import Schema from "@/components/shared/Schema";
 import { Metadata } from "next";
 import HeritageBlogSection from "@/components/home/HeritageBlogSection";
 import SupplyChainComparison from "@/components/home/SupplyChainComparison";
 import TrustCounter from "@/components/home/TrustCounter";
+import { siteUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Our Heritage & Story",
-  description: "Discover the 30-year legacy of Anand Arts, our direct-to-consumer manufacturing model, and our community of 20,000+ devotees.",
+  title: "Our Heritage & Story | South Indian Temple Art Studio",
+  description: "Discover Anand Arts, a Bengaluru temple-art studio preserving South Indian brass, bronze, copper, panchaloha, and wood craftsmanship for sacred spaces.",
+  alternates: {
+    canonical: `${siteUrl}/about`,
+  },
+  keywords: ["South Indian temple art", "temple art Bengaluru", "handcrafted brass idols", "artisan metal craft India"],
 };
 
 export default function AboutPage() {
   const aboutSchema = {
     "@type": "AboutPage",
     "name": "Our Heritage - Anand Arts",
-    "url": "https://anandarts.com/about"
+    "url": `${siteUrl}/about`
   };
 
   return (
@@ -41,36 +45,6 @@ export default function AboutPage() {
       <HeritageBlogSection />
       <SupplyChainComparison />
       <TrustCounter />
-
-      {/* Narrative Section - Additional Addons */}
-      <div className="bg-white py-24 border-t border-black/5">
-        <div className="max-w-[1320px] mx-auto px-6 md:px-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-24 items-center">
-            <div className="relative aspect-video rounded-3xl overflow-hidden shadow-2xl">
-               <Image 
-                src="https://images.unsplash.com/photo-1615484477778-ca3b77940c25?auto=format&fit=crop&w=1200&q=80" 
-                alt="Workshop" 
-                fill 
-                className="object-cover" 
-               />
-            </div>
-            <div>
-               <h3 className="font-display text-3xl text-[var(--color-brand-char)] mb-6">Ethical Sourcing & Artisan Welfare</h3>
-               <p className="font-ui text-lg text-[#8B8375] leading-relaxed mb-8">
-                 By owning the entire manufacture-to-customer cycle, we ensure that every rupee you pay directly supports the artisans' livelihood. We don't just create art; we sustain the families of over 40 traditional metalworkers.
-               </p>
-               <div className="flex flex-wrap gap-4">
-                 {["100% Recyclable Packaging", "Fair Wage Certified", "Lineage Preservation"].map((tag) => (
-                   <span key={tag} className="px-4 py-2 bg-[var(--color-brand-cream)] text-[var(--color-brand-gold)] font-ui text-[10px] font-bold uppercase tracking-widest rounded-full border border-[var(--color-brand-gold)]/10">
-                     {tag}
-                   </span>
-                 ))}
-               </div>
-            </div>
-          </div>
-        </div>
-      </div>
     </main>
   );
 }
-

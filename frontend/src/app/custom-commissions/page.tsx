@@ -1,11 +1,14 @@
 import React from "react";
 import Link from "next/link";
 import CommissionWizard from "@/components/commission/CommissionWizard";
+import { buildMetadata } from "@/lib/seo";
 
-export const metadata = {
-  title: "Custom Commissions | Anand Arts",
-  description: "Create custom temple idols and metal crafts designed specifically for you.",
-};
+export const metadata = buildMetadata({
+  title: "Custom Temple Idol Commissions in Bengaluru",
+  description: "Commission custom brass, bronze, copper, panchaloha, and wood temple idols from Anand Arts Bengaluru for homes, temples, interiors, and sacred gifting.",
+  path: "/custom-commissions",
+  keywords: ["custom idol makers Bangalore", "custom panchaloha idol", "custom temple idols Bengaluru"],
+});
 
 export default function CustomCommissionPage() {
   return (

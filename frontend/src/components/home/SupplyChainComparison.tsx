@@ -1,7 +1,8 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import { motion } from "framer-motion";
-import { ArrowDown, ArrowRight, Factory, Store, Users, UserCheck, ShieldCheck, Flame, Heart } from "lucide-react";
+import { ArrowRight, Factory, Home, Store, Users, UserCheck, ShieldCheck } from "lucide-react";
 
 export default function SupplyChainComparison() {
   return (
@@ -64,57 +65,71 @@ export default function SupplyChainComparison() {
                <div className="h-[1px] w-12 bg-[var(--color-brand-gold)]/40" />
             </div>
 
-            <div className="bg-[#16181D] rounded-[2rem] p-10 md:p-16 border border-[var(--color-brand-gold)]/30 relative overflow-hidden group">
-               
-               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-16">
-                  
-                  {/* From the Fire */}
-                  <div className="flex flex-col items-center text-center">
-                    <div className="w-24 h-24 rounded-2xl bg-[var(--color-brand-gold)] flex items-center justify-center text-white mb-6">
-                      <Flame size={40} />
-                    </div>
-                    <h4 className="font-display text-xl text-white mb-2 uppercase tracking-wide">Anand Arts</h4>
-                    <p className="font-ui text-[9px] font-bold uppercase tracking-widest text-[var(--color-brand-gold)]">Original Manufacture</p>
-                  </div>
+            <div className="relative overflow-hidden rounded-[2rem] border border-[var(--color-brand-gold)]/25 bg-[#16181D] p-6 shadow-[0_30px_90px_rgba(0,0,0,0.25)] sm:p-8 md:p-12">
+               <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[var(--color-brand-gold)]/60 to-transparent" />
+               <div className="absolute right-0 top-0 h-56 w-56 translate-x-1/3 -translate-y-1/3 rounded-full bg-[var(--color-brand-gold)]/8 blur-3xl" />
 
-                  {/* The Fast-Track Line */}
-                  <div className="flex-1 flex items-center justify-center relative w-full h-[2px] md:h-[1px]">
-                     {/* Horizontal Line (Desktop) */}
-                     <div className="hidden md:block w-full h-[1px] bg-[var(--color-brand-gold)]/40" />
-                     
-                     {/* Vertical Line (Mobile) */}
-                     <div className="md:hidden w-[1px] h-32 bg-[var(--color-brand-gold)]/40" />
-                     
-                     {/* Responsive Arrow */}
-                     <div className="absolute md:right-[-12px] bottom-[-20px] md:bottom-auto">
-                        <ArrowRight size={24} className="text-[var(--color-brand-gold)] rotate-90 md:rotate-0" />
+               <div className="relative z-10">
+                  <div className="flex flex-col gap-5 border-b border-white/8 pb-7 sm:flex-row sm:items-center sm:justify-between">
+                     <div className="flex items-center gap-4">
+                        <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-white/10 bg-white p-2 shadow-2xl sm:h-20 sm:w-20">
+                           <Image src="/Logo3.png" alt="Anand Arts logo" width={64} height={64} className="h-full w-full object-contain" />
+                        </div>
+                        <div>
+                           <p className="font-ui text-[9px] font-bold uppercase tracking-[0.28em] text-[var(--color-brand-gold)]">Source</p>
+                           <h4 className="mt-1 font-display text-2xl text-white">Anand Arts</h4>
+                           <p className="mt-1 font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-[#8B8375]">Original manufacturer</p>
+                        </div>
+                     </div>
+
+                     <div className="hidden h-px flex-1 bg-gradient-to-r from-[var(--color-brand-gold)]/45 to-transparent sm:block" />
+
+                     <div className="flex items-center gap-4 sm:text-right">
+                        <div className="order-2 flex h-14 w-14 items-center justify-center rounded-2xl border border-[var(--color-brand-gold)]/25 bg-[#0F1115] text-[var(--color-brand-gold)] sm:order-1">
+                           <Home size={25} strokeWidth={1.6} />
+                        </div>
+                        <div className="order-1 sm:order-2">
+                           <p className="font-ui text-[9px] font-bold uppercase tracking-[0.28em] text-[var(--color-brand-gold)]">Destination</p>
+                           <h4 className="mt-1 font-display text-2xl text-white">Your Home</h4>
+                           <p className="mt-1 font-ui text-[11px] font-bold uppercase tracking-[0.18em] text-[#8B8375]">Artisan-direct pricing</p>
+                        </div>
                      </div>
                   </div>
 
-                  {/* To the Heart */}
-                  <div className="flex flex-col items-center text-center">
-                    <div className="w-24 h-24 rounded-2xl bg-[#0F1115] border border-[var(--color-brand-gold)]/30 flex items-center justify-center text-white mb-6">
-                      <Heart size={40} className="text-[var(--color-brand-gold)]" />
-                    </div>
-                    <h4 className="font-display text-xl text-white mb-2 uppercase tracking-wide">Your Home</h4>
-                    <p className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375]">Artisan-Direct Pricing</p>
-                  </div>
+                  <div className="grid gap-5 py-8 md:grid-cols-[1fr_auto_1fr] md:items-center">
+                     <div className="rounded-3xl bg-white/[0.04] p-5">
+                        <p className="font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-brand-gold)]">What changes</p>
+                        <p className="mt-3 font-body text-sm leading-relaxed text-[#B8B0A3]">
+                           No dealer chain. No repeated handling. The piece moves from our craft team to your sacred space with clearer provenance.
+                        </p>
+                     </div>
 
-               </div>
+                     <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-brand-gold)]/30 bg-[var(--color-brand-gold)]/10 text-[var(--color-brand-gold)] md:rotate-0">
+                        <ArrowRight size={20} />
+                     </div>
 
-               <div className="mt-16 pt-12 border-t border-white/5 grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
-                  <div className="flex gap-4">
-                     <ShieldCheck className="text-[var(--color-brand-gold)] flex-shrink-0" size={18} />
-                     <div>
-                        <h5 className="font-ui text-[10px] font-bold uppercase tracking-widest text-white mb-2">Authenticity Verified</h5>
-                        <p className="font-ui text-[11px] text-[#8B8375] leading-relaxed">Direct provenance ensures every gram of material is as promised.</p>
+                     <div className="rounded-3xl bg-white/[0.04] p-5">
+                        <p className="font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--color-brand-gold)]">What you receive</p>
+                        <p className="mt-3 font-body text-sm leading-relaxed text-[#B8B0A3]">
+                           Authentic material, fair value, and direct support from people who understand the work before it reaches you.
+                        </p>
                      </div>
                   </div>
-                  <div className="flex gap-4">
-                     <UserCheck className="text-[var(--color-brand-gold)] flex-shrink-0" size={18} />
-                     <div>
-                        <h5 className="font-ui text-[10px] font-bold uppercase tracking-widest text-white mb-2">Fair Value</h5>
-                        <p className="font-ui text-[11px] text-[#8B8375] leading-relaxed">Artisans receive their true due, devotees pay the true price.</p>
+
+                  <div className="grid gap-4 border-t border-white/8 pt-7 sm:grid-cols-2">
+                     <div className="flex gap-4">
+                        <ShieldCheck className="mt-0.5 shrink-0 text-[var(--color-brand-gold)]" size={18} />
+                        <div>
+                           <h5 className="mb-2 font-ui text-[10px] font-bold uppercase tracking-widest text-white">Authenticity Verified</h5>
+                           <p className="font-ui text-[11px] leading-relaxed text-[#8B8375]">Direct provenance keeps material, finish, and craftsmanship easier to verify.</p>
+                        </div>
+                     </div>
+                     <div className="flex gap-4">
+                        <UserCheck className="mt-0.5 shrink-0 text-[var(--color-brand-gold)]" size={18} />
+                        <div>
+                           <h5 className="mb-2 font-ui text-[10px] font-bold uppercase tracking-widest text-white">Fair Value</h5>
+                           <p className="font-ui text-[11px] leading-relaxed text-[#8B8375]">Artisans receive their true due while buyers avoid unnecessary markup.</p>
+                        </div>
                      </div>
                   </div>
                </div>
@@ -157,4 +172,3 @@ function TraditionalStep({ icon, label, price, dim = false, highlight = false }:
     </div>
   );
 }
-

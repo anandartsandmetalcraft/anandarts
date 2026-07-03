@@ -29,7 +29,7 @@ import {
  * ────────────────────────────────────────────────────────────────
  */
 
-const OWNER_WHATSAPP = "919876543210"; 
+const OWNER_WHATSAPP = "9187542 62271"; 
 
 const STEPS = [
   { id: "vision", label: "The Vision", icon: MessageSquare },

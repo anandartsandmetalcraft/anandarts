@@ -91,7 +91,7 @@ export default function AdminOrdersPage() {
                           `${o.user.firstName} ${o.user.lastName}`.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = statusFilter === "All" || o.status === statusFilter;
     
-    // Payment filter logic (PhonePe is default for paid)
+    // Payment filter logic (Cashfree UPI/card/netbanking gateway)
     const matchesPayment = paymentFilter === "All" || (paymentFilter === "UPI" && o.status !== "PENDING");
     
     return matchesSearch && matchesStatus && matchesPayment;
@@ -209,7 +209,7 @@ export default function AdminOrdersPage() {
                 className="w-full bg-slate-50/50 border border-slate-100 px-6 py-4 rounded-2xl font-ui text-sm outline-none appearance-none font-bold text-[#0F172A]"
               >
                 <option value="All">Payment Mode</option>
-                <option value="UPI">PhonePe UPI</option>
+                <option value="UPI">Cashfree UPI</option>
                 <option value="COD">Cash (COD)</option>
               </select>
               <CreditCard className="absolute right-12 top-1/2 -translate-y-1/2 text-slate-300 pointer-events-none" size={16} />
