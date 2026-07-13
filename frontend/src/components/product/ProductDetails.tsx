@@ -1,4 +1,4 @@
-"use client";
+  "use client";
 import React, { useEffect, useMemo, useState, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -22,6 +22,7 @@ export default function ProductDetails({ product }: { product: Product }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalZoom, setModalZoom] = useState(1);
   const [modalOffset, setModalOffset] = useState({ x: 0, y: 0 });
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isStoreInfoOpen, setIsStoreInfoOpen] = useState(false);
   const [openSection, setOpenSection] = useState<string | null>("dimensions");
   const modalPointersRef = useRef(new Map<number, { x: number; y: number }>());
@@ -81,6 +82,8 @@ export default function ProductDetails({ product }: { product: Product }) {
   const images = product.thumbnails && product.thumbnails.length > 0
     ? [product.img, ...product.thumbnails]
     : [product.img];
+  const formattedPrice = `Rs.${(product.price / 100).toLocaleString("en-IN")}`;
+  const shouldClampDescription = Boolean(product.description && product.description.length > 180);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
@@ -191,11 +194,12 @@ export default function ProductDetails({ product }: { product: Product }) {
           </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 
   return (
-    <div className="max-w-[1320px] mx-auto px-6 md:px-12 pt-8">
+    <div className="max-w-[1320px] mx-auto px-6 pb-32 pt-8 md:px-12 md:pb-0">
       {/* Breadcrumbs */}
       <nav className="flex items-center gap-4 mb-8 font-ui text-[10px] font-bold uppercase tracking-[0.2em] text-[#8B8375]">
         <Link href="/" className="hover:text-[var(--color-brand-char)] transition-colors">Home</Link>
@@ -276,13 +280,9 @@ export default function ProductDetails({ product }: { product: Product }) {
                     initial={{ opacity: 0, y: 5 }}
                     animate={{ opacity: 0.5, y: 0 }}
                     className="font-ui text-[18px] md:text-[20px] text-[#8B8375] line-through decoration-[var(--color-brand-gold)] decoration-1"
-                  >
-                    ₹{(product.compareAt / 100).toLocaleString("en-IN")}
-                  </motion.span>
+                  >Rs.{(product.compareAt / 100).toLocaleString("en-IN")}</motion.span>
                 )}
-                <span className="font-display text-5xl md:text-6xl text-[var(--color-brand-char)] tracking-tight">
-                  ₹{(product.price / 100).toLocaleString("en-IN")}
-                </span>
+                <span className="font-display text-5xl md:text-6xl text-[var(--color-brand-char)] tracking-tight">Rs.{(product.price / 100).toLocaleString("en-IN")}</span>
               </div>
               <div className="flex flex-col gap-2">
                 <span className="font-ui text-[9px] text-[#8B8375] font-bold uppercase tracking-[0.2em] bg-black/5 px-4 py-2 rounded-full inline-block">
@@ -299,7 +299,7 @@ export default function ProductDetails({ product }: { product: Product }) {
 
             {(product as any).coupon && (
               <div className="inline-flex items-center gap-2 bg-[var(--color-brand-gold)]/10 border border-[var(--color-brand-gold)]/20 text-[var(--color-brand-char)] px-4 py-2 rounded-2xl font-ui text-[11px] font-bold uppercase tracking-widest">
-                Use code {(product as any).coupon.code} • {formatCouponDiscount((product as any).coupon.discount)}
+                Use code {(product as any).coupon.code} - {formatCouponDiscount((product as any).coupon.discount)}
               </div>
             )}
 
@@ -312,9 +312,20 @@ export default function ProductDetails({ product }: { product: Product }) {
           {product.description && (
             <div className="mb-10 space-y-4">
               <h3 className="font-ui text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--color-brand-gold)]">The Story</h3>
-              <p className="font-ui text-base text-[#4A453E] leading-relaxed max-w-xl italic">
+              <p
+                className={`max-w-xl font-ui text-base leading-relaxed text-[#4A453E] italic transition-all ${!isDescriptionExpanded && shouldClampDescription ? "line-clamp-4" : ""}`}
+              >
                 {product.description}
               </p>
+              {shouldClampDescription && (
+                <button
+                  type="button"
+                  onClick={() => setIsDescriptionExpanded((prev) => !prev)}
+                  className="font-ui text-[10px] font-bold uppercase tracking-[0.24em] text-[var(--color-brand-char)] underline underline-offset-4 transition-colors hover:text-[var(--color-brand-gold)]"
+                >
+                  {isDescriptionExpanded ? "Show Less" : "Read More"}
+                </button>
+              )}
             </div>
           )}
 
@@ -327,7 +338,7 @@ export default function ProductDetails({ product }: { product: Product }) {
                   : "bg-[var(--color-brand-red)] text-white"
                   }`}
               >
-                {isOutOfStock ? "Out of stock" : `Low stock alert • only ${stockCount} left`}
+                {isOutOfStock ? "Out of stock" : `Low stock alert - only ${stockCount} left`}
               </div>
             )}
             <div className="space-y-3">
@@ -353,7 +364,7 @@ export default function ProductDetails({ product }: { product: Product }) {
               </div>
             </div>
 
-            <div className="flex flex-col gap-3 max-w-lg">
+            <div className="hidden max-w-lg flex-col gap-3 md:flex">
               <button
                 onClick={handleAddToCart}
                 disabled={isOutOfStock}
@@ -486,10 +497,10 @@ export default function ProductDetails({ product }: { product: Product }) {
               title="Dimensions & Weight"
               content={
                 <ul className="space-y-2 font-mono">
-                  <li>• Height: {product.size}</li>
-                  {product.material && <li>• Material: Grade-A Sacred {product.material}</li>}
-                  <li>• Finish: Traditional Hand-Polished Antiquity</li>
-                  <li>• Certification: Hallmark of Ancient Artisanship</li>
+                  <li>- Height: {product.size}</li>
+                  {product.material && <li>- Material: Grade-A Sacred {product.material}</li>}
+                  <li>- Finish: Traditional Hand-Polished Antiquity</li>
+                  <li>- Certification: Hallmark of Ancient Artisanship</li>
                 </ul>
               }
             />
@@ -601,6 +612,26 @@ export default function ProductDetails({ product }: { product: Product }) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div className="fixed inset-x-0 bottom-0 z-[120] border-t border-black/5 bg-[var(--color-brand-cream)]/95 px-4 pb-[calc(env(safe-area-inset-bottom)+1rem)] pt-3 backdrop-blur md:hidden">
+        <div className="mx-auto flex max-w-lg items-center gap-3 rounded-[28px] border border-black/5 bg-white px-3 py-3 shadow-[0_-10px_35px_rgba(26,18,8,0.08)]">
+          <button
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+            className="flex-1 rounded-[18px] border border-[var(--color-brand-char)] px-4 py-3 text-center font-ui text-[11px] font-bold uppercase tracking-[0.14em] text-[var(--color-brand-char)] transition-all hover:bg-[var(--color-brand-char)] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--color-brand-char)]"
+          >
+            {isOutOfStock ? "Out of Stock" : "Add to Cart"}
+          </button>
+          <button
+            onClick={handleBuyNow}
+            disabled={isOutOfStock}
+            className="flex-1 rounded-[18px] bg-[var(--color-brand-gold)] px-4 py-3 text-center font-ui text-[11px] font-bold uppercase tracking-[0.08em] text-[#1A1208] shadow-sm transition-all hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <span className="block">Buy Now</span>
+            <span className="mt-0.5 block text-[12px] tracking-normal">{formattedPrice}</span>
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

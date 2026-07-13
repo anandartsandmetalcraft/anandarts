@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ShoppingBag, ShieldCheck, Lock, CreditCard, ArrowRight, Minus, Plus, Trash2 } from "lucide-react";
+import { X, ShoppingBag, ShieldCheck, Lock, CreditCard, ArrowRight, Minus, Plus, Trash2, ChevronDown } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,8 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const router = useRouter();
 
   const [feedProducts, setFeedProducts] = useState<any[]>([]);
+  const [isSuggestionsOpen, setIsSuggestionsOpen] = useState(false);
+  const [isExtrasOpen, setIsExtrasOpen] = useState(false);
 
   const handleCheckout = () => {
     onClose();
@@ -51,6 +53,11 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
     void load();
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    setIsSuggestionsOpen(false);
+  }, [isOpen, items.length]);
+
   const suggestions = useMemo(() => {
     const cartIds = new Set(items.map((i) => String(i.id)));
     const available = (feedProducts || []).filter((p) => !cartIds.has(String(p.id)));
@@ -75,7 +82,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[210]"
           />
 
           {/* Drawer */}
@@ -84,7 +91,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "tween", duration: 0.4, ease: "anticipate" }}
-            className="fixed inset-y-0 right-0 w-full max-w-[450px] bg-[var(--color-brand-cream)] shadow-2xl z-[110] flex flex-col"
+            className="fixed inset-y-0 right-0 w-full max-w-[450px] bg-[var(--color-brand-cream)] shadow-2xl z-[220] flex flex-col"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-black/10">
@@ -98,7 +105,7 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto no-scrollbar p-6">
+            <div className="flex-1 overflow-y-auto no-scrollbar p-6 pb-10">
               {items.length === 0 ? (
                 /* Empty State */
                 <div className="h-full flex flex-col items-center justify-center text-center p-6">
@@ -164,81 +171,117 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
             {/* Footer - Checkout & Trust */}
             {items.length > 0 && (
-              <div className="p-8 bg-white border-t border-black/10 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
-
-                {/* Shipping Progress Bar */}
-                <div className="mb-6">
-                  <div className="flex justify-between items-end mb-2">
-                    <span className="font-ui text-[10px] font-bold text-[#8B8375]">
-                      {remainingForFree > 0
-                        ? `Add ₹${(remainingForFree / 100).toLocaleString("en-IN")} more to get FREE SHIPPING!`
-                        : "You've unlocked FREE SHIPPING!"}
-                    </span>
+              <div className="p-8 bg-white border-t border-black/10 shadow-[0_-10px_30px_rgba(0,0,0,0.05)] flex flex-col">
+                
+                {/* Expand/Collapse Toggle for Extras */}
+                <button 
+                  onClick={() => setIsExtrasOpen(!isExtrasOpen)}
+                  className="w-full flex items-center justify-between py-2 mb-4 group"
+                >
+                  <span className="font-ui text-[10px] font-extrabold uppercase tracking-widest text-[#8B8375] group-hover:text-[var(--color-brand-char)] transition-colors">
+                    {isExtrasOpen ? "Hide Offers & Extras" : "View Offers & Extras"}
+                  </span>
+                  <div className="bg-gray-100 rounded-full p-1 group-hover:bg-gray-200 transition-colors">
+                    <ChevronDown size={14} className={`text-[#8B8375] transition-transform duration-300 ${isExtrasOpen ? "rotate-180" : ""}`} />
                   </div>
-                  <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                </button>
+
+                <AnimatePresence>
+                  {isExtrasOpen && (
                     <motion.div
-                      initial={{ width: 0 }}
-                      animate={{ width: `${progressPercent}%` }}
-                      className={`h-full ${remainingForFree > 0 ? 'bg-[var(--color-brand-gold)]' : 'bg-green-500'}`}
-                    />
-                  </div>
-                </div>
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      {/* Shipping Progress Bar */}
+                      <div className="mb-6">
+                        <div className="flex justify-between items-end mb-2">
+                          <span className="font-ui text-[10px] font-bold text-[#8B8375]">
+                            {remainingForFree > 0
+                              ? `Add ₹${(remainingForFree / 100).toLocaleString("en-IN")} more to get FREE SHIPPING!`
+                              : "You've unlocked FREE SHIPPING!"}
+                          </span>
+                        </div>
+                        <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progressPercent}%` }}
+                            className={`h-full ${remainingForFree > 0 ? 'bg-[var(--color-brand-gold)]' : 'bg-green-500'}`}
+                          />
+                        </div>
+                      </div>
 
-                {/* Bundle Suggestions */}
-                {suggestions.length > 0 && (
-                  <div className="mb-6 rounded-2xl border border-black/5 bg-gray-50/50 p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="font-ui text-[10px] font-extrabold uppercase tracking-[0.2em] text-[var(--color-brand-char)]">
-                        {remainingForFree > 0 ? "Add a piece to unlock free shipping" : "You might also like"}
-                      </span>
-                      {remainingForFree > 0 && (
-                        <span className="font-ui text-[10px] font-bold text-[#8B8375]">
-                          Need {(remainingForFree / 100).toLocaleString("en-IN")}
-                        </span>
+                      {/* Bundle Suggestions */}
+                      {suggestions.length > 0 && (
+                        <div className="mb-6 rounded-2xl border border-black/5 bg-gray-50/50 p-4">
+                          <button
+                            type="button"
+                            onClick={() => setIsSuggestionsOpen((prev) => !prev)}
+                            className="flex w-full items-center justify-between gap-4 text-left"
+                          >
+                            <div className="space-y-1">
+                              <span className="block font-ui text-[10px] font-extrabold uppercase tracking-[0.2em] text-[var(--color-brand-char)]">
+                                {remainingForFree > 0 ? "Add a piece to unlock free shipping" : "You might also like"}
+                              </span>
+                              {remainingForFree > 0 && (
+                                <span className="font-ui text-[10px] font-bold text-[#8B8375]">
+                                  Need {(remainingForFree / 100).toLocaleString("en-IN")}
+                                </span>
+                              )}
+                            </div>
+                            <ChevronDown
+                              size={16}
+                              className={`text-[#8B8375] transition-transform ${isSuggestionsOpen ? "rotate-180" : ""}`}
+                            />
+                          </button>
+
+                          {isSuggestionsOpen && (
+                            <div className="mt-4 space-y-3">
+                              {suggestions.map((p) => {
+                                const isSuggestionOut = typeof p.stock === "number" && p.stock <= 0;
+                                return (
+                                  <div key={p.id} className="flex items-center gap-3">
+                                    <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-xl border border-black/5 bg-white">
+                                      <Image src={p.img || "/placeholder.jpg"} alt={p.name} fill sizes="48px" className="object-cover" />
+                                    </div>
+                                    <div className="min-w-0 flex-1">
+                                      <p className="truncate font-ui text-[11px] font-bold text-[var(--color-brand-char)]">{p.name}</p>
+                                      <p className="font-ui text-[10px] text-[#8B8375]">
+                                        {(Number(p.price || 0) / 100).toLocaleString("en-IN")}
+                                      </p>
+                                    </div>
+                                    <button
+                                      disabled={isSuggestionOut}
+                                      onClick={() => addItem(p, 1)}
+                                      className="rounded-full border border-black/10 bg-white px-4 py-2 font-ui text-[10px] font-extrabold uppercase tracking-widest transition-all hover:bg-[var(--color-brand-char)] hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black"
+                                    >
+                                      {isSuggestionOut ? "Out" : "Add"}
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
                       )}
-                    </div>
 
-                    <div className="space-y-3">
-                      {suggestions.map((p) => {
-                        const isSuggestionOut = typeof p.stock === "number" && p.stock <= 0;
-                        return (
-                          <div key={p.id} className="flex items-center gap-3">
-                            <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-white border border-black/5 flex-shrink-0">
-                              <Image src={p.img || "/placeholder.jpg"} alt={p.name} fill sizes="48px" className="object-cover" />
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <p className="font-ui text-[11px] font-bold text-[var(--color-brand-char)] truncate">{p.name}</p>
-                              <p className="font-ui text-[10px] text-[#8B8375]">
-                                {(Number(p.price || 0) / 100).toLocaleString("en-IN")}
-                              </p>
-                            </div>
-                            <button
-                              disabled={isSuggestionOut}
-                              onClick={() => addItem(p, 1)}
-                              className="px-4 py-2 rounded-full bg-white border border-black/10 font-ui text-[10px] font-extrabold uppercase tracking-widest hover:bg-[var(--color-brand-char)] hover:text-white transition-all disabled:opacity-40 disabled:hover:bg-white disabled:hover:text-black disabled:cursor-not-allowed"
-                            >
-                              {isSuggestionOut ? "Out" : "Add"}
-                            </button>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
-
-                {/* Gift Wrap */}
-                <label className="flex items-center gap-3 mb-6 p-4 rounded-xl border border-black/5 bg-gray-50/50 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isGiftWrapped}
-                    onChange={(e) => setGiftWrapped(e.target.checked)}
-                    className="w-4 h-4 accent-[var(--color-brand-char)]"
-                  />
-                  <div className="flex flex-col">
-                    <span className="font-ui text-[11px] font-bold text-[var(--color-brand-char)]">Add Gift Wrap (Optional)</span>
-                    <span className="font-ui text-[10px] text-[#8B8375]"> Only for ₹99 per item</span>
-                  </div>
-                </label>
+                      {/* Gift Wrap */}
+                      <label className="flex items-center gap-3 mb-6 p-4 rounded-xl border border-black/5 bg-gray-50/50 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={isGiftWrapped}
+                          onChange={(e) => setGiftWrapped(e.target.checked)}
+                          className="w-4 h-4 accent-[var(--color-brand-char)]"
+                        />
+                        <div className="flex flex-col">
+                          <span className="font-ui text-[11px] font-bold text-[var(--color-brand-char)]">Add Gift Wrap (Optional)</span>
+                          <span className="font-ui text-[10px] text-[#8B8375]"> Only for ₹99 per item</span>
+                        </div>
+                      </label>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
                 <div className="flex justify-between items-center mb-6">
                   <span className="font-ui text-[11px] font-extrabold uppercase tracking-[0.2em] text-[#8B8375]">Order Subtotal</span>

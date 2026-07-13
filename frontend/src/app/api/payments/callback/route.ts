@@ -206,7 +206,8 @@ export async function POST(request: Request) {
             await db.order.update({
               where: { id: paymentRecord.orderId },
               data: { 
-                trackingId: String(shipResult.shiprocketOrderId),
+                shiprocketOrderId: String(shipResult.shiprocketOrderId),
+                shiprocketShipmentId: String(shipResult.shipmentId),
                 status: "CONFIRMED" // Move to confirmed once synced
               }
             });

@@ -12,10 +12,10 @@ const STATS = [
   },
   {
     prefix: "SINCE 1990",
-    value: 35,
+    value: 17,
     suffix: "+",
     label: "Years of Legacy",
-    sub: "Three decades of pure craftsmanship"
+    sub: "One and half decades of pure craftsmanship"
   },
   {
     prefix: "FOLLOWED BY",

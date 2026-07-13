@@ -3,12 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { 
   ArrowLeft, 
-  Printer, 
   Download, 
   ChevronRight,
   Info
 } from "lucide-react";
 import { getAdminOrderById } from "@/actions/admin";
+import InvoicePrintButton from "./InvoicePrintButton";
 
 function formatCurrency(value: number) {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value / 100);
@@ -220,7 +220,7 @@ export default async function InvoiceDetailPage({ params }: { params: { id: stri
                 
                 {/* Final Action Buttons (Image 3 Style) */}
                 <div className="flex justify-end gap-3 pt-6 print:hidden">
-                   <button onClick={() => window.print()} className="flex items-center gap-2 px-6 py-3 bg-[#0BB197] text-white rounded-[6px] text-[11px] font-bold uppercase tracking-widest hover:brightness-110 shadow-sm transition-all shadow-[#0BB197]/10 border border-transparent"><Printer size={16}/> Print Invoice</button>
+                   <InvoicePrintButton />
                    <button className="flex items-center gap-2 px-6 py-3 bg-blue-500 text-white rounded-[6px] text-[11px] font-bold uppercase tracking-widest hover:bg-blue-600 transition-all shadow-xl shadow-blue-500/10"><Download size={16}/> Download PDF</button>
                 </div>
             </div>

@@ -1,11 +1,12 @@
 "use server";
  
 import { db } from "@/lib/db";
-import { signIn } from "@/lib/auth";
+import { auth, signIn } from "@/lib/auth";
 import { sendOTP } from "@/lib/sms";
 import { rateLimit, getClientIP } from "@/lib/ratelimit";
 import crypto from "crypto";
-import { phoneOtpSchema } from "@/lib/validations"; 
+import { revalidatePath } from "next/cache";
+import { addressSchema, phoneOtpSchema, userSchema } from "@/lib/validations"; 
 /**
  * REQUEST OTP — Generate, store, and deliver code via 2Factor.in
  * ────────────────────────────────────────────────────────────────
@@ -112,9 +113,23 @@ export async function verifyOTPAndLogin(phone: string, code: string) {
  
     let user = await db.user.findUnique({
       where: { phone: validPhone },
-      select: { firstName: true, lastName: true, email: true, phone: true },
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        addresses: { select: { id: true }, take: 1 },
+      },
     });
-    const isNewUser = !user || user.firstName === "Sacred";
+    const hasCompleteProfile = Boolean(
+      user?.firstName &&
+      user?.lastName &&
+      user?.email &&
+      user.firstName !== "Sacred" &&
+      user.lastName !== "Curator" &&
+      user.addresses.length > 0
+    );
+    const isNewUser = !hasCompleteProfile;
 
     if (!user) {
       user = await db.user.create({
@@ -124,7 +139,13 @@ export async function verifyOTPAndLogin(phone: string, code: string) {
           firstName: "Sacred",
           lastName: "Curator",
         },
-        select: { firstName: true, lastName: true, email: true, phone: true },
+        select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+        phone: true,
+        addresses: { select: { id: true }, take: 1 },
+      },
       });
     }
 
@@ -135,9 +156,117 @@ export async function verifyOTPAndLogin(phone: string, code: string) {
       redirect: false,
     });
     
-    return { success: true, isNewUser, user };
+    return {
+      success: true,
+      isNewUser,
+      user: {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+      },
+    };
   } catch (error: any) {
     console.error("[Auth] Login error:", error);
     return { error: "An unexpected error occurred during login." };
+  }
+}
+const completePhoneSignupSchema = userSchema.extend({
+  phone: phoneOtpSchema.shape.phone,
+  houseNo: addressSchema.shape.houseNo,
+  street: addressSchema.shape.street,
+  locality: addressSchema.shape.street,
+  landmark: addressSchema.shape.landmark,
+  city: addressSchema.shape.city,
+  state: addressSchema.shape.state,
+  postalCode: addressSchema.shape.postalCode,
+  country: addressSchema.shape.country,
+});
+
+export async function completePhoneSignup(data: unknown) {
+  const session = await auth();
+  if (!session?.user?.id) {
+    return { error: "Please verify your phone number before completing signup." };
+  }
+
+  const parsed = completePhoneSignupSchema.safeParse(data);
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0].message };
+  }
+
+  const signup = parsed.data;
+  if (session.user.phone && session.user.phone !== signup.phone) {
+    return { error: "This phone number does not match the verified session." };
+  }
+
+  try {
+    const existingAddress = await db.address.findFirst({
+      where: { userId: session.user.id },
+      select: { id: true },
+      orderBy: { createdAt: "asc" },
+    });
+
+    const user = await db.$transaction(async (tx) => {
+      const updatedUser = await tx.user.update({
+        where: { id: session.user.id },
+        data: {
+          firstName: signup.firstName,
+          lastName: signup.lastName,
+          email: signup.email,
+          phone: signup.phone,
+        },
+        select: { firstName: true, lastName: true, email: true, phone: true },
+      });
+
+      const addressData = {
+        label: "Home",
+        firstName: signup.firstName,
+        lastName: signup.lastName,
+        phone: signup.phone,
+        houseNo: signup.houseNo,
+        street: [signup.street, signup.locality].filter(Boolean).join(", "),
+        landmark: signup.landmark,
+        city: signup.city,
+        state: signup.state,
+        postalCode: signup.postalCode,
+        country: signup.country,
+        isDefault: true,
+      };
+
+      await tx.address.updateMany({
+        where: { userId: session.user.id },
+        data: { isDefault: false },
+      });
+
+      if (existingAddress) {
+        await tx.address.update({
+          where: { id: existingAddress.id },
+          data: addressData,
+        });
+      } else {
+        await tx.address.create({
+          data: { ...addressData, userId: session.user.id },
+        });
+      }
+
+      return updatedUser;
+    });
+
+    revalidatePath("/account");
+    return {
+      success: true,
+      user: {
+        firstName: user.firstName ?? undefined,
+        lastName: user.lastName ?? undefined,
+        email: user.email ?? undefined,
+        phone: user.phone ?? undefined,
+      },
+    };
+  } catch (error: any) {
+    console.error("[Auth] Complete phone signup error:", error);
+    if (error?.code === "P2002") {
+      return { error: "An account with this email or phone already exists." };
+    }
+    return { error: "Unable to save your details. Please try again." };
   }
 }
