@@ -1,12 +1,12 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { X, Smartphone, Mail, ShieldCheck, Truck, Star } from "lucide-react";
 import { signIn } from "next-auth/react";
 import { useAuthStore } from "@/store/authStore";
-import { requestOTP, verifyOTPAndLogin } from "@/actions/authPhone";
+import { completePhoneSignup, requestOTP, verifyOTPAndLogin } from "@/actions/authPhone";
 import { toast } from "sonner";
  
 interface AuthModalProps {
@@ -24,6 +24,7 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]); // Standard 6-digit OTP
+  const otpInputRefs = useRef<Array<HTMLInputElement | null>>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [phoneExists, setPhoneExists] = useState(false);
   const [otpAttempts, setOtpAttempts] = useState(0);
@@ -36,6 +37,7 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
     houseNo: "", 
     street: "",
     locality: "",
+    landmark: "",
     city: "", 
     state: "",
     postalCode: "", 
@@ -140,6 +142,31 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
     }
   };
  
+  const focusOtpInput = (index: number) => {
+    otpInputRefs.current[index]?.focus();
+  };
+
+  const handleOtpChange = (value: string, index: number) => {
+    const digits = value.replace(/\D/g, "").slice(0, otp.length - index);
+    if (!digits && value) return;
+
+    const newOtp = [...otp];
+    if (!digits) {
+      newOtp[index] = "";
+      setOtp(newOtp);
+      return;
+    }
+
+    digits.split("").forEach((digit, offset) => {
+      newOtp[index + offset] = digit;
+    });
+    setOtp(newOtp);
+
+    if (index + digits.length < otp.length) {
+      focusOtpInput(index + digits.length);
+    }
+  };
+
   const handleSignupSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -155,11 +182,16 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
     }
     
     setIsLoading(true);
-    // In production, call updateProfile action here to save to DB
-    // For now, simulate the state update
-    login({ ...signupData, phone });
+    const result = await completePhoneSignup({ ...signupData, phone });
     setIsLoading(false);
-    setStep('success');
+
+    if (result.success && result.user) {
+      login(result.user);
+      router.refresh();
+      setStep('success');
+    } else {
+      toast.error(result.error || "Failed to save your details.");
+    }
   };
 
   const handleCredentialsSubmit = async (e: React.FormEvent) => {
@@ -324,25 +356,22 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
                                {otp.map((digit, id) => (
                                   <input 
                                      key={id} 
+                                     ref={(el) => {
+                                        otpInputRefs.current[id] = el;
+                                     }} 
                                      type="text" 
+                                     inputMode="numeric"
+                                     pattern="[0-9]*"
+                                     autoComplete={id === 0 ? "one-time-code" : "off"}
                                      maxLength={1} 
                                      value={digit}
                                      id={`otp-${id}`}
                                      onChange={(e) => {
-                                        const val = e.target.value;
-                                        if (isNaN(Number(val)) && val !== "") return;
-                                        
-                                        const newOtp = [...otp];
-                                        newOtp[id] = val;
-                                        setOtp(newOtp);
-                                        
-                                        if (val && id < 5) {
-                                           document.getElementById(`otp-${id + 1}`)?.focus();
-                                        }
+                                        handleOtpChange(e.target.value, id);
                                      }}
                                      onKeyDown={(e) => {
                                         if (e.key === "Backspace" && !otp[id] && id > 0) {
-                                           document.getElementById(`otp-${id - 1}`)?.focus();
+                                           focusOtpInput(id - 1);
                                         }
                                      }}
                                      className="w-12 h-16 text-center font-display text-3xl border-b-2 border-black/10 focus:border-[var(--color-brand-red)] outline-none transition-all bg-transparent"
@@ -405,7 +434,7 @@ const [step, setStep] = useState<'phone' | 'phone-check' | 'otp' | 'detailed-sig
  
                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                                   <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Locality</label><input required type="text" value={signupData.locality} onChange={(e) => setSignupData({...signupData, locality: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
-                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Landmark</label><input type="text" value={(signupData as any).landmark || ""} onChange={(e) => setSignupData({...signupData, landmark: e.target.value} as any)} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
+                                  <div className="space-y-2"><label className="font-ui text-[9px] font-bold uppercase tracking-widest text-[#8B8375] ml-2">Landmark</label><input type="text" value={signupData.landmark} onChange={(e) => setSignupData({...signupData, landmark: e.target.value})} className="w-full bg-[#FAF9F6] border border-black/5 px-5 py-3 rounded-xl outline-none font-ui text-sm" /></div>
                                </div>
  
                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">

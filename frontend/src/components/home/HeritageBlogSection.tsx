@@ -29,7 +29,7 @@ export default function HeritageBlogSection() {
               transition={{ delay: 0.1 }}
               className="font-display text-4xl md:text-6xl text-[var(--color-brand-char)] leading-tight"
             >
-              One and halfDecades of <br />
+              One and half Decades of <br />
               <span className="italic font-light">Metal & Devotion</span>
             </motion.h2>
           </div>
@@ -67,7 +67,7 @@ export default function HeritageBlogSection() {
                   Established in 2009, Anand Arts began as a humble digital forge in Bengaluru with a singular vision: to bring temple-grade craftsmanship directly to the homes of devotees. While the industry moved towards mass-produced plastic and generic molds, we stayed true to the <strong>lost-wax casting process</strong> and hand-chiseled detailing.
                 </p>
                 <p>
-                  For three decades, our furnace has never gone cold. Every piece you see on our platform—from the 6-inch miniature brass Krishna to the life-sized bronze Nataraja—is conceived, cast, and finished in our <strong>own manufacturing unit</strong>.
+                  For one and half decades, our furnace has never gone cold. Every piece you see on our platform—from the 6-inch miniature brass Krishna to the life-sized bronze Nataraja—is conceived, cast, and finished in our <strong>own manufacturing unit</strong>.
                 </p>
                 <p>
                   Today, we are humbled to be trusted by over 50,000 customers worldwide. Our digital community of 20,000+ followers isn't just a number; it's a testament to the revival of traditional art in the modern age.

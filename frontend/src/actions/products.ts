@@ -108,14 +108,14 @@ function normalizeProduct(product: any): ProductRecord {
     couponCode: product.couponCode ?? null,
     coupon: product.coupon
       ? {
-          id: product.coupon.id,
-          code: product.coupon.code,
-          discount: product.coupon.discount,
-          startDate: product.coupon.startDate,
-          endDate: product.coupon.endDate,
-          status: product.coupon.status,
-          productType: product.coupon.productType,
-        }
+        id: product.coupon.id,
+        code: product.coupon.code,
+        discount: product.coupon.discount,
+        startDate: product.coupon.startDate,
+        endDate: product.coupon.endDate,
+        status: product.coupon.status,
+        productType: product.coupon.productType,
+      }
       : null,
   };
 }
@@ -131,8 +131,8 @@ async function attachCoupons(products: any[]) {
 
   const coupons = codes.length
     ? await db.coupon.findMany({
-        where: { code: { in: codes } },
-      })
+      where: { code: { in: codes } },
+    })
     : [];
 
   const couponMap = new Map(coupons.map((coupon) => [coupon.code.toUpperCase(), coupon]));
@@ -260,7 +260,7 @@ const getCachedFeed = (limit: number, tag?: string) => unstable_cache(
   async () => {
     console.log(`[DB] Fetching feed: limit=${limit}, tag=${tag || 'none'}`);
     const dbProducts = await db.product.findMany({
-      where: { 
+      where: {
         isActive: true,
         ...(tag ? { tag: { contains: tag, mode: "insensitive" } } : {})
       },
@@ -278,7 +278,7 @@ const getCachedFeed = (limit: number, tag?: string) => unstable_cache(
         couponCode: true,
         description: true,
         category: { select: { name: true } },
-        images: { 
+        images: {
           orderBy: { sortOrder: 'asc' },
           select: { url: true, isPrimary: true }
         },

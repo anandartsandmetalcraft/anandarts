@@ -13,9 +13,9 @@ const HERO_SLIDES = [
     title: "Ram Lalla",
     subtitle: "Pran Pratishtha",
     description: "A divine representation of Lord Rama, meticulously handcrafted in golden brass to commemorate the Pran Pratishtha. This sacred masterpiece brings the eternal aura of Ayodhya to your home sanctuary.",
-    image: "/Heroimg.webp",
+    image: "/Banner1.webp",
     cta: "Shop The Collection",
-    link: "/collections?category=Brass",
+    link: "/collections",
     theme: "dark",
     desktopObjectFit: "contain",
     bgColor: "#F3EAD8"
@@ -52,6 +52,7 @@ export default function Hero() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
   const isContainDesktop = HERO_SLIDES[current].desktopObjectFit === "contain";
+  const isBannerSlide = HERO_SLIDES[current].image === "/Banner1.webp";
 
   const slideNext = useCallback(() => {
     setDirection(1);
@@ -132,21 +133,21 @@ export default function Hero() {
               fill
               sizes="100vw"
               loading="lazy"
-              className={`transition-all duration-700 object-cover object-center ${isContainDesktop ? "md:object-contain md:object-center" : ""}`}
+              className={`transition-all duration-700 object-center ${isBannerSlide ? "object-contain" : "object-cover"} ${isContainDesktop ? "md:object-contain md:object-center" : ""}`}
             />
             {/* Dynamic Overlays */}
-            <div className={`absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent`} />
-            <div className="absolute inset-0 bg-black/20" />
+            <div className={`absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent ${isBannerSlide ? "hidden" : ""}`} />
+            <div className={`absolute inset-0 bg-black/20 ${isBannerSlide ? "hidden" : ""}`} />
 
             {/* Texture Overlay */}
-            <div className="absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#1A1208] to-transparent" />
+            <div className={`absolute inset-x-0 bottom-0 h-64 bg-gradient-to-t from-[#1A1208] to-transparent ${isBannerSlide ? "hidden" : ""}`} />
           </div>
 
           {/* Invisible Link covering the entire slide */}
           <Link href={HERO_SLIDES[current].link} className="absolute inset-0 z-10" aria-label={HERO_SLIDES[current].title} />
 
           {/* Content Layer */}
-          <div className="relative z-20 h-full max-w-[1440px] mx-auto px-6 md:px-12 flex flex-col justify-center pt-8 md:pt-0 pointer-events-none">
+          <div className={`relative z-20 h-full max-w-[1440px] mx-auto px-6 md:px-12 ${isBannerSlide ? "hidden" : "flex"} flex-col justify-center pt-8 md:pt-0 pointer-events-none`}>
             <div className="max-w-2xl space-y-3 md:space-y-6 pointer-events-auto">
               <motion.div
                 initial={{ y: prefersReducedMotion ? 0 : 20, opacity: 0 }}

@@ -117,46 +117,66 @@ export default function ProductForm({ initialData, categories, coupons }: Produc
     setImages((prev) => [...prev, ...tempImages]);
 
     try {
-      // 2. Upload to Cloudinary
-      const uploadData = new FormData();
-      accepted.forEach((file) => uploadData.append("files", file));
+      // 2. Upload to Cloudinary sequentially to avoid Vercel's 4.5MB payload limit
+      let successCount = 0;
+      let failCount = 0;
 
-      const response = await fetch("/api/uploads/product-images", {
-        method: "POST",
-        body: uploadData,
-      });
+      for (let i = 0; i < accepted.length; i++) {
+        const file = accepted[i];
+        const tempImageId = tempImages[i].id;
+        
+        const uploadData = new FormData();
+        uploadData.append("files", file);
 
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Image upload failed.");
+        try {
+          const response = await fetch("/api/uploads/product-images", {
+            method: "POST",
+            body: uploadData,
+          });
+
+          let errMsg = "Upload failed";
+          if (!response.ok) {
+             const errText = await response.text();
+             try {
+                const parsed = JSON.parse(errText);
+                errMsg = parsed.error || errMsg;
+             } catch {
+                // If it's HTML, it's likely a 413 Request Entity Too Large from Vercel
+                if (response.status === 413) errMsg = "File is too large (max 4MB per image).";
+             }
+             throw new Error(errMsg);
+          }
+
+          const result = await response.json();
+          const uploadedFile = result.files && result.files[0];
+          
+          if (uploadedFile) {
+            successCount++;
+            setImages((prev) => 
+              prev.map((img) => 
+                img.id === tempImageId 
+                  ? { ...img, url: uploadedFile.url, isUploading: false } 
+                  : img
+              )
+            );
+          } else {
+            throw new Error("No file returned by server.");
+          }
+        } catch (e: any) {
+          console.error(`[ProductForm] Failed to upload ${file.name}:`, e);
+          failCount++;
+          // Remove the failed placeholder from the UI
+          setImages((prev) => prev.filter(img => img.id !== tempImageId));
+          toast.error(`Failed to upload ${file.name}: ${e.message || "Unknown error"}`);
+        }
       }
 
-      // 3. Update with real URLs
-      const uploadedFiles = result.files || [];
-      
-      setImages((prev) => 
-        prev.map((img) => {
-          const match = tempImages.find(t => t.id === img.id);
-          if (match) {
-            const indexInTemp = tempImages.indexOf(match);
-            const realFile = uploadedFiles[indexInTemp];
-            if (realFile) {
-              return {
-                ...img,
-                url: realFile.url,
-                isUploading: false
-              };
-            }
-          }
-          return img;
-        })
-      );
-
-      toast.success(`${uploadedFiles.length} images uploaded successfully.`);
+      if (successCount > 0) {
+        toast.success(`${successCount} image(s) uploaded successfully.`);
+      }
     } catch (error: any) {
-      console.error("[ProductForm] Upload error:", error);
+      console.error("[ProductForm] Upload loop error:", error);
       toast.error(error?.message || "Unable to upload images.");
-      // Note: We no longer remove tempImages automatically so the user sees the 'blank' or 'error' state
     }
   };
 

@@ -18,7 +18,9 @@ import {
   Ban
 } from "lucide-react";
 import { getAllAdminOrders } from "@/actions/admin";
+import { syncShiprocketStatusesAction, schedulePickupAction } from "@/actions/tracking";
 import { motion, AnimatePresence } from "framer-motion";
+import { toast } from "sonner";
 
 function formatMoney(value: number) {
   return new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(value / 100);
@@ -27,17 +29,59 @@ function formatMoney(value: number) {
 export default function ShippingListPage() {
   const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [isScheduling, setIsScheduling] = useState(false);
   const [selectedIdx, setSelectedIdx] = useState(0);
   const [search, setSearch] = useState("");
 
+  const fetchOrders = async () => {
+    const res = await getAllAdminOrders();
+    if (res.success) setOrders(res.orders || []);
+    setIsLoading(false);
+  };
+
   useEffect(() => {
-    async function fetch() {
-      const res = await getAllAdminOrders();
-      if (res.success) setOrders(res.orders || []);
-      setIsLoading(false);
-    }
-    fetch();
+    fetchOrders();
   }, []);
+
+  const handleSync = async () => {
+    setIsSyncing(true);
+    toast.loading("Syncing with Shiprocket...");
+    try {
+      const res = await syncShiprocketStatusesAction();
+      if (res.success) {
+        toast.success(`Sync complete. ${res.updatedCount} orders updated.`);
+        await fetchOrders();
+      } else {
+        toast.error(res.error || "Failed to sync");
+      }
+    } catch (e) {
+      toast.error("An error occurred during sync");
+    } finally {
+      setIsSyncing(false);
+      toast.dismiss();
+    }
+  };
+
+  const handleSchedulePickup = async () => {
+    if (!activeOrder) return;
+    setIsScheduling(true);
+    toast.loading("Assigning courier & scheduling pickup...");
+    try {
+      const res = await schedulePickupAction(activeOrder.id);
+      if (res.success) {
+        toast.success(`Pickup scheduled! Courier: ${res.courier}, AWB: ${res.awb}`);
+        await fetchOrders();
+      } else {
+        toast.error(res.error || "Failed to schedule pickup");
+      }
+    } catch (e) {
+      toast.error("An error occurred while scheduling");
+    } finally {
+      setIsScheduling(false);
+      toast.dismiss();
+    }
+  };
 
   const filteredOrders = useMemo(() => {
     return orders.filter(o => 
@@ -52,6 +96,8 @@ export default function ShippingListPage() {
     switch (status) {
       case 'DELIVERED': return 'bg-emerald-50 text-emerald-500 border-emerald-100';
       case 'SHIPPED': return 'bg-blue-50 text-blue-500 border-blue-100';
+      case 'OUT_FOR_DELIVERY': return 'bg-amber-50 text-amber-500 border-amber-100';
+      case 'CONFIRMED': return 'bg-indigo-50 text-indigo-500 border-indigo-100';
       case 'PAID': return 'bg-purple-50 text-purple-500 border-purple-100';
       case 'CANCELLED': return 'bg-rose-50 text-rose-500 border-rose-100';
       default: return 'bg-slate-50 text-slate-400 border-slate-100';
@@ -60,15 +106,18 @@ export default function ShippingListPage() {
 
   const getStatusText = (status: string) => {
      if (status === 'PAID') return "Processed";
-     if (status === 'SHIPPED') return "Shipping";
+     if (status === 'CONFIRMED') return "Confirmed";
+     if (status === 'SHIPPED') return "Shipped";
+     if (status === 'OUT_FOR_DELIVERY') return "Out for Delivery";
      return status.charAt(0) + status.slice(1).toLowerCase();
   };
 
-  const statuses = ["Order Process", "Packed", "Order Shipped", "Out Of Delivery", "Delivered"];
+  const statuses = ["Order Process", "Confirmed", "Order Shipped", "Out Of Delivery", "Delivered"];
   const currentStatusIdx = activeOrder ? (
     activeOrder.status === 'DELIVERED' ? 4 : 
+    activeOrder.status === 'OUT_FOR_DELIVERY' ? 3 : 
     activeOrder.status === 'SHIPPED' ? 2 : 
-    activeOrder.status === 'PAID' ? 1 : 0
+    activeOrder.status === 'CONFIRMED' ? 1 : 0
   ) : 0;
 
   return (
@@ -77,7 +126,16 @@ export default function ShippingListPage() {
       {/* Sidebar List */}
       <aside className="w-full lg:w-[380px] flex flex-col gap-6">
          <div className="bg-white rounded-[32px] border border-slate-100 p-6 shadow-sm">
-            <h2 className="font-display text-xl font-bold text-[#0F172A] mb-6">Shipping List</h2>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="font-display text-xl font-bold text-[#0F172A]">Shipping List</h2>
+              <button 
+                onClick={handleSync}
+                disabled={isSyncing}
+                className="text-[10px] font-bold uppercase tracking-widest text-blue-500 hover:bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-100 transition-colors disabled:opacity-50"
+              >
+                {isSyncing ? 'Syncing...' : 'Sync Tracker'}
+              </button>
+            </div>
             <div className="relative group">
                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-[#0F172A] transition-colors" size={16} />
                <input 
@@ -111,7 +169,7 @@ export default function ShippingListPage() {
                   </div>
                   <div className="space-y-1.5">
                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Track ID: {order.trackingId || 'TBA'}</p>
-                     <p className="text-[10px] text-slate-400">Delivery Date: {new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
+                     <p className="text-[10px] text-slate-400">Date: {new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
                   </div>
                   <div className="mt-4 flex justify-end">
                      <div className="text-[10px] font-bold uppercase tracking-widest text-[#0F172A] flex items-center gap-1 opacity-0 group-hover:opacity-100 translate-x-4 group-hover:translate-x-0 transition-all">
@@ -146,8 +204,8 @@ export default function ShippingListPage() {
                         <div className="flex justify-between items-center mb-10">
                            <h2 className="font-display text-2xl font-bold text-[#0F172A]">Shipping Details</h2>
                            <div className="text-right">
-                              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Delivery Date</p>
-                              <p className="text-sm font-bold text-[#0F172A] mt-1">14 Jan, 2026</p>
+                              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400">Order Date</p>
+                              <p className="text-sm font-bold text-[#0F172A] mt-1">{new Date(activeOrder.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}</p>
                            </div>
                         </div>
 
@@ -220,6 +278,15 @@ export default function ShippingListPage() {
 
                         {/* Actions */}
                         <div className="flex justify-end gap-3 mt-16 pt-10 border-t border-slate-50">
+                           {activeOrder.status === 'CONFIRMED' && activeOrder.shiprocketShipmentId && !activeOrder.trackingId && (
+                             <button 
+                               onClick={handleSchedulePickup}
+                               disabled={isScheduling}
+                               className="px-6 py-3 bg-indigo-50 text-indigo-500 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-indigo-100 transition-all disabled:opacity-50"
+                             >
+                               <Package size={14}/> {isScheduling ? 'Scheduling...' : 'Schedule Pickup'}
+                             </button>
+                           )}
                            <button className="px-6 py-3 bg-blue-50 text-blue-500 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-blue-100 transition-all"><MapPin size={14}/> Change Address</button>
                            <button className="px-6 py-3 bg-rose-50 text-rose-500 rounded-xl text-[10px] font-bold uppercase tracking-widest flex items-center gap-2 hover:bg-rose-100 transition-all"><Ban size={14}/> Cancel Order</button>
                         </div>
@@ -228,7 +295,10 @@ export default function ShippingListPage() {
 
                   {/* Sub Content Row */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                     <div className="bg-white rounded-[40px] border border-slate-100 p-8 shadow-sm h-64 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-blue-500/30 transition-all">
+                     <div 
+                        className="bg-white rounded-[40px] border border-slate-100 p-8 shadow-sm h-64 flex flex-col items-center justify-center text-center group cursor-pointer hover:border-blue-500/30 transition-all"
+                        onClick={() => window.open(`/track-order?id=${activeOrder.orderNumber}`, '_blank')}
+                     >
                         <div className="h-14 w-14 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 mb-6 group-hover:scale-110 transition-transform">
                            <Map size={24} />
                         </div>

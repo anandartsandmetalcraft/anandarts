@@ -70,6 +70,38 @@ export async function getShiprocketTracking(awb: string) {
   }
 }
 
+export async function getShiprocketTrackingByShipmentId(shipmentId: string) {
+  const token = await getToken();
+  if (!token || !shipmentId) return null;
+
+  try {
+    const response = await axios.get(`${BASE_URL}/courier/track/shipment/${shipmentId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    // Shiprocket returns tracking data keyed by tracking mode (e.g. tracking_data)
+    const trackingData = response.data?.tracking_data;
+    
+    if (!trackingData) return null;
+
+    // The API might return { track_status: ..., shipment_track: [...] }
+    return {
+      status: trackingData.track_status,
+      awb: trackingData.awb_code || trackingData.track_url?.split('=').pop(), // Just in case it's nested
+      orderId: trackingData.shiprocket_order_id,
+      courier: trackingData.courier_name,
+      currentStatus: trackingData.shipment_status_name,
+      scans: trackingData.shipment_track_activities || [],
+      edd: trackingData.expected_delivery_date,
+    };
+  } catch (error: any) {
+    console.error("Shiprocket Shipment Tracking Error:", error.response?.data || error.message);
+    return null;
+  }
+}
+
 // --- Step 3: Create Shipment (Sync with Shiprocket) ---
 export async function createShiprocketOrder(order: any) {
   const token = await getToken();
@@ -176,5 +208,61 @@ export async function checkShiprocketServiceability(deliveryPincode: string, wei
   } catch (error: any) {
     console.error("Shiprocket Serviceability Error:", error.response?.data || error.message);
     return null;
+  }
+}
+
+// --- Step 5: Assign AWB & Schedule Pickup ---
+export async function assignShiprocketAWB(shipmentId: string) {
+  const token = await getToken();
+  if (!token) return { success: false, error: "Authentication failed" };
+
+  try {
+    const response = await axios.post(`${BASE_URL}/courier/assign/awb`, {
+      shipment_id: parseInt(shipmentId)
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.data?.awb_assign_status === 1 || response.data?.response?.data?.awb_assign_status === 1) {
+       // Shiprocket response structure varies heavily. We check for success flag.
+       const responseData = response.data?.response?.data || response.data;
+       return {
+         success: true,
+         awbCode: responseData.awb_code,
+         courierName: responseData.courier_name,
+         courierId: responseData.courier_company_id
+       };
+    }
+    
+    throw new Error(response.data?.message || "Failed to assign AWB");
+  } catch (error: any) {
+    console.error("Shiprocket Assign AWB Error:", error.response?.data || error.message);
+    return { success: false, error: error.response?.data?.message || error.message };
+  }
+}
+
+export async function requestShiprocketPickup(shipmentId: string) {
+  const token = await getToken();
+  if (!token) return { success: false, error: "Authentication failed" };
+
+  try {
+    const response = await axios.post(`${BASE_URL}/courier/generate/pickup`, {
+      shipment_id: [parseInt(shipmentId)]
+    }, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.data?.pickup_status === 1 || response.data?.response?.pickup_status === 1) {
+       return { success: true };
+    }
+    
+    throw new Error(response.data?.message || "Failed to schedule pickup");
+  } catch (error: any) {
+    console.error("Shiprocket Request Pickup Error:", error.response?.data || error.message);
+    return { success: false, error: error.response?.data?.message || error.message };
   }
 }
