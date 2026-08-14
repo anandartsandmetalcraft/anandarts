@@ -68,7 +68,7 @@ export default function Footer() {
             <div className="flex items-center gap-4 mb-6">
               <Image
                 src="/Logo2.svg"
-                alt="Anand Arts Logo"
+                alt="Anandartsandmetalcrafts Logo"
                 width={60}
                 height={60}
                 className="rounded-lg"
@@ -190,10 +190,10 @@ export default function Footer() {
             </p>
 
             <p className="text-[13px] leading-relaxed mb-2">
-              <span className="font-bold text-[var(--color-brand-gold)]">WhatsApp / Phone:</span> <a href="tel:+918754262271" className="hover:text-[var(--color-brand-gold)] transition-colors">+91 87542 62271</a>
+              <span className="font-bold text-[var(--color-brand-gold)]">WhatsApp / Phone:</span> <a href="tel:+918431838722" className="hover:text-[var(--color-brand-gold)] transition-colors">+91 84318 38722</a>
             </p>
             <p className="text-[13px] leading-relaxed mb-8">
-              <span className="font-bold text-[var(--color-brand-gold)]">Email:</span> <a href="mailto:anandartsandmetalcraft@gmail.com" className="hover:text-[var(--color-brand-gold)] transition-colors">anandartsandmetalcraft@gmail.com</a>
+              <span className="font-bold text-[var(--color-brand-gold)]">Email:</span> <a href="mailto:anandartsandmetalcrafts@gmail.com" className="hover:text-[var(--color-brand-gold)] transition-colors">anandartsandmetalcrafts@gmail.com</a>
             </p>
             <p className="text-[13px] leading-relaxed mb-8">
               Mon - Sat: 10:00 AM - 7:00 PM<br />
@@ -228,7 +228,7 @@ export default function Footer() {
       <div className="border-t border-[#2A2621]">
         <div className="max-w-[1320px] mx-auto px-6 md:px-12 py-6 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <p className="text-[#6B6356]">
-            © {new Date().getFullYear()} Anand Arts. All Rights Reserved.
+            © {new Date().getFullYear()} Anandartsandmetalcrafts. All Rights Reserved.
           </p>
 
           <div className="flex items-center gap-4 text-[#8B8375]">

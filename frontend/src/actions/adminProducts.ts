@@ -24,18 +24,18 @@ import { z } from "zod";
  */
 
 const productUpsertSchema = z.object({
-  id: z.string().optional(),
+  id: z.string().optional().nullable(),
   name: z.string().min(2),
   slug: z.string().min(2),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
   material: z.string(),
   size: z.string(),
-  weight: z.string().optional(),
-  hsnCode: z.string().optional(),
+  weight: z.string().optional().nullable(),
+  hsnCode: z.string().optional().nullable(),
   price: z.number().int().positive(), // in paise
-  compareAt: z.number().int().optional(),
+  compareAt: z.number().int().optional().nullable(),
   stock: z.number().int().nonnegative(),
-  tag: z.string().optional(),
+  tag: z.string().optional().nullable(),
   couponCode: z.string().optional().nullable(),
   categoryId: z.string(),
   images: z.array(z.object({

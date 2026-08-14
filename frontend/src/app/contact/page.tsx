@@ -65,8 +65,8 @@ export default function ContactPage() {
               <ContactItem 
                 icon={<Mail size={22} />} 
                 title="Electronic Mail" 
-                detail="anandartsandmetalcraft@gmail.com"
-                link="mailto:anandartsandmetalcraft@gmail.com"
+                detail="anandartsandmetalcrafts@gmail.com"
+                link="mailto:anandartsandmetalcrafts@gmail.com"
               />
               <ContactItem 
                 icon={<Phone size={22} />} 
