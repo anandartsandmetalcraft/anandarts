@@ -34,7 +34,7 @@ export default function TermsOfServicePage() {
               <section>
                 <h2 className="font-display text-2xl uppercase tracking-widest text-[var(--color-brand-char)] mb-6">1. Agreement to Terms</h2>
                 <p className="text-[#4A453E] leading-relaxed">
-                  Welcome to <strong>Anand Arts and Metal Craft</strong>. By using our website or purchasing our products, you agree to these Terms of Service. If you do not agree with any part of these terms, please do not use our site.
+                  Welcome to <strong>Anandartsandmetalcrafts</strong>. By using our website or purchasing our products, you agree to these Terms of Service. If you do not agree with any part of these terms, please do not use our site.
                 </p>
               </section>
 
@@ -65,7 +65,7 @@ export default function TermsOfServicePage() {
               <section className="border-t border-black/5 pt-12">
                 <h2 className="font-display text-2xl uppercase tracking-widest text-[var(--color-brand-char)] mb-6">4. Intellectual Property</h2>
                 <p className="text-[#4A453E] leading-relaxed">
-                  All designs, images, and content on this site are the property of <strong>Anand Arts and Metal Craft</strong>. You may not copy, reproduce, or use our artistic designs for commercial purposes without our written permission.
+                  All designs, images, and content on this site are the property of <strong>Anandartsandmetalcrafts</strong>. You may not copy, reproduce, or use our artistic designs for commercial purposes without our written permission.
                 </p>
               </section>
 
@@ -89,10 +89,10 @@ export default function TermsOfServicePage() {
                   If you have any questions about these terms, please contact our support team.
                 </p>
                 <a 
-                  href="mailto:contact@anandartsandmetalcrafts.com" 
+                  href="mailto:anandartsandmetalcrafts@gmail.com" 
                   className="text-xl font-display text-[var(--color-brand-gold)] hover:underline"
                 >
-                  contact@anandartsandmetalcrafts.com
+                  anandartsandmetalcrafts@gmail.com
                 </a>
               </section>
             </div>

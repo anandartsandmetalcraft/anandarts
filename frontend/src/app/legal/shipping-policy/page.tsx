@@ -32,7 +32,7 @@ export default function ShippingPolicyPage() {
             <div className="space-y-12">
               <section>
                 <p className="text-[#4A453E] leading-relaxed text-lg italic border-l-4 border-[var(--color-brand-gold)] pl-8 mb-10">
-                  "<strong>Anand Arts and Metal Craft</strong> endeavors to ensure that your every purchase is seamless and memorable with the highest standard of quality and shopping experience."
+                  "<strong>Anandartsandmetalcrafts</strong> endeavors to ensure that your every purchase is seamless and memorable with the highest standard of quality and shopping experience."
                 </p>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
                   We have a strict Quality Checking process embedded before each product is packed and dispatched. We take utmost care in packing to ensure zero damage during transit – domestic or international and we ship through registered reputed shipping service providers.
@@ -142,7 +142,7 @@ export default function ShippingPolicyPage() {
                       <CreditCard size={18} /> Payments
                     </h4>
                     <p className="text-sm text-[#8B8375] leading-relaxed">
-                      <strong>Anand Arts and Metal Craft</strong> does not offer Cash On Delivery (COD). All orders must be prepaid through our secured payment gateways.
+                      <strong>Anandartsandmetalcrafts</strong> does not offer Cash On Delivery (COD). All orders must be prepaid through our secured payment gateways.
                     </p>
                   </div>
                 </div>
@@ -154,11 +154,11 @@ export default function ShippingPolicyPage() {
                   Contact us for an approximate estimation of the shipping charge for your international order or custom commissions.
                 </p>
                 <div className="flex flex-wrap justify-center gap-6">
-                  <a href="tel:+918754262271" className="flex items-center gap-3 text-[var(--color-brand-gold)] font-display text-xl hover:underline">
-                    +91 87542 62271
+                  <a href="tel:+918431838722" className="flex items-center gap-3 text-[var(--color-brand-gold)] font-display text-xl hover:underline">
+                    +91 84318 38722
                   </a>
-                  <a href="mailto:anandartsandmetalcraft@gmail.com" className="flex items-center gap-3 text-[var(--color-brand-gold)] font-display text-xl hover:underline">
-                    anandartsandmetalcraft@gmail.com
+                  <a href="mailto:anandartsandmetalcrafts@gmail.com" className="flex items-center gap-3 text-[var(--color-brand-gold)] font-display text-xl hover:underline">
+                    anandartsandmetalcrafts@gmail.com
                   </a>
                 </div>
               </section>

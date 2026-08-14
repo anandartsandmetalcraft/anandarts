@@ -23,7 +23,7 @@ export default function RefundPolicyPage() {
              Financial Safeguards
           </div>
           <h1 className="font-display text-4xl md:text-6xl text-[var(--color-brand-char)] uppercase tracking-tight leading-tight mb-8">
-             Refund <br/> <span className="text-[#8B8375]">Policy</span>
+             Cancellation & Refund <br/> <span className="text-[#8B8375]">Policy</span>
           </h1>
         </header>
 
@@ -32,7 +32,7 @@ export default function RefundPolicyPage() {
             <div className="space-y-12">
               <section>
                 <p className="text-[#4A453E] leading-relaxed text-lg italic border-l-4 border-[var(--color-brand-gold)] pl-8 mb-10">
-                  "<strong>Anand Arts and Metal Craft</strong> endeavors to ensure that every transaction at our website is seamless. We take great care in delivering our products and adhere to the highest quality standards."
+                  "<strong>Anandartsandmetalcrafts</strong> endeavors to ensure that every transaction at our website is seamless. We take great care in delivering our products and adhere to the highest quality standards."
                 </p>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
                   As a policy, we do not offer refunds on products delivered in correct and good condition as per the order placed. Refunds are considered only when the product delivered is different from the order confirmation, has a confirmed manufacturing or quality defect, or is damaged during shipping.
@@ -102,19 +102,19 @@ export default function RefundPolicyPage() {
                     <div className="flex-1">
                       <h4 className="font-bold uppercase tracking-widest text-sm mb-4">Initial Report</h4>
                       <p className="text-sm text-[#4A453E] leading-relaxed mb-6">
-                        Always record the <strong>un-boxing video</strong> and photographs. If incorrect or damaged items are found, contact Anand Arts and Metal Craft Customer Care within <strong>48 hours</strong> from delivery.
+                        Always record the <strong>un-boxing video</strong> and photographs. If incorrect or damaged items are found, contact Anandartsandmetalcrafts Customer Care within <strong>48 hours</strong> from delivery.
                       </p>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                          <div className="p-6 bg-[var(--color-brand-cream)] rounded-3xl">
                             <Mail size={16} className="text-[var(--color-brand-gold)] mb-2" />
                             <p className="text-xs font-bold uppercase mb-1">Email</p>
-                            <p className="text-[11px] text-[#8B8375]">anandartsandmetalcraft@gmail.com</p>
+                            <p className="text-[11px] text-[#8B8375]">anandartsandmetalcrafts@gmail.com</p>
                          </div>
                          <div className="p-6 bg-[var(--color-brand-cream)] rounded-3xl">
                             <Phone size={16} className="text-[var(--color-brand-gold)] mb-2" />
                             <p className="text-xs font-bold uppercase mb-1">WhatsApp</p>
-                            <p className="text-[11px] text-[#8B8375]">+91 87542 62271</p>
+                            <p className="text-[11px] text-[#8B8375]">+91 84318 38722</p>
                          </div>
                       </div>
                     </div>
