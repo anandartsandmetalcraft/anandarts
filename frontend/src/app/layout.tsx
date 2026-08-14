@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Playfair_Display, Inter, Lora, Hind, Kalam } from "next/font/google";
 import "./globals.css";
 // import LenisProvider from "@/components/providers/LenisProvider";
@@ -126,6 +127,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-HJCGJ0GEJ7" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-HJCGJ0GEJ7');
+          `}
+        </Script>
+      </head>
       <body className={`${playfair.variable} ${inter.variable} ${lora.variable} ${hind.variable} ${kalam.variable} antialiased overflow-x-hidden`}>
         <SessionProvider>
           {/* SEO/GEO/AEO Schemas */}
