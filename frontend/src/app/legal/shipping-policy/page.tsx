@@ -32,7 +32,7 @@ export default function ShippingPolicyPage() {
             <div className="space-y-12">
               <section>
                 <p className="text-[#4A453E] leading-relaxed text-lg italic border-l-4 border-[var(--color-brand-gold)] pl-8 mb-10">
-                  "<strong>Anandartsandmetalcrafts</strong> endeavors to ensure that your every purchase is seamless and memorable with the highest standard of quality and shopping experience."
+                  "<strong>Anand Arts & Metal Craft</strong> endeavors to ensure that your every purchase is seamless and memorable with the highest standard of quality and shopping experience."
                 </p>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
                   We have a strict Quality Checking process embedded before each product is packed and dispatched. We take utmost care in packing to ensure zero damage during transit – domestic or international and we ship through registered reputed shipping service providers.
@@ -115,7 +115,7 @@ export default function ShippingPolicyPage() {
                     <div className="p-8 border border-black/5 rounded-3xl bg-amber-50/30">
                       <h4 className="font-bold text-xs uppercase tracking-widest mb-4">Important Note</h4>
                       <p className="text-xs text-[#8B8375] leading-relaxed">
-                        International shipping is <strong>NOT FREE</strong>. Even if the website shows free shipping for high-value orders, these charges are calculated separately after order placement. Please contact us for an estimate before ordering.
+                        International shipping charges are calculated separately based on actual carrier rates. Free shipping promotional offers apply strictly to domestic deliveries within India above ₹2,000. Please contact our support desk for international shipping rate confirmation prior to placing custom or heavy shipments.
                       </p>
                     </div>
                     <div className="p-8 border border-black/5 rounded-3xl bg-amber-50/30">
@@ -142,7 +142,7 @@ export default function ShippingPolicyPage() {
                       <CreditCard size={18} /> Payments
                     </h4>
                     <p className="text-sm text-[#8B8375] leading-relaxed">
-                      <strong>Anandartsandmetalcrafts</strong> does not offer Cash On Delivery (COD). All orders must be prepaid through our secured payment gateways.
+                      <strong>Anand Arts & Metal Craft</strong> does not offer Cash On Delivery (COD). All orders must be prepaid through our secured payment gateways.
                     </p>
                   </div>
                 </div>

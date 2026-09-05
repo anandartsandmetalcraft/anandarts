@@ -32,7 +32,7 @@ export default function ReturnExchangePage() {
             <div className="space-y-12">
               <section>
                 <p className="text-[#4A453E] leading-relaxed text-lg italic border-l-4 border-[var(--color-brand-gold)] pl-8 mb-10">
-                  "<strong>Anandartsandmetalcrafts</strong> endeavors to ensure that every transaction at our website is seamless. We take great care in delivering our products and adhere to the highest quality standards."
+                  "<strong>Anand Arts & Metal Craft</strong> endeavors to ensure that every transaction at our website is seamless. We take great care in delivering our products and adhere to the highest quality standards."
                 </p>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
                   As a policy, we do not offer return or exchange on products delivered in correct and good condition as per the order placed. Return or exchange is considered only when the product delivered is different from the order confirmation, has a confirmed manufacturing defect, or is damaged during shipping.

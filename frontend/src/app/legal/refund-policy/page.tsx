@@ -32,7 +32,7 @@ export default function RefundPolicyPage() {
             <div className="space-y-12">
               <section>
                 <p className="text-[#4A453E] leading-relaxed text-lg italic border-l-4 border-[var(--color-brand-gold)] pl-8 mb-10">
-                  "<strong>Anandartsandmetalcrafts</strong> endeavors to ensure that every transaction at our website is seamless. We take great care in delivering our products and adhere to the highest quality standards."
+                  "<strong>Anand Arts & Metal Craft</strong> endeavors to ensure that every transaction at our website is seamless. We take great care in delivering our products and adhere to the highest quality standards."
                 </p>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
                   As a policy, we do not offer refunds on products delivered in correct and good condition as per the order placed. Refunds are considered only when the product delivered is different from the order confirmation, has a confirmed manufacturing or quality defect, or is damaged during shipping.
@@ -102,7 +102,7 @@ export default function RefundPolicyPage() {
                     <div className="flex-1">
                       <h4 className="font-bold uppercase tracking-widest text-sm mb-4">Initial Report</h4>
                       <p className="text-sm text-[#4A453E] leading-relaxed mb-6">
-                        Always record the <strong>un-boxing video</strong> and photographs. If incorrect or damaged items are found, contact Anandartsandmetalcrafts Customer Care within <strong>48 hours</strong> from delivery.
+                        Always record the <strong>un-boxing video</strong> and photographs. If incorrect or damaged items are found, contact Anand Arts & Metal Craft Customer Care within <strong>48 hours</strong> from delivery.
                       </p>
                       
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

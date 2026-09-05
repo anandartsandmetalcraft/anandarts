@@ -374,7 +374,7 @@ export default function CheckoutPage() {
                                                 <div className="mt-4 p-4 bg-amber-50 rounded-xl border border-amber-100 flex gap-3">
                                                    <AlertCircle className="text-amber-500 shrink-0 mt-0.5" size={16} />
                                                    <p className="text-[10px] text-amber-800 font-medium leading-relaxed">
-                                                      <strong>International Delivery:</strong> For secure and fast international shipping, please contact our team via WhatsApp at <strong>+91 8754262271</strong> before placing your order.
+                                                      <strong>International Delivery:</strong> For secure and fast international shipping, please contact our team via WhatsApp at <strong>+91 8431838722</strong> before placing your order.
                                                    </p>
                                                 </div>
                                              )}

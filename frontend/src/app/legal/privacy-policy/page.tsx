@@ -35,10 +35,10 @@ export default function PrivacyPolicyPage() {
                   <UserCheck size={24} className="text-[var(--color-brand-gold)]" /> User Information & Privacy
                 </h2>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
-                  <strong>Anandartsandmetalcrafts</strong> is committed to protecting all the information you share with us. We follow stringent procedures to protect the confidentiality, security, and integrity of data stored on our systems. 
+                  <strong>Anand Arts & Metal Craft</strong> is committed to protecting all the information you share with us. We follow stringent procedures to protect the confidentiality, security, and integrity of data stored on our systems. 
                 </p>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
-                  Only those employees who need access to your information in order to perform their duties are allowed such access. Anandartsandmetalcrafts's top most priority is protecting your confidential information and privacy.
+                  Only those employees who need access to your information in order to perform their duties are allowed such access. Anand Arts & Metal Craft's top most priority is protecting your confidential information and privacy.
                 </p>
                 <div className="p-8 bg-[var(--color-brand-cream)]/30 border border-black/5 rounded-3xl">
                    <p className="text-xs text-[#8B8375] leading-relaxed m-0 italic">
@@ -50,7 +50,7 @@ export default function PrivacyPolicyPage() {
               <section className="border-t border-black/5 pt-12">
                 <h2 className="font-display text-2xl uppercase tracking-widest text-[var(--color-brand-char)] mb-6">Collection & Use of Information</h2>
                 <p className="text-[#4A453E] leading-relaxed mb-6">
-                  We collect, process, and retain information about you when you visit <strong>Anandartsandmetalcrafts</strong>. You may choose to provide us with information such as:
+                  We collect, process, and retain information about you when you visit <strong>Anand Arts & Metal Craft</strong>. You may choose to provide us with information such as:
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    {[

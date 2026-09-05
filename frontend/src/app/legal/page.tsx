@@ -16,7 +16,7 @@ const LEGAL_GROUPS = [
     title: "Orders & Shipping",
     items: [
       { id: "shipping", title: "Shipping Policy", icon: Truck, path: "/legal/shipping-policy", desc: "Delivery timelines and care." },
-      { id: "returns", title: "Return & Exchange", icon: RefreshCw, path: "/legal/refund-policy", desc: "Quality assurance and returns." },
+      { id: "returns", title: "Return & Exchange", icon: RefreshCw, path: "/legal/return-and-exchange", desc: "Quality assurance and returns." },
       { id: "refund", title: "Refund Policy", icon: Scale, path: "/legal/refund-policy", desc: "Money back and cancellations." },
     ]
   },
@@ -112,7 +112,7 @@ export default function LegalPage() {
               <Link href="/contact" className="px-10 py-4 bg-[var(--color-brand-char)] text-white font-ui text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-[var(--color-brand-gold)] transition-all shadow-xl">
                  Contact Us
               </Link>
-              <a href="mailto:support@anandartsandmetalcrafts.com" className="px-10 py-4 border border-black/10 text-[var(--color-brand-char)] font-ui text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black hover:text-white transition-all">
+              <a href="mailto:anandartsandmetalcrafts@gmail.com" className="px-10 py-4 border border-black/10 text-[var(--color-brand-char)] font-ui text-[11px] font-bold uppercase tracking-[0.2em] rounded-full hover:bg-black hover:text-white transition-all">
                  Email Support
               </a>
            </div>
