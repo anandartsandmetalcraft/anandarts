@@ -18,7 +18,6 @@ import { addressSchema, phoneOtpSchema, userSchema } from "@/lib/validations";
  * - OTP expires in 5 minutes
  * - OTP codes are cryptographically random
  * - Generic error messages prevent information leakage
- * - Test mode bypass: allows '123456' OTP in development/test
  * ────────────────────────────────────────────────────────────────
  */
 export async function requestOTP(phone: string) {
@@ -96,17 +95,11 @@ export async function verifyOTPAndLogin(phone: string, code: string) {
       return { error: rateLimitResult.message || "Too many authentication attempts. Please try again later." };
     }
 
-    // 1. Verify manually first to check if new user
-    let tokenRecord = await db.verificationCode.findUnique({
+    // 1. Verify OTP against database record
+    const tokenRecord = await db.verificationCode.findUnique({
       where: { identifier_code: { identifier: validPhone, code: validCode } },
     });
 
-    // TEST MODE BYPASS: Allow 123456 if enabled
-    const isTestMode = process.env.ALLOW_TEST_PAYMENTS === "true";
-    if (isTestMode && validCode === "123456") {
-      tokenRecord = { id: "test", identifier: validPhone, code: "123456", expires: new Date(Date.now() + 1000000) } as any;
-    }
- 
     if (!tokenRecord || tokenRecord.expires < new Date()) {
       return { error: "The verification code is invalid or has expired." };
     }

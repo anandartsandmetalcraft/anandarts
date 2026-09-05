@@ -50,17 +50,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const { phone, code } = credentials as { phone: string; code: string };
         if (!phone || !code) return null;
  
-        // 1. Verify OTP
-        let tokenRecord = await db.verificationCode.findUnique({
+        // 1. Verify OTP against database
+        const tokenRecord = await db.verificationCode.findUnique({
           where: { identifier_code: { identifier: phone, code } },
         });
 
-        // TEST MODE BYPASS: Allow 123456 if enabled
-        const isTestMode = process.env.ALLOW_TEST_PAYMENTS === "true";
-        if (isTestMode && code === "123456") {
-          tokenRecord = { id: "test", identifier: phone, code: "123456", expires: new Date(Date.now() + 1000000) } as any;
-        }
- 
         if (!tokenRecord || tokenRecord.expires < new Date()) {
           return null;
         }
@@ -71,24 +65,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
  
         if (!user) {
-          // First-time curator discovery
+          // First-time customer discovery
           user = await db.user.create({
             data: {
               phone,
               role: "CUSTOMER",
-              // Placeholders for future enrichment
               firstName: "Sacred",
               lastName: "Curator",
             },
           });
         }
  
-        // 3. Purge used code (skip for test mode)
-        if (tokenRecord.id !== "test") {
-          await db.verificationCode.delete({
-            where: { id: tokenRecord.id },
-          });
-        }
+        // 3. Purge used OTP code
+        await db.verificationCode.delete({
+          where: { id: tokenRecord.id },
+        });
  
         return {
           id: user.id,
