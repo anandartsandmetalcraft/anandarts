@@ -104,7 +104,10 @@ export async function sendOTP(phone: string, otp: string): Promise<SMSResult> {
 
   // 4. Call 2Factor.in API
   try {
-    const url = `${BASE_URL}/${TWOFACTOR_API_KEY}/SMS/${cleanPhone}/${otp}/AUTOGEN`;
+    const templateName = process.env.TWOFACTOR_OTP_TEMPLATE;
+    const url = templateName
+      ? `${BASE_URL}/${TWOFACTOR_API_KEY}/SMS/${cleanPhone}/${otp}/${templateName}`
+      : `${BASE_URL}/${TWOFACTOR_API_KEY}/SMS/${cleanPhone}/${otp}`;
 
     const response = await fetch(url, {
       method: "GET",
@@ -116,10 +119,8 @@ export async function sendOTP(phone: string, otp: string): Promise<SMSResult> {
     });
 
     if (!response.ok) {
-      console.error(
-        `[SMS] 2Factor.in HTTP ${response.status}:`,
-        await response.text()
-      );
+      const errText = await response.text();
+      console.error(`[SMS] 2Factor.in HTTP ${response.status}:`, errText);
       return { success: false, error: "SMS delivery failed. Please try again." };
     }
 
@@ -129,8 +130,8 @@ export async function sendOTP(phone: string, otp: string): Promise<SMSResult> {
       return { success: true, sessionId: data.Details };
     }
 
-    console.error("[SMS] 2Factor.in API error:", data);
-    return { success: false, error: "SMS delivery failed. Please try again." };
+    console.error("[SMS] 2Factor.in API error response:", data);
+    return { success: false, error: data.Details || "SMS delivery failed. Please check your number or try again." };
   } catch (error) {
     console.error("[SMS] Network error:", error);
     return {
